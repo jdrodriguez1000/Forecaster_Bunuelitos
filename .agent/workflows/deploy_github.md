@@ -1,12 +1,9 @@
+// turbo-all
 ---
 description: Sincroniza el proyecto local con GitHub, crea el repositorio remoto y asegura el despliegue inicial bajo los estándares de MLOps y de Supabase.
 ---
 
 # Workflow: Deploy GitHub (Forecaster Buñuelitos)
-
-Este workflow automatiza la creación del repositorio en GitHub, la gestión del control de versiones y la preparación del despliegue inicial, asegurando la limpieza del área de trabajo antes del commit.
-
-// turbo-all
 
 ## Pasos de Ejecución
 
