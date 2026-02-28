@@ -1,4 +1,3 @@
-// turbo-all
 ---
 description: Sincroniza el proyecto local con GitHub, crea el repositorio remoto y asegura el despliegue inicial bajo los estándares de MLOps y de Supabase.
 ---
