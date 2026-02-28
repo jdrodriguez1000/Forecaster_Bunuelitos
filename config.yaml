@@ -1,0 +1,53 @@
+# Forecaster Buñuelitos Configuration
+
+general:
+  project_name: Forecaster Buñuelitos
+  random_state: 42
+  target_variable: demanda_teorica_total
+  prediction_horizon: 185
+
+extractions:
+  db_type: supabase
+  tables:
+    - sales
+    - inventory
+    - finance
+    - marketing
+    - macroeconomics
+    - weather
+
+preprocessing:
+  day_x_strategy: true
+  imputation_rules:
+    sales: zero
+    weather: interpolate
+    macro: forward_fill
+
+eda:
+  generate_figures: true
+
+features:
+  calendars:
+    - quincenas
+    - primas
+    - holidays
+    - pandemic_flag
+    - promos_2x1
+
+modeling:
+  champion_model: Ridge
+  metrics:
+    - MAPE
+    - RMSE
+
+forecast:
+  horizon: 185
+  aggregation: monthly
+
+simulations:
+  scenarios:
+    - marketing_push
+    - weather_extreme
+
+monitoring:
+  drift_threshold: 0.05

@@ -1,0 +1,18 @@
+# Python standard
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.env
+
+# Data and Outputs
+data/
+outputs/**/history/
+!outputs/**/.gitkeep
+
+# IDEs
+.vscode/
+.idea/
+
+# Experiments
+experiments/
