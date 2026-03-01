@@ -1,0 +1,25 @@
+metadata:
+  contract_id: "test_v1"
+  version: "1.0"
+monitoring_strategy:
+  trend_analysis:
+    drift_threshold_pct: 10
+tables:
+  ventas:
+    columns:
+      unidades_totales: {type: "int"}
+    rules:
+      logic_sum:
+        rule: "unidades_totales == unidades_pagas + unidades_bonificadas"
+        severity: "FAILURE"
+      promo_check:
+        condition: "es_promocion == 1"
+        rule: "unidades_pagas > 0"
+        severity: "WARNING"
+  finances:
+    columns:
+      price: {type: "float"}
+global_standards:
+  integrity_defaults:
+    unknown_categories: {severity: "WARNING"}
+    null_management: {default_max_null_pct: 0.1}

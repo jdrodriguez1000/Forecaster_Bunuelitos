@@ -45,7 +45,7 @@ class DataHealthAuditor:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def audit_dataframe(self, table_name, df):
+    def audit_dataframe(self, table_name, df, horizon_days=185):
         """
         Runs the audit for a specific table's DataFrame.
         """
@@ -90,7 +90,7 @@ class DataHealthAuditor:
         # 2. Monitoring Strategy (Drift Detection: Internal History vs Horizon)
         if 'monitoring_strategy' in self.contract:
             drift_thresh = self.contract['monitoring_strategy']['trend_analysis']['drift_threshold_pct'] / 100
-            horizon_days = 185 # Target prediction horizon
+            # horizon_days is now a function parameter
 
             for col_name in df.select_dtypes(include=['number']).columns:
                 if col_name in table_snapshot.get('columns', {}):

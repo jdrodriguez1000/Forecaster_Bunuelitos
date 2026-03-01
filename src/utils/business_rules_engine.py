@@ -23,8 +23,15 @@ class BusinessRulesEngine:
             # evaluate returns a boolean series where the condition is TRUE
             result = df.eval(expr)
             
-            # If the result contains NaNs (due to shift(1)), treat as PASSED 
-            # (common for the first row of a dataset)
+            # Find any temp columns used in this expr to handle edge NaNs (lags/leads)
+            # If any temp column involved in the result is NaN, we treat as True (pass)
+            temp_cols_used = [c for c in df.columns if c.startswith("__temp_") and c in expr]
+            if temp_cols_used:
+                # Use a mask where any involved temp column is NaN
+                nan_mask = df[temp_cols_used].isna().any(axis=1)
+                result[nan_mask] = True
+            
+            # Handle standard fillna if pandas returns object series with NaNs
             if isinstance(result, pd.Series):
                 result = result.fillna(True)
             

@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "audit_timestamp": "2026-03-01T15:27:19.119079",
-        "contract_id": "v1_2026_03_01_20260301_152719",
+        "audit_timestamp": "2026-03-01T15:58:39.008516",
+        "contract_id": "v1_2026_03_01_20260301_155838",
         "contract_version": "1.3"
     },
     "summary": {
@@ -78,7 +78,7 @@
                 },
                 {
                     "severity": "WARNING",
-                    "message": "Business Rule 'stock_continuity' violated in 3 rows (0.1%). Rule: (kit_final_bodega_t_minus_1 + kit_recibido) == kit_inicial_bodega"
+                    "message": "Business Rule 'stock_continuity' violated in 2 rows (0.1%). Rule: (kit_final_bodega_t_minus_1 + kit_recibido) == kit_inicial_bodega"
                 },
                 {
                     "severity": "WARNING",

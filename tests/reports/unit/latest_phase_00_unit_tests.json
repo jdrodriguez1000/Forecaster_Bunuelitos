@@ -1,0 +1,74 @@
+{
+    "metadata": {
+        "phase_id": "00",
+        "phase_name": "Exploración Inicial",
+        "project": "Forecaster Buñuelitos",
+        "execution_date": "2026-03-01T15:57:16.778135"
+    },
+    "summary": {
+        "status": "PASSED",
+        "duration_seconds": 1.498,
+        "coverage_percentage": "65.45%",
+        "metrics": {
+            "passed": 10,
+            "failed": 0,
+            "total": 10
+        }
+    },
+    "test_results": [
+        {
+            "test_name": "test_arithmetic_rule_evaluation",
+            "class": "tests.unit.test_business_rules_engine",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_if_then_conversion",
+            "class": "tests.unit.test_business_rules_engine",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_time_lag_minus_n",
+            "class": "tests.unit.test_business_rules_engine",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_time_lead_plus_n",
+            "class": "tests.unit.test_business_rules_engine",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_cleanup_temps",
+            "class": "tests.unit.test_business_rules_engine",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_rule_error_graceful_failure",
+            "class": "tests.unit.test_business_rules_engine",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_audit_dataframe_basic",
+            "class": "tests.unit.test_data_health_auditor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_health_score_logic",
+            "class": "tests.unit.test_data_health_auditor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_drift_detection_logic",
+            "class": "tests.unit.test_data_health_auditor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_freshness_check",
+            "class": "tests.unit.test_data_health_auditor",
+            "status": "PASSED"
+        }
+    ],
+    "raw_output": {
+        "stdout": "============================= test session starts =============================\nplatform win32 -- Python 3.12.10, pytest-9.0.2, pluggy-1.6.0 -- C:\\Users\\USUARIO\\Documents\\Forecaster\\Buñuelitos\\.venv\\Scripts\\python.exe\ncachedir: .pytest_cache\nrootdir: C:\\Users\\USUARIO\\Documents\\Forecaster\\Buñuelitos\nplugins: anyio-4.12.1, cov-7.0.0\ncollecting ... collected 10 items\n\ntests/unit/test_business_rules_engine.py::test_arithmetic_rule_evaluation PASSED [ 10%]\ntests/unit/test_business_rules_engine.py::test_if_then_conversion PASSED [ 20%]\ntests/unit/test_business_rules_engine.py::test_time_lag_minus_n PASSED   [ 30%]\ntests/unit/test_business_rules_engine.py::test_time_lead_plus_n PASSED   [ 40%]\ntests/unit/test_business_rules_engine.py::test_cleanup_temps PASSED      [ 50%]\ntests/unit/test_business_rules_engine.py::test_rule_error_graceful_failure PASSED [ 60%]\ntests/unit/test_data_health_auditor.py::test_audit_dataframe_basic PASSED [ 70%]\ntests/unit/test_data_health_auditor.py::test_health_score_logic PASSED   [ 80%]\ntests/unit/test_data_health_auditor.py::test_drift_detection_logic PASSED [ 90%]\ntests/unit/test_data_health_auditor.py::test_freshness_check PASSED      [100%]\n\n- generated xml file: C:\\Users\\USUARIO\\Documents\\Forecaster\\Buñuelitos\\tests\\reports\\unit\\temp_results.xml -\n=============================== tests coverage ================================\n______________ coverage: platform win32, python 3.12.10-final-0 _______________\n\nCoverage JSON written to file tests/reports/unit\\coverage.json\n============================= 10 passed in 0.39s ==============================\n",
+        "stderr": ""
+    }
+}

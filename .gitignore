@@ -16,3 +16,8 @@ outputs/**/history/
 
 # Experiments
 experiments/
+
+# Temporary and Reports
+tmp/
+tests/reports/**/history/
+!.gitkeep
