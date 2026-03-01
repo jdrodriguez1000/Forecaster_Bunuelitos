@@ -22,5 +22,8 @@ tmp/
 .coverage
 .pytest_cache/
 .DS_Store
+*.xml
+coverage.json
 tests/reports/**/history/
+.executive/**/history/
 !.gitkeep

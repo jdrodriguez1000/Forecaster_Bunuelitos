@@ -19,7 +19,7 @@ def save_dual_persistence(data, base_path, filename):
     os.makedirs(history_path, exist_ok=True)
 
     # Prepare filenames
-    latest_name = f"latest_{filename}.json"
+    latest_name = f"{filename}_latest.json"
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     history_name = f"{filename}_{timestamp}.json"
 
