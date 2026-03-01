@@ -3,7 +3,7 @@
 # Fecha de Creación: 2026-03-01
 
 metadata:
-  contract_id: "v1_2026_03_01"
+  contract_id: "v1_2026_03_01_20260301_170034"
   version: "1.3" # Inclusión de Monitoreo Dinámico y Drift
   author: "Antigravity (Data Health Auditor)"
   description: "Manual de normas para la validación de integridad, lógica, limpieza estructural y monitoreo dinámico (Drift)."

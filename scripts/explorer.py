@@ -35,17 +35,38 @@ def run_phase_00_audit():
     os.makedirs(os.path.dirname(contract_history), exist_ok=True)
     os.makedirs(os.path.dirname(snapshot_history), exist_ok=True)
     
-    # Create the immutable copies (Double Persistence Protocol)
-    shutil.copy2(contract_latest, contract_history)
-    shutil.copy2(snapshot_latest, snapshot_history)
-    print(f"Archived immutable snapshot and contract: {timestamp}")
+    # Create the updated copies (Double Persistence Protocol)
+    with open(contract_latest, "r", encoding="utf-8") as f:
+        contract_data = yaml.safe_load(f)
+    with open(snapshot_latest, "r", encoding="utf-8") as f:
+        snapshot_data = json.load(f)
+
+    # Get Base ID (remove existing timestamp if already present to avoid accumulation)
+    base_id = contract_data['metadata']['contract_id']
+    parts = base_id.split('_')
+    if len(parts) > 4: # v1_YYYY_MM_DD_TIMESTAMP
+        base_id = "_".join(parts[:4])
+    
+    unique_contract_id = f"{base_id}_{timestamp}"
+    contract_data['metadata']['contract_id'] = unique_contract_id
+    snapshot_data['metadata']['contract_id'] = unique_contract_id
+
+    # Save Updated "Latest" (Sync internal metadata)
+    with open(contract_latest, "w", encoding="utf-8") as f:
+        yaml.dump(contract_data, f, allow_unicode=True, sort_keys=False)
+    with open(snapshot_latest, "w", encoding="utf-8") as f:
+        json.dump(snapshot_data, f, indent=4, ensure_ascii=False)
+
+    # Save History (Double Persistence with updated metadata)
+    with open(contract_history, "w", encoding="utf-8") as f:
+        yaml.dump(contract_data, f, allow_unicode=True, sort_keys=False)
+    with open(snapshot_history, "w", encoding="utf-8") as f:
+        json.dump(snapshot_data, f, indent=4, ensure_ascii=False)
+
+    print(f"Archived and updated internal IDs: {unique_contract_id}")
 
     # 1. Initialize Auditor & Load Data
     auditor = DataHealthAuditor(contract_history, snapshot_history)
-    
-    # Update contract_id with time for the DB record and the JSON report
-    original_id = auditor.contract['metadata']['contract_id']
-    unique_contract_id = f"{original_id}_{timestamp}"
     auditor.set_contract_id(unique_contract_id) # Update in the JSON metadata
     
     version = auditor.contract['metadata']['version']

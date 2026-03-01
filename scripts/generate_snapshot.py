@@ -16,7 +16,16 @@ def generate_initial_snapshot():
     with open(contract_path, "r", encoding="utf-8") as f:
         contract = yaml.safe_load(f)
     
-    contract_id = contract['metadata']['contract_id']
+    # Generate Timestamp (aligned with explorer.py)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Get Base ID (remove existing timestamp if present)
+    base_id = contract['metadata']['contract_id']
+    parts = base_id.split('_')
+    if len(parts) > 4: # v1_YYYY_MM_DD_TIMESTAMP
+        base_id = "_".join(parts[:4])
+    
+    full_contract_id = f"{base_id}_{timestamp}"
     version = contract['metadata']['version']
     
     # Initialize DB Connection
@@ -25,7 +34,7 @@ def generate_initial_snapshot():
     
     snapshot = {
         "metadata": {
-            "contract_id": contract_id,
+            "contract_id": full_contract_id,
             "contract_version": version,
             "generated_at": datetime.now().isoformat(),
             "lookback_period_days": contract.get('monitoring_strategy', {}).get('trend_analysis', {}).get('lookback_period_days', 185)
@@ -94,13 +103,12 @@ def generate_initial_snapshot():
         json.dump(snapshot, f, indent=4, ensure_ascii=False)
     
     # Save History version
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-    history_path = f"schemas/statistical/history/snapshot_{timestamp}.json"
+    history_path = f"schemas/statistical/history/initial_snapshot_{timestamp}.json"
     os.makedirs(os.path.dirname(history_path), exist_ok=True)
     with open(history_path, "w", encoding="utf-8") as f:
         json.dump(snapshot, f, indent=4, ensure_ascii=False)
     
-    print(f"Snapshot generated successfully at {output_path}")
+    print(f"Snapshot generated successfully at {output_path} with ID {full_contract_id}")
 
 if __name__ == "__main__":
     generate_initial_snapshot()
