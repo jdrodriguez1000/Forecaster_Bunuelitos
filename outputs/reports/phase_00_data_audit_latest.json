@@ -1,0 +1,178 @@
+{
+    "metadata": {
+        "audit_timestamp": "2026-03-01T15:27:19.119079",
+        "contract_id": "v1_2026_03_01_20260301_152719",
+        "contract_version": "1.3"
+    },
+    "summary": {
+        "total_violations": 26,
+        "failure_count": 0,
+        "warning_count": 26,
+        "status": "WARNING",
+        "health_score": 74.0
+    },
+    "tables": {
+        "ventas": {
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'unidades_totales': 35.01% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Business Rule 'promo_balance' violated in 254 rows (7.6%). Rule: if (es_promocion == 1) then (abs(unidades_pagas - unidades_bonificadas) == 0)"
+                }
+            ],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "freshness_days": 1,
+                "latest_date": "2026-02-28"
+            }
+        },
+        "inventario": {
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'kit_inicial_bodega': 219.01% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'kit_inicial_bodega': 540.54% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'kit_recibido': 32.59% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'lbs_recibidas': 32.59% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'demanda_teorica_total': 35.01% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'buñuelos_preparados': 35.51% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'ventas_reales_totales': 35.19% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'buñuelos_desperdiciados': 52.47% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'unidades_agotadas': 27.19% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'kit_final_bodega': 224.95% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'kit_final_bodega': 554.95% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Business Rule 'stock_continuity' violated in 3 rows (0.1%). Rule: (kit_final_bodega_t_minus_1 + kit_recibido) == kit_inicial_bodega"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Business Rule 'production_yield' violated in 220 rows (6.6%). Rule: abs(buñuelos_preparados - (kit_inicial_bodega + kit_recibido - kit_final_bodega)) / (kit_inicial_bodega + kit_recibido - kit_final_bodega + 0.001) <= 0.10"
+                }
+            ],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "freshness_days": 1,
+                "latest_date": "2026-02-28"
+            }
+        },
+        "finanzas": {
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'precio_unitario': 29.30% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'precio_unitario': 82.03% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'costo_unitario': 32.45% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'costo_unitario': 87.79% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'margen_bruto': 24.92% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'margen_bruto': 74.01% deviation in last 185 days"
+                }
+            ],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "freshness_days": 1,
+                "latest_date": "2026-02-28"
+            }
+        },
+        "marketing": {
+            "violations": [],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "freshness_days": 1,
+                "latest_date": "2026-02-28"
+            }
+        },
+        "macroeconomia": {
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'smlv': 29.89% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'smlv': 86.28% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'inflacion_mensual_ipc': 51.29% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'trm': 35.05% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'trm': 55.62% deviation in last 185 days"
+                }
+            ],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "freshness_days": 1,
+                "latest_date": "2026-02-28"
+            }
+        },
+        "clima": {
+            "violations": [],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "freshness_days": 1,
+                "latest_date": "2026-02-28"
+            }
+        }
+    }
+}

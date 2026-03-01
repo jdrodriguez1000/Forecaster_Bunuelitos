@@ -29,8 +29,8 @@ En cada fase técnica, el agente debe seguir obligatoriamente este flujo secuenc
 *   **Acciones**:
     *   **Lectura Remota**: Lectura de metadatos y muestras de la base de datos sin descarga masiva.
     *   **Definición de Contrato**: Documentación de nombres de columnas, tipos de datos (dtypes), columnas esperadas y métricas base (min/max/unique para numéricos y categorías para objetos).
-    *   **Sincronía con Config**: Actualización de `config.yaml` basada en el contrato descubierto.
-*   **Resultados**: Reporte JSON del Contrato de Datos y actualización de `config.yaml`.
+    *   **Doble Persistencia**: Guardado en `schemas/data_contract_latest.yaml` y copia histórica en `schemas/history/`.
+*   **Resultados**: Reporte JSON del Contrato de Datos, actualización de `config.yaml` y creación de archivos YAML en `schemas/`.
 
 ### Fase 01: Data Discovery & Audit (Salud de Datos)
 *   **Acción**: Conexión a la fuente de datos (Supabase), carga inicial (o incremental) y auditoría de integridad.

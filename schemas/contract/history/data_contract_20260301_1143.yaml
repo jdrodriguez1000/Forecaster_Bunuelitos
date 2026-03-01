@@ -1,0 +1,166 @@
+# Data Contract: Forecaster Buñuelitos
+# Versión: 1.0 (Initial Draft)
+# Fecha de Creación: 2026-03-01
+
+metadata:
+  contract_id: "v1_2026_03_01"
+  version: "1.2" # Sincronización completa con Charter y Categorías
+  author: "Antigravity (Data Health Auditor)"
+  description: "Manual de normas para la validación de integridad, lógica, limpieza estructural y gobernanza de categorías."
+
+global_standards:
+  sentinel_values:
+    numeric: [-999, 9999, -1]
+    object: ["NULL", "NA", "Unknown", "N/A", "NONE", "test"]
+    datetime: ["1900-01-01", "2099-12-31"]
+    boolean: [null]
+  
+  integrity_defaults:
+    uniqueness: 
+      rule: "no_duplicates_on_primary_key"
+      severity: "FAILURE"
+    null_management:
+      default_max_null_pct: 0.05
+      critical_columns_max_null_pct: 0.00
+      severity: "FAILURE"
+    negative_values:
+      rule: "forbidden_on_metrics"
+      severity: "FAILURE"
+    unknown_categories:
+      default_action: "map_to_others"
+      severity: "WARNING"
+
+tables:
+  ventas:
+    internal_alias: "sales"
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      unidades_totales: {type: "int", required: true, min: 0}
+      unidades_pagas: {type: "int", required: true, min: 0}
+      unidades_bonificadas: {type: "int", required: true, min: 0}
+      es_promocion: {type: "bool", required: true}
+      ads_activos: {type: "bool", required: true}
+    rules:
+      logic_check_sum: 
+        rule: "unidades_totales == unidades_pagas + unidades_bonificadas"
+        severity: "FAILURE"
+      promo_balance: 
+        condition: "es_promocion == 1"
+        rule: "abs(unidades_pagas - unidades_bonificadas) <= 1"
+        severity: "WARNING"
+      ads_consistency:
+        rule: "if es_promocion == 1 then ads_activos == 1"
+        severity: "WARNING"
+
+  inventario:
+    internal_alias: "inventory"
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      kit_inicial_bodega: {type: "float", required: true, min: 0}
+      kit_recibido: {type: "float", required: true, min: 0}
+      lbs_recibidas: {type: "float", required: true, min: 0}
+      lbs_utilizadas: {type: "float", required: true, min: 0}
+      demanda_teorica_total: {type: "int", required: true, min: 0} # TARGET
+      buñuelos_preparados: {type: "int", required: true, min: 0}
+      ventas_reales_totales: {type: "int", required: true, min: 0}
+      ventas_reales_pagas: {type: "int", required: true, min: 0}
+      ventas_reales_bonificadas: {type: "int", required: true, min: 0}
+      buñuelos_desperdiciados: {type: "int", required: true, min: 0}
+      unidades_agotadas: {type: "int", required: true, min: 0}
+      kit_final_bodega: {type: "float", required: true, min: 0}
+    rules:
+      target_restriction: 
+        column: "demanda_teorica_total"
+        max_null_pct: 0
+        severity: "FAILURE"
+      target_identity: 
+        rule: "demanda_teorica_total == ventas_reales_totales + unidades_agotadas"
+        severity: "FAILURE"
+      waste_logic: 
+        rule: "buñuelos_desperdiciados == buñuelos_preparados - ventas_reales_totales"
+        severity: "FAILURE"
+      physical_limit: 
+        rule: "ventas_reales_totales <= buñuelos_preparados"
+        severity: "FAILURE"
+      stock_continuity: 
+        rule: "kit_final_bodega_t_minus_1 == kit_inicial_bodega_t"
+        severity: "FAILURE"
+      production_yield: 
+        rule: "abs(buñuelos_preparados - (lbs_utilizadas * 50)) / (lbs_utilizadas * 50) <= 0.05"
+        severity: "WARNING"
+
+  finanzas:
+    internal_alias: "finance"
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      precio_unitario: {type: "float", required: true, min: 100}
+      costo_unitario: {type: "float", required: true, min: 50}
+      margen_bruto: {type: "float", required: true}
+      porcentaje_margen: {type: "float", required: true}
+    rules:
+      margin_calculation: 
+        rule: "margen_bruto == precio_unitario - costo_unitario"
+        severity: "FAILURE"
+      profitability_check: 
+        rule: "precio_unitario > costo_unitario"
+        severity: "FAILURE"
+
+  marketing:
+    internal_alias: "marketing"
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      inversion_total: {type: "float", required: true, min: 0}
+      fb_cost: {type: "float", required: true, min: 0}
+      ig_cost: {type: "float", required: true, min: 0}
+      fb_pct: {type: "float", required: true, min: 0, max: 1}
+      ig_pct: {type: "float", required: true, min: 0, max: 1}
+      campaña_activa: {type: "bool", required: true}
+    rules:
+      cost_sum: 
+        rule: "inversion_total == fb_cost + ig_cost"
+        severity: "FAILURE"
+
+  macroeconomia:
+    internal_alias: "macroeconomics"
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      smlv: {type: "float", required: true, min: 0}
+      inflacion_mensual_ipc: {type: "float", required: true}
+      tasa_desempleo: {type: "float", required: true}
+      trm: {type: "float", required: true, min: 0}
+
+  clima:
+    internal_alias: "weather"
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      temperatura_media: {type: "float", required: true, min: 5, max: 45}
+      probabilidad_lluvia: {type: "float", required: true, min: 0, max: 1}
+      precipitacion_mm: {type: "float", required: true, min: 0}
+      tipo_lluvia: 
+        type: "string"
+        required: true
+        categories: ["Nula", "Ligera", "Fuerte"]
+        on_unknown: "map_to_others"
+      evento_macro: 
+        type: "string"
+        required: true
+        on_unknown: "map_to_others"
+      es_dia_lluvioso: {type: "bool", required: true}
+    rules:
+      rain_logic_nula: 
+        rule: "if tipo_lluvia == 'Nula' then precipitacion_mm == 0"
+        severity: "WARNING"
+      rain_flag_logic: 
+        rule: "if precipitacion_mm > 0 then es_dia_lluvioso == 1"
+        severity: "WARNING"
+
+cross_table_validations:
+  demand_sincronicity:
+    rule: "ventas.unidades_totales == inventario.demanda_teorica_total"
+    severity: "FAILURE"
+  total_vs_real:
+    rule: "inventario.ventas_reales_totales <= ventas.unidades_totales"
+    severity: "FAILURE"
+  marketing_sales_sync:
+    rule: "if marketing.campaña_activa == 1 then ventas.es_promocion == 1"
+    severity: "WARNING"

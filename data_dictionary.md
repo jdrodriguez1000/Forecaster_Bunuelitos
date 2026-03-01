@@ -13,6 +13,7 @@ Este documento es la autoridad única de definiciones para el proyecto de foreca
 | **Buñuelos Preparados** | Cantidad total de unidades fritas puestas a disposición del público en un día $T$. | Es el límite físico de la venta. No puede venderse más de lo que se prepara. |
 | **Mermas (Desperdicios)** | Unidades fritas que no se vendieron al cierre del día y deben ser desechadas (Vida útil = 1 día). | Representa ineficiencia por sobreestimar la demanda o mala rotación. |
 | **Unidades Bonificadas** | Buñuelos entregados sin costo como parte de promociones (ej: el "+1" del 2x1). | Afectan el volumen de salida pero no el ingreso bruto. Vital para el cálculo de costos. |
+| **Libras Recibidas** | Materia prima recibida en punto de venta (Harina + Queso + Huevos) en unidades de masa. | Se usa para validar el rendimiento operativo (Yield): **1 lb = 50 buñuelos**. |
 
 ## 📅 2. Conceptos Temporales y Triggers
 
@@ -40,4 +41,4 @@ Este documento es la autoridad única de definiciones para el proyecto de foreca
 | **Ads Activos** | Flag que indica si hay pauta en Facebook/Instagram ese día. | Se activa 20 días antes de la promoción y se apaga el día 25 del segundo mes. |
 
 ---
-*Este documento es propiedad de Sabbia Solutions & Services (Triple S) y Cafeteria SAS. Actualizado: 2026-02-28.*
+*Este documento es propiedad de Sabbia Solutions & Services (Triple S) y Cafeteria SAS. Actualizado: 2026-03-01.*

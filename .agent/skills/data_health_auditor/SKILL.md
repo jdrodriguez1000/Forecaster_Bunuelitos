@@ -8,7 +8,7 @@ description: Actúa como el Data Steward del proyecto, validando la integridad, 
 Esta habilidad es el primer filtro de seguridad del sistema. Su misión es garantizar que los datos de entrada sean técnicamente aptos y lógicamente coherentes para el modelado, evitando "basura adentro, basura afuera" (GIGO).
 
 ## 📝 1. El concepto del "Contrato de Datos" (Data Contract)
-El Contrato de Datos es la verdad única sobre cómo deben verse los datos. Se define en `config.yaml` y esta habilidad lo audita bajo cuatro dimensiones:
+El Contrato de Datos es la verdad única sobre cómo deben verse los datos. Se define en `schemas/data_contract_latest.yaml` y esta habilidad lo audita bajo cuatro dimensiones:
 
 *   **Estructural (Schema):** Nombre de columnas, tipos de datos (float, int, datetime) y claves primarias.
 *   **De Frescura (Freshness):** ¿Cuándo fue la última actualización? (Cumplimiento de la regla $T-1$).

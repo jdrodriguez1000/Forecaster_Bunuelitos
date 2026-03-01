@@ -1,0 +1,64 @@
+# Data Contract: Forecaster Buñuelitos
+# Versión: 1.0 (Initial Draft)
+# Fecha de Creación: 2026-03-01
+
+metadata:
+  contract_id: "v1_2026_03_01"
+  version: "1.0"
+  author: "Antigravity (Data Health Auditor)"
+  description: "Manual de normas para la validación de integridad y lógica de las fuentes de datos en Supabase."
+
+tables:
+  sales:
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      unidades_totales: {type: "int", required: true, min: 0}
+      unidades_pagas: {type: "int", required: true, min: 0}
+      unidades_bonificadas: {type: "int", required: true, min: 0}
+      es_promocion: {type: "bool", required: true}
+      ads_activos: {type: "bool", required: true}
+    rules:
+      logic_check: "unidades_totales == unidades_pagas + unidades_bonificadas"
+
+  inventory:
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      kit_inicial_bodega: {type: "float", required: true, min: 0}
+      kit_recibido: {type: "float", required: true, min: 0}
+      lbs_recibidas: {type: "float", required: true, min: 0}
+      demanda_teorica_total: {type: "int", required: true, min: 0} # TARGET
+      buñuelos_preparados: {type: "int", required: true, min: 0}
+      ventas_reales_totales: {type: "int", required: true, min: 0}
+      buñuelos_desperdiciados: {type: "int", required: true, min: 0}
+      unidades_agotadas: {type: "int", required: true, min: 0}
+    rules:
+      target_restriction: {column: "demanda_teorica_total", max_null_pct: 0}
+      logic_check: "ventas_reales_totales <= buñuelos_preparados"
+
+  finance:
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      precio_unitario: {type: "float", required: true, min: 100} # Precio mínimo base
+      costo_unitario: {type: "float", required: true, min: 50}
+      margen_bruto: {type: "float", required: true}
+
+  marketing:
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      inversion_total: {type: "float", required: true, min: 0}
+      campaña_activa: {type: "bool", required: true}
+
+  macroeconomics:
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      smlv: {type: "float", required: true, min: 0}
+      inflacion_mensual_ipc: {type: "float", required: true}
+      trm: {type: "float", required: true, min: 0}
+
+  weather:
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      temperatura_media: {type: "float", required: true, min: 5, max: 45}
+      probabilidad_lluvia: {type: "float", required: true, min: 0, max: 1}
+      tipo_lluvia: {type: "string", required: true, categories: ["Nula", "Ligera", "Fuerte"]}
+      es_dia_lluvioso: {type: "bool", required: true}

@@ -1,0 +1,56 @@
+# Data Contract: Forecaster Buñuelitos
+# Versión: 1.0 (Initial Draft)
+# Fecha de Creación: 2026-03-01
+
+metadata:
+  contract_id: "v1_2026_03_01"
+  version: "1.0"
+  author: "Antigravity (Data Health Auditor)"
+  description: "Manual de normas para la validación de integridad y lógica de las fuentes de datos en Supabase."
+
+tables:
+  ventas:
+    internal_alias: "sales"
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      unidades_totales: {type: "int", required: true, min: 0}
+      unidades_pagas: {type: "int", required: true, min: 0}
+      unidades_bonificadas: {type: "int", required: true, min: 0}
+      es_promocion: {type: "bool", required: true}
+      ads_activos: {type: "bool", required: true}
+    rules:
+      logic_check_sum: "unidades_totales == unidades_pagas + unidades_bonificadas"
+      promo_balance: 
+        condition: "es_promocion == 1"
+        rule: "abs(unidades_pagas - unidades_bonificadas) <= 1" # Regla del 2x1 (Paga 1, Lleva 2)
+
+  inventario:
+    internal_alias: "inventory"
+    columns:
+      fecha: {type: "datetime", required: true, primary_key: true}
+      kit_inicial_bodega: {type: "float", required: true, min: 0}
+      kit_recibido: {type: "float", required: true, min: 0}
+      lbs_recibidas: {type: "float", required: true, min: 0}
+      demanda_teorica_total: {type: "int", required: true, min: 0} # TARGET
+      buñuelos_preparados: {type: "int", required: true, min: 0}
+      ventas_reales_totales: {type: "int", required: true, min: 0}
+      ventas_reales_pagas: {type: "int", required: true, min: 0}
+      ventas_reales_bonificadas: {type: "int", required: true, min: 0}
+      buñuelos_desperdiciados: {type: "int", required: true, min: 0}
+      unidades_agotadas: {type: "int", required: true, min: 0}
+    rules:
+      target_restriction: {column: "demanda_teorica_total", max_null_pct: 0}
+      target_identity: "demanda_teorica_total == ventas_reales_totales + unidades_agotadas"
+      waste_logic: "buñuelos_desperdiciados == buñuelos_preparados - ventas_reales_totales"
+      physical_limit: "ventas_reales_totales <= buñuelos_preparados"
+
+cross_table_validations:
+  demand_sincronicity:
+    rule: "ventas.unidades_totales == inventario.demanda_teorica_total"
+    severity: "FALLO"
+  total_vs_real:
+    rule: "inventario.ventas_reales_totales <= ventas.unidades_totales"
+    severity: "FALLO"
+  marketing_consistency:
+    rule: "if marketing.campaña_activa == 1 then ventas.es_promocion == 1"
+    severity: "WARNING"

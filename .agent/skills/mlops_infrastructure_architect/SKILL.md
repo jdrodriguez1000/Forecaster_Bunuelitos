@@ -14,6 +14,7 @@ Garantiza la inmutabilidad y el orden del flujo de datos a través de capas lóg
 *   **`data/02_cleansed/`**: Datos tras limpieza inicial, estandarización a `snake_case`, tipos de datos correctos y reindexación diaria perfecta (NaN en fechas faltantes).
 *   **`data/03_features/`**: Datasets enriquecidos con ingeniería de variables (Quincenas, Primas, Festivos como Sábados, Pandemia, Promociones y proyecciones exógenas de 185 días).
 *   **`data/04_processed/`**: Dataset final listo para el entrenamiento del modelo (frecuencia diaria alineada y variables filtradas por el contrato de datos).
+*   **`schemas/`**: Directorio de los Contratos de Datos (YAML) bajo protocolo de doble persistencia.
 *   **`.blueprint/`**: Planificación técnica obligatoria (Plan de Fase) antes de cada desarrollo.
 *   **`.executive/`**: Informes ejecutivos de impacto estratégico (Puntos de Poder y Verdades Críticas).
 *   **`experiments/`**: Resultados de laboratorios y notebooks que no deben mezclarse con producción.
@@ -71,6 +72,11 @@ Subcarpetas oficiales:
 *   **`outputs/models/`**: Binarios (.pkl/.joblib) del modelo campeón.
 *   **`outputs/forecast/`**: Pronóstico diario final (.csv).
 *   **`outputs/simulations/`**: Resultados de escenarios What-if.
+
+### 📜 Esquemas y Gobernanza (`schemas/`)
+Los contratos de datos siguen el protocolo de dualidad:
+*   **Latest**: `schemas/data_contract_latest.yaml`.
+*   **History**: `schemas/history/data_contract_YYYYMMDD_HHMM.yaml`.
 
 ### 🔬 Laboratorio y Opcionales
 *   **`notebooks/`**: Exploraciones interactivas (Fase opcional).
