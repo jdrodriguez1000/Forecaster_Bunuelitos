@@ -56,6 +56,7 @@ class DataHealthAuditor:
         table_snapshot = self.snapshot['tables'].get(table_name, {})
         
         table_report = {
+            "successes": [],
             "violations": [],
             "stats": {
                 "row_count": len(df),
@@ -76,6 +77,8 @@ class DataHealthAuditor:
                  self._add_violation(table_report, "FAILURE", f"Column '{col_name}' is required but has nulls")
             elif null_pct > max_null:
                  self._add_violation(table_report, "WARNING", f"Column '{col_name}' exceeds null tolerance ({null_pct:.2%})")
+            else:
+                 self._add_success(table_report, f"Column '{col_name}' null percentage within tolerance ({null_pct:.2%})")
 
             # Category Check (Map to Others)
             if 'categories' in col_rules:
@@ -86,6 +89,8 @@ class DataHealthAuditor:
                     action = col_rules.get('on_unknown', 'map_to_others')
                     severity = self.contract['global_standards']['integrity_defaults']['unknown_categories']['severity']
                     self._add_violation(table_report, severity, f"Unknown categories in '{col_name}': {list(unknowns)}. Action: {action}")
+                else:
+                    self._add_success(table_report, f"Column '{col_name}' categorical values within allowed list")
 
         # 2. Monitoring Strategy (Drift Detection: Internal History vs Horizon)
         if 'monitoring_strategy' in self.contract:
@@ -101,6 +106,8 @@ class DataHealthAuditor:
                         drift = abs(curr_mean - hist_mean) / hist_mean
                         if drift > drift_thresh:
                             self._add_violation(table_report, "WARNING", f"Global Trend Drift detected in '{col_name}': {drift:.2%} deviation from snapshot (Full History)")
+                        else:
+                            self._add_success(table_report, f"No Global Drift detected in '{col_name}' (Deviation: {drift:.2%})")
 
                         # 2.2 Horizon Drift (Last 185 days - The 'Launchpad' for forecasting)
                         if 'fecha' in df.columns:
@@ -113,6 +120,8 @@ class DataHealthAuditor:
                                 h_drift = abs(horizon_mean - hist_mean) / hist_mean
                                 if h_drift > drift_thresh:
                                     self._add_violation(table_report, "WARNING", f"Horizon Drift detected in '{col_name}': {h_drift:.2%} deviation in last {horizon_days} days")
+                                else:
+                                    self._add_success(table_report, f"No Horizon Drift detected in '{col_name}' in last {horizon_days} days (Deviation: {h_drift:.2%})")
 
         # 3. Business Rules Validation (New)
         if 'rules' in table_contract:
@@ -132,6 +141,8 @@ class DataHealthAuditor:
                     fail_pct = (failures / len(df)) * 100
                     msg = f"Business Rule '{rule_name}' violated in {failures} rows ({fail_pct:.1f}%). Rule: {full_rule}"
                     self._add_violation(table_report, severity, msg)
+                else:
+                    self._add_success(table_report, f"Business Rule '{rule_name}' passed (0 violations)")
 
             # Cleanup temp columns (if any created for t-1/lags)
             self.rules_engine.cleanup_temps(df)
@@ -161,6 +172,7 @@ class DataHealthAuditor:
         
         if delta <= 1: # Represents Feb 28th if ref is Mar 1st
             status = "SUCCESS"
+            self._add_success(table_report, f"Freshness Check: Data is up to date (Latest: {latest_date})")
         elif delta == 2: # Represents Feb 27th
             status = "WARNING"
             self._add_violation(table_report, "WARNING", f"Freshness Check: Data delay of 2 days (Latest: {latest_date})")
@@ -183,6 +195,12 @@ class DataHealthAuditor:
             self.report['summary']['warning_count'] += 1
             if self.report['summary']['status'] != "FAILURE":
                 self.report['summary']['status'] = "WARNING"
+
+    def _add_success(self, table_report, message):
+        success = {"status": "SUCCESS", "message": message}
+        if "successes" not in table_report:
+            table_report["successes"] = []
+        table_report['successes'].append(success)
 
     def save_report(self, output_path):
         # Calculate final health score
