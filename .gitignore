@@ -19,5 +19,8 @@ experiments/
 
 # Temporary and Reports
 tmp/
+.coverage
+.pytest_cache/
+.DS_Store
 tests/reports/**/history/
 !.gitkeep
