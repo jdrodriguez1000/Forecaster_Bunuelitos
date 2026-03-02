@@ -33,7 +33,12 @@ class DataLoader:
     def _handshake(self):
         """Query the v_latest_data_health view to get the active law."""
         logger.info("Performing Handshake with Supabase Control Plane...")
-        res = self.client.table("v_latest_data_health").select("*").eq("es_contrato_activo", True).limit(1).execute()
+        res = self.client.table("v_latest_data_health") \
+            .select("*") \
+            .eq("es_contrato_activo", True) \
+            .order("contract_db_id", descending=True) \
+            .limit(1) \
+            .execute()
         
         if not res.data:
             logger.error("Critical Error: No active Data Contract found in v_latest_data_health view.")
