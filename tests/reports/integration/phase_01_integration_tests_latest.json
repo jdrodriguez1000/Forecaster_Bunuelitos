@@ -1,0 +1,29 @@
+{
+    "metadata": {
+        "phase_id": "01",
+        "phase_name": "Loader & Auditor (Integration)",
+        "project": "Forecaster Buñuelitos",
+        "execution_date": "2026-03-02T07:32:06.238354",
+        "type": "INTEGRATION"
+    },
+    "summary": {
+        "status": "PASSED",
+        "duration_seconds": 3.104,
+        "metrics": {
+            "passed": 1,
+            "failed": 0,
+            "total": 1
+        }
+    },
+    "test_results": [
+        {
+            "test_name": "test_full_loader_integration_flow",
+            "class": "tests.integration.test_loader_integration",
+            "status": "PASSED"
+        }
+    ],
+    "raw_output": {
+        "stdout": "============================= test session starts =============================\nplatform win32 -- Python 3.12.10, pytest-9.0.2, pluggy-1.6.0 -- C:\\Users\\USUARIO\\Documents\\Forecaster\\Buñuelitos\\.venv\\Scripts\\python.exe\ncachedir: .pytest_cache\nrootdir: C:\\Users\\USUARIO\\Documents\\Forecaster\\Buñuelitos\nplugins: anyio-4.12.1, cov-7.0.0\ncollecting ... collected 1 item\n\ntests/integration/test_loader_integration.py::test_full_loader_integration_flow PASSED [100%]\n\n- generated xml file: C:\\Users\\USUARIO\\Documents\\Forecaster\\Buñuelitos\\tests\\reports\\integration\\temp_results.xml -\n============================== 1 passed in 1.09s ==============================\n",
+        "stderr": ""
+    }
+}
