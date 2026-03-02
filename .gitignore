@@ -28,5 +28,6 @@ tmp/
 coverage.json
 tests/reports/**/history/
 .executive/**/history/
+.blueprint/**/history/
 !.gitkeep
 pipeline_execution.log

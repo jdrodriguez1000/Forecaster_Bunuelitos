@@ -26,6 +26,11 @@ Cada tabla descargada pasa por un escaneo exhaustivo que incluye:
 4.  **Detección de Drift:** Comparación estadística del lote actual contra el Snapshot histórico de la Fase 00.
 5.  **Cero Huella Técnica:** Las columnas temporales (`__temp_*`) utilizadas para validaciones se eliminan estrictamente antes de la persistencia y no afectan el cálculo de nulos (`null_pct`).
 
+### 2.3. Sincronización del Panel de Control (Cloud-Local Sync)
+Se implementó una capa de persistencia remota en Supabase para asegurar que el **Control Plane** esté siempre alineado con la realidad local:
+- **Actualización Incondicional:** Incluso si no hay datos nuevos (`NO_NEW_DATA`), el sistema audita la copia local y actualiza los indicadores de salud (`health_score`) y fechas en la tabla `data_inventory_status`.
+- **Trazabilidad Remota:** Cada auditoría genera una entrada en `validation_logs`, permitiendo monitorear la degradación de datos desde cualquier interfaz (Nube o Local).
+
 ---
 
 ## 🚦 3. Protocolo de Gobernanza y Salida (Quality Gates)
@@ -72,4 +77,5 @@ Se implementó un **Portero de QA de 3 Niveles** para blindar el código:
 - **[2026-03-02]**: **Auditoría Refinada**: Implementación de `audit_reference_date` para pruebas estables y eliminación de columnas `__temp_*` en reportes de nulos.
 - **[2026-03-02]**: **Consolidación de Reportes**: Mejora en la estructura JSON del reporte de auditoría para facilitar el consumo por niveles superiores del pipeline.
 - **[2026-03-02]**: **HITO ALCANZADO**: Certificación de la Fase 01 con un Score de Salud de **99.0** en ventas y **SUCCESS** global en todas las tablas de Cafetería SAS.
-- **[2026-03-02]**: **Sincronización Final**: Limpieza de archivos residuales (`tmp/`, `.coverage`) y despliegue exitoso al repositorio GitHub.
+- **[2026-03-02]**: **Sincronización Total**: Refactorización del `DataLoader` para garantizar que la tabla `data_inventory_status` y `validation_logs` en Supabase se actualicen incluso en ausencia de datos nuevos, eliminando discrepancias nube-local.
+- **[2026-03-02]**: Despliegue final certificado al repositorio GitHub.

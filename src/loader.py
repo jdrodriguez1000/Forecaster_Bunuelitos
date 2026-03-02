@@ -208,7 +208,12 @@ class DataLoader:
                 self._log_and_notify(table, status, audit_report, inventory_info)
                 summary_results[table] = status
             else:
-                # No new data, just report the last status found in the local audit
+                # No new data, but we still update the status with the local audit results
+                # to keep the Control Plane (Supabase) in sync with the latest truth
+                local_file = os.path.join(raw_path, f"{table}.parquet")
+                df_local = pd.read_parquet(local_file)
+                self._update_inventory_status(table, df_local, pd.DataFrame(), status, hs, inventory_info)
+                self._log_and_notify(table, status, audit_report, inventory_info)
                 summary_results[table] = status
 
         self._save_phase_report(forensic_reports)
@@ -229,7 +234,14 @@ class DataLoader:
 
     def _update_inventory_status(self, table, df_all, df_new, status, health_score, info):
         """Update the data_inventory_status table in Supabase."""
-        max_date = str(df_new['fecha'].max())
+        # Use max_date from df_new if available, otherwise from df_all (local truth)
+        if not df_new.empty:
+            max_date = str(df_new['fecha'].max())
+        elif not df_all.empty:
+            max_date = str(df_all['fecha'].max())
+        else:
+            max_date = info.get('last_data_date') # Keep existing
+
         update_data = {
             "last_execution": datetime.now().isoformat(),
             "last_data_date": max_date,
