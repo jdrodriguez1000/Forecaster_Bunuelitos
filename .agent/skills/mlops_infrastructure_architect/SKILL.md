@@ -61,15 +61,17 @@ Protocolos de validación obligatorios usando `pytest`:
 *   **`main.py`**: Orquestador principal que invoca las clases de `src/` según la fase.
 *   **`scripts/gen_XX.py`**: Generadores de notebooks experimentales (opcional).
 
-### 🏭 Producción (`outputs/`)
+### 🏭 Producción y Documentación
 Toda salida oficial debe persistirse doblemente:
 *   **Latest**: Archivo en la raíz de la subcarpeta (ej: `outputs/reports/phase_01_latest.json`).
 *   **History**: Versión inmutable en `/history/` con timestamp (ej: `outputs/reports/history/phase_01_20260228.json`).
 
-Subcarpetas oficiales:
+Subcarpetas oficiales con este protocolo:
 *   **`outputs/reports/`**: Reportes JSON con métricas de fase.
+*   **`.blueprint/`**: Planeación técnica inmutable.
+*   **`.executive/`**: Informes ejecutivos estratégicos.
 *   **`outputs/figures/`**: Visualizaciones (PNG/HTML).
-*   **`outputs/models/`**: Binarios (.pkl/.joblib) del modelo campeón.
+*   **`outputs/models/`**: Binarios (.pkl/.joblib).
 *   **`outputs/forecast/`**: Pronóstico diario final (.csv).
 *   **`outputs/simulations/`**: Resultados de escenarios What-if.
 
