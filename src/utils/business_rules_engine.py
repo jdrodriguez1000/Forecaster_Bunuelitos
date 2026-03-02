@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 class BusinessRulesEngine:
     """
@@ -37,7 +40,7 @@ class BusinessRulesEngine:
             
             return result
         except Exception as e:
-            print(f"Error evaluating rule '{rule_str}': {str(e)}")
+            logger.error(f"Error evaluating rule '{rule_str}': {str(e)}")
             return pd.Series([False] * len(df))
 
     def _preprocess_rule(self, df: pd.DataFrame, rule_str: str) -> str:
@@ -78,6 +81,12 @@ class BusinessRulesEngine:
         for col in matches_t:
             if col in df.columns:
                 processed_rule = re.sub(rf'\b{col}_[tT]\b', col, processed_rule)
+        
+        # 5. Handle "day" keyword (extracted from fecha)
+        if re.search(r'\bday\b', processed_rule, re.IGNORECASE) and 'fecha' in df.columns:
+            temp_col_name = "__temp_day"
+            df[temp_col_name] = pd.to_datetime(df['fecha']).dt.day
+            processed_rule = re.sub(r'\bday\b', temp_col_name, processed_rule, flags=re.IGNORECASE)
         
         return processed_rule
 

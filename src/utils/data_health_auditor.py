@@ -20,6 +20,9 @@ class DataHealthAuditor:
         self.rules_engine = BusinessRulesEngine()
         self.report = {
             "metadata": {
+                "phase": "00", # Default, should be updated by caller
+                "phase_name": "Unknown Phase",
+                "execution_mode": "EXPLORE",
                 "audit_timestamp": datetime.now().isoformat(),
                 "contract_id": self.contract['metadata']['contract_id'],
                 "contract_version": self.contract['metadata']['version']
@@ -28,10 +31,17 @@ class DataHealthAuditor:
                 "total_violations": 0,
                 "failure_count": 0,
                 "warning_count": 0,
-                "status": "SUCCESS"
+                "status": "SUCCESS",
+                "health_score": 100.0
             },
             "tables": {}
         }
+
+    def set_metadata(self, phase, phase_name, execution_mode):
+        """Updates the metadata for the report."""
+        self.report['metadata']['phase'] = phase
+        self.report['metadata']['phase_name'] = phase_name
+        self.report['metadata']['execution_mode'] = execution_mode
 
     def set_contract_id(self, contract_id):
         """Updates the contract_id in the report metadata."""
@@ -56,13 +66,53 @@ class DataHealthAuditor:
         table_snapshot = self.snapshot['tables'].get(table_name, {})
         
         table_report = {
+            "status": "SUCCESS", # Default, updated during audit
+            "ingestion_type": "UNKNOWN", # Updated by loader
+            "compliance_summary": "", # human readable recap
+            "critical_message": "", # ONLY for FAILURE
+            "compliance": {
+                "matched_columns": [],
+                "missing_columns": [],
+                "extra_columns": []
+            },
             "successes": [],
             "violations": [],
             "stats": {
                 "row_count": len(df),
-                "null_pct": float(df.isnull().mean().mean())
+                "null_pct": float(df.isnull().mean().mean()) if not df.empty else 0.0,
+                "integrity": {
+                    "duplicate_rows": 0,
+                    "duplicate_dates": 0,
+                    "temporal_gaps": 0,
+                    "sentinel_count": 0
+                }
             }
         }
+
+        # 1. Integrity Validation (Duplicates & Gaps)
+        self._audit_integrity_checks(table_name, df, table_report)
+
+        # 0. Schema Hierarchy Check
+        contract_cols = set(table_contract.get('columns', {}).keys())
+        data_cols = set(df.columns)
+        
+        table_report['compliance']['matched_columns'] = list(data_cols & contract_cols)
+        table_report['compliance']['missing_columns'] = list(contract_cols - data_cols)
+        table_report['compliance']['extra_columns'] = list(data_cols - contract_cols)
+        
+        # Log missing columns as failures
+        if table_report['compliance']['missing_columns']:
+            table_report['status'] = "FAILURE"
+            self._add_violation(table_report, "FAILURE", f"Missing required columns: {table_report['compliance']['missing_columns']}")
+
+        # Log extra columns as warnings
+        if table_report['compliance']['extra_columns']:
+            if table_report['status'] != "FAILURE":
+                table_report['status'] = "WARNING"
+            self._add_violation(table_report, "WARNING", f"Uncontracted columns detected (Schema Drift): {table_report['compliance']['extra_columns']}")
+        
+        if not table_report['compliance']['missing_columns'] and not table_report['compliance']['extra_columns']:
+            self._add_success(table_report, "Schema matches contract exactly.")
 
         # 1. Structural Validation (Types & Existence)
         for col_name, col_rules in table_contract.get('columns', {}).items():
@@ -92,6 +142,9 @@ class DataHealthAuditor:
                 else:
                     self._add_success(table_report, f"Column '{col_name}' categorical values within allowed list")
 
+            # Sentinel Check (Per Column)
+            self._check_sentinels(col_name, df, table_report)
+
         # 2. Monitoring Strategy (Drift Detection: Internal History vs Horizon)
         if 'monitoring_strategy' in self.contract:
             drift_thresh = self.contract['monitoring_strategy']['trend_analysis']['drift_threshold_pct'] / 100
@@ -111,9 +164,11 @@ class DataHealthAuditor:
 
                         # 2.2 Horizon Drift (Last 185 days - The 'Launchpad' for forecasting)
                         if 'fecha' in df.columns:
-                            latest_date = df['fecha'].max()
+                            # Robust conversion to ensure arithmetic works
+                            temp_fecha = pd.to_datetime(df['fecha'])
+                            latest_date = temp_fecha.max()
                             horizon_start = latest_date - pd.Timedelta(days=horizon_days)
-                            horizon_df = df[df['fecha'] >= horizon_start]
+                            horizon_df = df[temp_fecha >= horizon_start]
                             
                             if not horizon_df.empty:
                                 horizon_mean = float(horizon_df[col_name].mean())
@@ -147,8 +202,90 @@ class DataHealthAuditor:
             # Cleanup temp columns (if any created for t-1/lags)
             self.rules_engine.cleanup_temps(df)
 
+        # Final Status & Critical Message Logic
+        if table_report['status'] == "FAILURE":
+            table_report['critical_message'] = "CRÍTICO: NO CONTINUAR"
+        
+        # Human readable compliance summary
+        matched = len(table_report['compliance']['matched_columns'])
+        missing = len(table_report['compliance']['missing_columns'])
+        extra = len(table_report['compliance']['extra_columns'])
+        table_report['compliance_summary'] = f"Matched: {matched} | Missing: {missing} | Extras: {extra}"
+
         self.report['tables'][table_name] = table_report
         return table_report
+
+    def _audit_integrity_checks(self, table_name, df, table_report):
+        """Internal method to check for duplicates and temporal continuity."""
+        if df.empty:
+            return
+
+        # A. Global Duplicates (Exact row matches)
+        dups_count = int(df.duplicated().sum())
+        table_report['stats']['integrity']['duplicate_rows'] = dups_count
+        if dups_count > 0:
+            self._add_violation(table_report, "WARNING", f"Detected {dups_count} exact duplicate rows.")
+
+        # B. Temporal Logic (Dates and Gaps)
+        if 'fecha' in df.columns:
+            # Duplicate Dates
+            date_dups = int(df['fecha'].duplicated().sum())
+            table_report['stats']['integrity']['duplicate_dates'] = date_dups
+            if date_dups > 0:
+                self._add_violation(table_report, "WARNING", f"Detected {date_dups} duplicate dates (multiple records for same day).")
+
+            # Temporal Gaps (Holes in the series)
+            try:
+                temp_dates = pd.to_datetime(df['fecha']).dt.date
+                date_range = pd.date_range(start=temp_dates.min(), end=temp_dates.max(), freq='D').date
+                missing_dates = set(date_range) - set(temp_dates)
+                gaps_count = len(missing_dates)
+                table_report['stats']['integrity']['temporal_gaps'] = gaps_count
+                
+                if gaps_count > 0:
+                    self._add_violation(table_report, "WARNING", f"Data continuity breach: {gaps_count} missing days found in the time series.")
+                else:
+                    self._add_success(table_report, "No temporal gaps found. Time series is continuous.")
+            except Exception as e:
+                # Silently skip if date conversion fails, common in raw dirty data
+                pass
+
+    def _check_sentinels(self, col_name, df, table_report):
+        """Checks for sentinel values (dummy markers) in a column."""
+        sentinels = self.contract.get('global_standards', {}).get('sentinel_values', {})
+        if not sentinels or df[col_name].empty:
+            return
+
+        # Map pandas dtypes to contract categories
+        dtype = str(df[col_name].dtype)
+        category = "object"
+        if "int" in dtype or "float" in dtype:
+            category = "numeric"
+        elif "datetime" in dtype:
+            category = "datetime"
+        elif "bool" in dtype:
+            category = "boolean"
+        
+        target_sentinels = sentinels.get(category, [])
+        if not target_sentinels:
+            return
+
+        # Standardize for comparison (especially for strings and dates)
+        found_sentinels = df[df[col_name].isin(target_sentinels)][col_name].unique().tolist()
+        hits = df[col_name].isin(target_sentinels).sum()
+        
+        if hits > 0:
+            pct = (hits / len(df)) * 100
+            table_report['stats']['integrity']['sentinel_count'] += int(hits)
+            
+            # Convert found values to strings for clean JSON reporting
+            found_str = [str(s) for s in found_sentinels]
+            
+            self._add_violation(
+                table_report, 
+                "WARNING", 
+                f"Sentinel value(s) detected in '{col_name}': {hits} instances ({pct:.1f}%). Found: {found_str}"
+            )
 
     def audit_freshness(self, table_name, df, ref_date):
         """
@@ -163,21 +300,16 @@ class DataHealthAuditor:
         latest_date = pd.to_datetime(df['fecha']).max().date()
         ref_date = pd.to_datetime(ref_date).date()
         
-        # Calculate days difference
-        # ref_date is March 1st. 
-        # Target: Feb 28th should be SUCCESS
+        # Calculate days difference (Target: Feb 28th should be SUCCESS for Mar 1st ref)
         delta = (ref_date - latest_date).days
         
-        table_report = self.report['tables'].get(table_name, {"violations": [], "stats": {}})
+        table_report = self.report['tables'].get(table_name, {"status": "SUCCESS", "violations": [], "stats": {}})
         
         if delta <= 1: # Represents Feb 28th if ref is Mar 1st
-            status = "SUCCESS"
             self._add_success(table_report, f"Freshness Check: Data is up to date (Latest: {latest_date})")
         elif delta == 2: # Represents Feb 27th
-            status = "WARNING"
             self._add_violation(table_report, "WARNING", f"Freshness Check: Data delay of 2 days (Latest: {latest_date})")
         else: # Feb 26 or older
-            status = "FAILURE"
             self._add_violation(table_report, "FAILURE", f"Freshness Check: CRITICAL delay of {delta} days (Latest: {latest_date})")
             
         table_report['stats']['freshness_days'] = int(delta)
@@ -188,6 +320,15 @@ class DataHealthAuditor:
         violation = {"severity": severity, "message": message}
         table_report['violations'].append(violation)
         self.report['summary']['total_violations'] += 1
+        
+        # 1. Update Table Level Status (Hierarchy: FAILURE > WARNING > SUCCESS)
+        if severity == "FAILURE":
+            table_report['status'] = "FAILURE"
+        elif severity == "WARNING":
+            if table_report.get('status') != "FAILURE":
+                table_report['status'] = "WARNING"
+
+        # 2. Update Global Summary Status
         if severity == "FAILURE":
             self.report['summary']['failure_count'] += 1
             self.report['summary']['status'] = "FAILURE"
@@ -202,14 +343,16 @@ class DataHealthAuditor:
             table_report["successes"] = []
         table_report['successes'].append(success)
 
-    def save_report(self, output_path):
-        # Calculate final health score
-        # Base 100, -10 per failure, -1 per warning
+    def calculate_score(self):
+        """Calculates and returns the health score based on failures and warnings."""
         failures = self.report['summary']['failure_count']
         warnings = self.report['summary']['warning_count']
         score = max(0, 100 - (failures * 10) - (warnings * 1))
         self.report['summary']['health_score'] = float(score)
+        return float(score)
 
+    def save_report(self, output_path):
+        score = self.calculate_score()
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(self.report, f, indent=4, ensure_ascii=False)

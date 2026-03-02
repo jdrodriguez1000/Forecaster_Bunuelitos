@@ -1,27 +1,34 @@
 # Forecaster Buñuelitos Configuration
+# ---------------------------------------------------------
+# Este archivo centraliza la orquestación y parámetros tácticos.
+# Toda definición de tipos, rangos y leyes de datos reside en 
+# schemas/contract/data_contract_latest.yaml (Single Truth).
 
 general:
   project_name: Forecaster Buñuelitos
   random_state: 42
+  base_path: "."
+  data_raw_path: "data/01_raw"
+  data_cleansed_path: "data/02_cleansed"
+  data_features_path: "data/03_features"
+  data_processed_path: "data/04_processed"
+  outputs_path: "outputs"
+  tests_reports_path: "tests/reports"
+  mode: "load" # Opciones: load, train, forecast
   target_variable: demanda_teorica_total
   prediction_horizon: 185
 
 extractions:
   db_type: supabase
-  tables:
-    - sales
-    - inventory
-    - finance
-    - marketing
-    - macroeconomics
-    - weather
+  # Las tablas deben coincidir con los nombres en Supabase y el Contrato de Datos.
+  tables: ["ventas", "inventario", "finanzas", "marketing", "macroeconomia", "clima"]
 
 preprocessing:
   day_x_strategy: true
   imputation_rules:
-    sales: zero
-    weather: interpolate
-    macro: forward_fill
+    ventas: zero
+    clima: interpolate
+    macroeconomia: forward_fill
 
 eda:
   generate_figures: true
@@ -50,4 +57,5 @@ simulations:
     - weather_extreme
 
 monitoring:
-  drift_threshold: 0.05
+  drift_threshold: 0.15 # Consistente con el contrato (15%)
+

@@ -1,0 +1,705 @@
+{
+    "metadata": {
+        "phase": "01",
+        "phase_name": "Data Loading & Validation",
+        "execution_mode": "load",
+        "timestamp": "20260301_214337",
+        "contract_code": "v1_2026_03_01_20260301_203922",
+        "contract_db_id": 22
+    },
+    "execution_summary": {
+        "total_tables": 6,
+        "success_count": 2,
+        "warning_count": 4,
+        "failure_count": 0,
+        "overall_status": "WARNING"
+    },
+    "tables": {
+        "ventas": {
+            "status": "WARNING",
+            "ingestion_type": "NO_NEW_DATA",
+            "compliance_summary": "Matched: 6 | Missing: 0 | Extras: 0",
+            "critical_message": "",
+            "compliance": {
+                "matched_columns": [
+                    "unidades_bonificadas",
+                    "unidades_pagas",
+                    "es_promocion",
+                    "unidades_totales",
+                    "fecha",
+                    "ads_activos"
+                ],
+                "missing_columns": [],
+                "extra_columns": []
+            },
+            "successes": [
+                {
+                    "status": "SUCCESS",
+                    "message": "No temporal gaps found. Time series is continuous."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Schema matches contract exactly."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'unidades_totales' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'unidades_pagas' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'unidades_bonificadas' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'es_promocion' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'ads_activos' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'unidades_totales' (Deviation: 10.68%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'unidades_pagas' (Deviation: 0.54%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'unidades_pagas' in last 185 days (Deviation: 9.45%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'logic_check_sum' passed (0 violations)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'ads_consistency' passed (0 violations)"
+                }
+            ],
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'unidades_totales': 35.01% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Business Rule 'promo_balance' violated in 254 rows (7.6%). Rule: if (es_promocion == 1) then (abs(unidades_pagas - unidades_bonificadas) == 0)"
+                }
+            ],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "integrity": {
+                    "duplicate_rows": 0,
+                    "duplicate_dates": 0,
+                    "temporal_gaps": 0,
+                    "sentinel_count": 0
+                }
+            },
+            "new_rows_count": 0,
+            "message": "Audit performed on local data (No Delta download).",
+            "health_score": 98.0
+        },
+        "inventario": {
+            "status": "WARNING",
+            "ingestion_type": "NO_NEW_DATA",
+            "compliance_summary": "Matched: 12 | Missing: 0 | Extras: 0",
+            "critical_message": "",
+            "compliance": {
+                "matched_columns": [
+                    "ventas_reales_bonificadas",
+                    "kit_recibido",
+                    "kit_final_bodega",
+                    "buñuelos_desperdiciados",
+                    "unidades_agotadas",
+                    "lbs_recibidas",
+                    "demanda_teorica_total",
+                    "ventas_reales_pagas",
+                    "fecha",
+                    "ventas_reales_totales",
+                    "buñuelos_preparados",
+                    "kit_inicial_bodega"
+                ],
+                "missing_columns": [],
+                "extra_columns": []
+            },
+            "successes": [
+                {
+                    "status": "SUCCESS",
+                    "message": "No temporal gaps found. Time series is continuous."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Schema matches contract exactly."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'kit_inicial_bodega' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'kit_recibido' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'lbs_recibidas' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'demanda_teorica_total' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'buñuelos_preparados' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'ventas_reales_totales' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'ventas_reales_pagas' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'ventas_reales_bonificadas' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'buñuelos_desperdiciados' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'unidades_agotadas' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'kit_final_bodega' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'kit_recibido' (Deviation: 12.01%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'lbs_recibidas' (Deviation: 12.01%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'demanda_teorica_total' (Deviation: 10.68%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'buñuelos_preparados' (Deviation: 10.87%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'ventas_reales_totales' (Deviation: 10.84%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'ventas_reales_pagas' (Deviation: 0.42%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'ventas_reales_pagas' in last 185 days (Deviation: 9.54%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'buñuelos_desperdiciados' (Deviation: 12.59%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'unidades_agotadas' (Deviation: 3.96%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'target_restriction' passed (0 violations)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'target_identity' passed (0 violations)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'waste_logic' passed (0 violations)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'physical_limit' passed (0 violations)"
+                }
+            ],
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'kit_inicial_bodega': 219.01% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'kit_inicial_bodega': 540.54% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'kit_recibido': 32.59% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'lbs_recibidas': 32.59% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'demanda_teorica_total': 35.01% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'buñuelos_preparados': 35.51% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'ventas_reales_totales': 35.19% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'buñuelos_desperdiciados': 52.47% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'unidades_agotadas': 27.19% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'kit_final_bodega': 224.95% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'kit_final_bodega': 554.95% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Business Rule 'stock_continuity' violated in 2 rows (0.1%). Rule: (kit_final_bodega_t_minus_1 + kit_recibido) == kit_inicial_bodega"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Business Rule 'production_yield' violated in 220 rows (6.6%). Rule: abs(buñuelos_preparados - (kit_inicial_bodega + kit_recibido - kit_final_bodega)) / (kit_inicial_bodega + kit_recibido - kit_final_bodega + 0.001) <= 0.10"
+                }
+            ],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "integrity": {
+                    "duplicate_rows": 0,
+                    "duplicate_dates": 0,
+                    "temporal_gaps": 0,
+                    "sentinel_count": 0
+                }
+            },
+            "new_rows_count": 0,
+            "message": "Audit performed on local data (No Delta download).",
+            "health_score": 87.0
+        },
+        "finanzas": {
+            "status": "WARNING",
+            "ingestion_type": "NO_NEW_DATA",
+            "compliance_summary": "Matched: 5 | Missing: 0 | Extras: 0",
+            "critical_message": "",
+            "compliance": {
+                "matched_columns": [
+                    "precio_unitario",
+                    "fecha",
+                    "margen_bruto",
+                    "porcentaje_margen",
+                    "costo_unitario"
+                ],
+                "missing_columns": [],
+                "extra_columns": []
+            },
+            "successes": [
+                {
+                    "status": "SUCCESS",
+                    "message": "No temporal gaps found. Time series is continuous."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Schema matches contract exactly."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'precio_unitario' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'costo_unitario' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'margen_bruto' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'porcentaje_margen' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'porcentaje_margen' (Deviation: 3.31%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'porcentaje_margen' in last 185 days (Deviation: 4.72%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'margin_calculation' passed (0 violations)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'profitability_check' passed (0 violations)"
+                }
+            ],
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'precio_unitario': 29.30% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'precio_unitario': 82.03% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'costo_unitario': 32.45% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'costo_unitario': 87.79% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'margen_bruto': 24.92% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'margen_bruto': 74.01% deviation in last 185 days"
+                }
+            ],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "integrity": {
+                    "duplicate_rows": 0,
+                    "duplicate_dates": 0,
+                    "temporal_gaps": 0,
+                    "sentinel_count": 0
+                }
+            },
+            "new_rows_count": 0,
+            "message": "Audit performed on local data (No Delta download).",
+            "health_score": 94.0
+        },
+        "marketing": {
+            "status": "SUCCESS",
+            "ingestion_type": "NO_NEW_DATA",
+            "compliance_summary": "Matched: 7 | Missing: 0 | Extras: 0",
+            "critical_message": "",
+            "compliance": {
+                "matched_columns": [
+                    "ig_pct",
+                    "ig_cost",
+                    "campaña_activa",
+                    "fecha",
+                    "inversion_total",
+                    "fb_cost",
+                    "fb_pct"
+                ],
+                "missing_columns": [],
+                "extra_columns": []
+            },
+            "successes": [
+                {
+                    "status": "SUCCESS",
+                    "message": "No temporal gaps found. Time series is continuous."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Schema matches contract exactly."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'inversion_total' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'fb_cost' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'ig_cost' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'fb_pct' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'ig_pct' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'campaña_activa' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'cost_sum' passed (0 violations)"
+                }
+            ],
+            "violations": [],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "integrity": {
+                    "duplicate_rows": 0,
+                    "duplicate_dates": 0,
+                    "temporal_gaps": 0,
+                    "sentinel_count": 0
+                }
+            },
+            "new_rows_count": 0,
+            "message": "Audit performed on local data (No Delta download).",
+            "health_score": 100.0
+        },
+        "macroeconomia": {
+            "status": "WARNING",
+            "ingestion_type": "NO_NEW_DATA",
+            "compliance_summary": "Matched: 5 | Missing: 0 | Extras: 0",
+            "critical_message": "",
+            "compliance": {
+                "matched_columns": [
+                    "inflacion_mensual_ipc",
+                    "trm",
+                    "smlv",
+                    "fecha",
+                    "tasa_desempleo"
+                ],
+                "missing_columns": [],
+                "extra_columns": []
+            },
+            "successes": [
+                {
+                    "status": "SUCCESS",
+                    "message": "No temporal gaps found. Time series is continuous."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Schema matches contract exactly."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'smlv' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'inflacion_mensual_ipc' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'tasa_desempleo' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'trm' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'inflacion_mensual_ipc' in last 185 days (Deviation: 10.70%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'tasa_desempleo' (Deviation: 12.69%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'tasa_desempleo' in last 185 days (Deviation: 4.96%)"
+                }
+            ],
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'smlv': 29.89% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'smlv': 86.28% deviation in last 185 days"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'inflacion_mensual_ipc': 51.29% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Global Trend Drift detected in 'trm': 35.05% deviation from snapshot (Full History)"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Horizon Drift detected in 'trm': 55.62% deviation in last 185 days"
+                }
+            ],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "integrity": {
+                    "duplicate_rows": 0,
+                    "duplicate_dates": 0,
+                    "temporal_gaps": 0,
+                    "sentinel_count": 0
+                }
+            },
+            "new_rows_count": 0,
+            "message": "Audit performed on local data (No Delta download).",
+            "health_score": 95.0
+        },
+        "clima": {
+            "status": "SUCCESS",
+            "ingestion_type": "NO_NEW_DATA",
+            "compliance_summary": "Matched: 7 | Missing: 0 | Extras: 0",
+            "critical_message": "",
+            "compliance": {
+                "matched_columns": [
+                    "evento_macro",
+                    "es_dia_lluvioso",
+                    "temperatura_media",
+                    "fecha",
+                    "probabilidad_lluvia",
+                    "tipo_lluvia",
+                    "precipitacion_mm"
+                ],
+                "missing_columns": [],
+                "extra_columns": []
+            },
+            "successes": [
+                {
+                    "status": "SUCCESS",
+                    "message": "No temporal gaps found. Time series is continuous."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Schema matches contract exactly."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'temperatura_media' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'probabilidad_lluvia' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'precipitacion_mm' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'tipo_lluvia' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'tipo_lluvia' categorical values within allowed list"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'evento_macro' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'evento_macro' categorical values within allowed list"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Column 'es_dia_lluvioso' null percentage within tolerance (0.00%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'temperatura_media' (Deviation: 1.53%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'temperatura_media' in last 185 days (Deviation: 1.68%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'probabilidad_lluvia' (Deviation: 9.85%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'probabilidad_lluvia' in last 185 days (Deviation: 5.32%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'precipitacion_mm' (Deviation: 7.50%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'precipitacion_mm' in last 185 days (Deviation: 14.57%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Global Drift detected in 'es_dia_lluvioso' (Deviation: 10.32%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "No Horizon Drift detected in 'es_dia_lluvioso' in last 185 days (Deviation: 12.93%)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'rain_logic_nula' passed (0 violations)"
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Business Rule 'rain_flag_logic' passed (0 violations)"
+                }
+            ],
+            "violations": [],
+            "stats": {
+                "row_count": 3346,
+                "null_pct": 0.0,
+                "integrity": {
+                    "duplicate_rows": 0,
+                    "duplicate_dates": 0,
+                    "temporal_gaps": 0,
+                    "sentinel_count": 0
+                }
+            },
+            "new_rows_count": 0,
+            "message": "Audit performed on local data (No Delta download).",
+            "health_score": 100.0
+        }
+    }
+}

@@ -111,10 +111,15 @@ def run_phase_00_audit():
         except Exception as e:
             print(f"Error auditing table {table_name}: {str(e)}")
 
-    # 2. Save Final Reports (Double Persistence for the audit report)
-    latest_report = "outputs/reports/phase_00_data_audit_latest.json"
-    history_report = f"outputs/reports/phase_00/history/data_audit_{timestamp}.json"
+    # 2. Save Final Reports (Double Persistence following standard hierarchy)
+    base_reports_path = "outputs/reports/phase_00"
+    history_reports_path = os.path.join(base_reports_path, "history")
+    os.makedirs(history_reports_path, exist_ok=True)
+
+    latest_report = os.path.join(base_reports_path, "phase_00_data_audit_latest.json")
+    history_report = os.path.join(history_reports_path, f"phase_00_data_audit_{timestamp}.json")
     
+    auditor.set_metadata("00", "Initial Exploration & Data Contract", "EXPLORE")
     auditor.save_report(latest_report) # Save latest
     auditor.save_report(history_report) # Save history
     
