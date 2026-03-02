@@ -42,6 +42,9 @@ class BusinessRulesEngine:
         except Exception as e:
             logger.error(f"Error evaluating rule '{rule_str}': {str(e)}")
             return pd.Series([False] * len(df))
+        finally:
+            # Ensure no internal technical columns leak to the production dataframe
+            self.cleanup_temps(df)
 
     def _preprocess_rule(self, df: pd.DataFrame, rule_str: str) -> str:
         """

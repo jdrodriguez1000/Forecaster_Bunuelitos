@@ -152,7 +152,8 @@ class DataLoader:
                 }
             }
             
-            audit_report = self.auditor.audit_dataframe(table, df_audit)
+            # Pass a copy to isolate validation columns (if any) from original data
+            audit_report = self.auditor.audit_dataframe(table, df_audit.copy())
             
             # Map Ingestion and New Row count
             audit_report['ingestion_type'] = ingestion_type
@@ -188,6 +189,7 @@ class DataLoader:
                 # FUSION: Merge with local history if exists
                 if os.path.exists(local_file):
                     df_local = pd.read_parquet(local_file)
+                    df_local = self._apply_type_conversion(df_local)
                     df_combined = pd.concat([df_local, df_new], ignore_index=True)
                     df_combined = df_combined.drop_duplicates(subset=['fecha'], keep='last').sort_values('fecha')
                 else:

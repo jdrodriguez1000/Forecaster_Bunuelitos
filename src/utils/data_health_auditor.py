@@ -86,9 +86,12 @@ class DataHealthAuditor:
             }
         }
 
+        # 1. Structural, Process and Statistics (Pure data from source)
         self._audit_pilar_1(table_name, df, table_report)
         self._audit_pilar_2(table_name, df, table_report)
         self._audit_pilar_3(table_name, df, table_report)
+        
+        # 2. Domain Logic (Last step - May create/clean technical temp columns)
         self._audit_pilar_4(table_name, df, table_report)
 
         self._consolidate_table_report(table_report)
@@ -108,7 +111,9 @@ class DataHealthAuditor:
         else:
             self._add_passed_check(table_report, "pilar_1", "Esquema completo (todas las columnas presentes).")
 
-        extra = [c for c in (data_cols - set(contract_cols.keys())) if c not in self.SYSTEM_COLUMNS]
+        # Filter out authorized system columns AND hidden technical temp columns (__temp_*)
+        extra = [c for c in (data_cols - set(contract_cols.keys())) 
+                 if c not in self.SYSTEM_COLUMNS and not c.startswith("__temp_")]
         if extra:
             self._add_violation(table_report, "pilar_1", "WARNING", f"Schema Drift (Columnas extra): {extra}")
         else:
@@ -258,7 +263,7 @@ class DataHealthAuditor:
         
         stats_issues = False
         for col in df.columns:
-            if col in self.SYSTEM_COLUMNS: continue
+            if col in self.SYSTEM_COLUMNS or col.startswith("__temp_"): continue
             unique_count = df[col].nunique()
             ratio = unique_count / len(df) if len(df) > 0 else 0
             
