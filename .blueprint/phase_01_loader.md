@@ -21,9 +21,10 @@ El `DataLoader` es el corazón de esta fase, diseñado bajo principios de **Idem
 ### 2.2. El Motor de Auditoría (`DataHealthAuditor`)
 Cada tabla descargada pasa por un escaneo exhaustivo que incluye:
 1.  **Validación de Esquema:** Tipos de datos y presencia de columnas obligatorias.
-2.  **Integridad Temporal:** Detección de huecos (gaps) en la serie de tiempo diaria.
-3.  **Leyes de Negocio:** Evaluación de reglas aritméticas y lógicas (ej. `unidades_totales == pagas + bonificadas`).
+2.  **Integridad Temporal:** Detección de huecos (gaps) en la serie de tiempo diaria y validación de fronteras (usando `audit_reference_date` para estabilidad en pruebas).
+3.  **Leyes de Negocio:** Evaluación de reglas aritméticas y lógicas (ej. `unidades_totales == pagas + bonificadas`) utilizando el `BusinessRulesEngine`.
 4.  **Detección de Drift:** Comparación estadística del lote actual contra el Snapshot histórico de la Fase 00.
+5.  **Cero Huella Técnica:** Las columnas temporales (`__temp_*`) utilizadas para validaciones se eliminan estrictamente antes de la persistencia y no afectan el cálculo de nulos (`null_pct`).
 
 ---
 
@@ -40,7 +41,7 @@ La Phase 01 no permite el avance si no se cumplen los estándares mínimos de sa
 ## 📄 4. Protocolo de Reporte (Doble Persistencia)
 
 Cada ejecución genera evidencia auditable en `outputs/reports/phase_01/`:
-- **`latest`**: Puntero actual para consumo rápido por el sistema.
+- **`latest`**: Puntero actual con estructura estandarizada (incluye listas consolidadas de `violations` y `passed_checks` por tabla).
 - **`history`**: Registro inmutable con timestamp (`YYYYMMDD_HHMMSS`) para auditoría de degradación de datos en el tiempo.
 
 ---
@@ -68,4 +69,7 @@ Se implementó un **Portero de QA de 3 Niveles** para blindar el código:
 - **[2026-03-01]**: Migración de almacenamiento de CSV a **Parquet** para asegurar integridad de tipos (especialmente fechas y booleanos).
 - **[2026-03-02]**: Refactorización del QA Orchestrator para manejar codificación UTF-8 en Windows, evitando errores de emojis en logs.
 - **[2026-03-02]**: Implementación de la exclusión de pruebas de Fase 00 en el runner oficial para evitar falsos negativos en el pipeline productivo.
-- **[2026-03-02]**: **HITO ALCANZADO**: Certificación de la Fase 01 con un Score de Salud de **98.0** en ventas (pese a warnings de drift/promos que serán tratados en Fase 02).
+- **[2026-03-02]**: **Auditoría Refinada**: Implementación de `audit_reference_date` para pruebas estables y eliminación de columnas `__temp_*` en reportes de nulos.
+- **[2026-03-02]**: **Consolidación de Reportes**: Mejora en la estructura JSON del reporte de auditoría para facilitar el consumo por niveles superiores del pipeline.
+- **[2026-03-02]**: **HITO ALCANZADO**: Certificación de la Fase 01 con un Score de Salud de **99.0** en ventas y **SUCCESS** global en todas las tablas de Cafetería SAS.
+- **[2026-03-02]**: **Sincronización Final**: Limpieza de archivos residuales (`tmp/`, `.coverage`) y despliegue exitoso al repositorio GitHub.
