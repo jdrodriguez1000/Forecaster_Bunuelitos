@@ -42,11 +42,18 @@ def test_time_lag_logic(engine):
     assert result[1] == True # 110 > 100
     assert result[2] == True # 120 > 110
 
-def test_cleanup_temps(engine, sample_df):
-    # Use a rule that creates a temp column
+def test_automatic_cleanup_after_eval(engine, sample_df):
+    # evaluate_rule uses a 'finally' block to cleanup technical columns
     rule = "day == 1"
     engine.evaluate_rule(sample_df, rule)
-    assert any(c.startswith("__temp_") for c in sample_df.columns)
+    # The temp column __temp_day should NOT exist after evaluate_rule returns
+    assert not any(c.startswith("__temp_") for c in sample_df.columns)
+
+def test_manual_cleanup_temps(engine, sample_df):
+    # Pre-populate some temp columns manually to test cleanup_temps standalone
+    sample_df["__temp_test"] = 1
+    assert "__temp_test" in sample_df.columns
     
     engine.cleanup_temps(sample_df)
+    assert "__temp_test" not in sample_df.columns
     assert not any(c.startswith("__temp_") for c in sample_df.columns)

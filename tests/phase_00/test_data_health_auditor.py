@@ -101,3 +101,25 @@ def test_sentinel_hits(auditor, df_with_sentinels):
     report = auditor.audit_dataframe('ventas', df_with_sentinels)
     # df_with_sentinels has 3 hits: -999, NULL, 1900-01-01
     assert report['stats']['integrity_metrics']['sentinel_hits'] == 3
+
+def test_pilar_1_ignores_temp_columns(auditor, sample_df):
+    # If we add a __temp_ column, pilar 1 should NOT report it as an extra column (Schema Drift)
+    df_with_temp = sample_df.copy()
+    df_with_temp['__temp_internal_flag'] = True
+    
+    report = auditor.audit_dataframe('ventas', df_with_temp)
+    # Pillars should stay SUCCESS despite the extra column
+    assert report['pillars']['pilar_1']['status'] == "SUCCESS"
+    assert "__temp_internal_flag" not in str(report['pillars']['pilar_1']['violations'])
+
+def test_null_pct_ignores_temp_columns(auditor, sample_df):
+    # Ensure technical columns don't dilute the real null percentage of business columns
+    df_with_temp_nulls = sample_df.copy()
+    # Add a temp column that is all NULL
+    df_with_temp_nulls['__temp_empty'] = np.nan
+    
+    report = auditor.audit_dataframe('ventas', df_with_temp_nulls)
+    
+    # null_pct should be 0 because all real columns are full
+    # (If temp counted, it would be 1/7 = 14%)
+    assert report['stats']['null_pct'] == 0.0

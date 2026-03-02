@@ -22,27 +22,27 @@ class DataHealthAuditor:
     # Internal white list to avoid false positives in Schema Drift
     SYSTEM_COLUMNS = ['day', 'month', 'year', 'is_holiday', 'is_weekend']
 
-    def __init__(self, contract_input, snapshot_input):
-        self.contract = self._load_data(contract_input, "yaml")
-        self.snapshot = self._load_data(snapshot_input, "json")
+    def __init__(self, contract_path, snapshot_path, reference_date=None):
+        self.contract_path = contract_path
+        self.snapshot_path = snapshot_path
+        self.reference_date = reference_date if reference_date else date.today()
+        self.contract = self._load_data(contract_path, "yaml")
+        self.snapshot = self._load_data(snapshot_path, "json")
         self.rules_engine = BusinessRulesEngine()
-        self.dataframes = {} # To support cross-table validation
-        
+        self.dataframes = {}
         self.report = {
             "metadata": {
-                "phase": "00",
-                "phase_name": "Initial Exploration & Governance 2.3",
-                "execution_mode": "EXPLORE",
-                "audit_timestamp": datetime.now().isoformat(),
-                "contract_id": self.contract.get('metadata', {}).get('contract_id', 'unknown'),
-                "contract_version": self.contract.get('metadata', {}).get('version', 'unknown')
+                "phase": "01",
+                "phase_name": "Data Loading & Validation",
+                "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S")
             },
             "summary": {
+                "total_tables": 0,
                 "total_violations": 0,
                 "failure_count": 0,
                 "warning_count": 0,
                 "status": "SUCCESS",
-                "health_score": 100.0,
+                "health_score": 100,
                 "pillars": {
                     "pilar_1": {"status": "SUCCESS", "violations_count": 0, "passed_checks_count": 0},
                     "pilar_2": {"status": "SUCCESS", "violations_count": 0, "passed_checks_count": 0},
@@ -52,10 +52,11 @@ class DataHealthAuditor:
             },
             "tables": {}
         }
+        self.SYSTEM_COLUMNS = ['updated_at', 'id']
 
-    def _load_data(self, input_val, file_type):
-        if not isinstance(input_val, str): return input_val
-        with open(input_val, "r", encoding="utf-8") as f:
+    def _load_data(self, input_path, file_type):
+        if not isinstance(input_path, str): return input_path
+        with open(input_path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f) if file_type == "yaml" else json.load(f)
 
     def audit_dataframe(self, table_name, df, horizon_days=185):
@@ -64,6 +65,8 @@ class DataHealthAuditor:
 
         table_report = {
             "status": "SUCCESS",
+            "violations": [],
+            "passed_checks": [],
             "pillars": {
                 "pilar_1": {"status": "SUCCESS", "violations": [], "passed_checks": []},
                 "pilar_2": {"status": "SUCCESS", "violations": [], "passed_checks": []},
@@ -72,7 +75,7 @@ class DataHealthAuditor:
             },
             "stats": {
                 "row_count": len(df),
-                "null_pct": float(df.isnull().mean().mean()) if not df.empty else 0.0,
+                "null_pct": float(df[[c for c in df.columns if not c.startswith("__temp_")]].isnull().mean().mean()) if not df.empty else 0.0,
                 "integrity_metrics": {
                     "duplicate_rows": 0,
                     "duplicate_dates": 0,
@@ -225,7 +228,7 @@ class DataHealthAuditor:
         if 'fecha' not in df.columns: return
         df_dates = pd.to_datetime(df['fecha']).dt.date
         max_date = df_dates.max()
-        today_val = date.today()
+        today_val = self.reference_date
         gap = (today_val - max_date).days
         
         # 5.1 Frontera Temporal
@@ -323,6 +326,9 @@ class DataHealthAuditor:
         violation = {"severity": severity, "message": message, "timestamp": datetime.now().isoformat()}
         table_report['pillars'][pilar_key]['violations'].append(violation)
         
+        # Also add to the top-level list of the table report for easier access
+        table_report['violations'].append(violation)
+        
         if severity == "FAILURE":
             table_report['pillars'][pilar_key]['status'] = "FAILURE"
             self.report['summary']['failure_count'] += 1
@@ -340,6 +346,7 @@ class DataHealthAuditor:
         check = {"status": "SUCCESS", "message": message}
         if check not in table_report['pillars'][pilar_key]['passed_checks']:
             table_report['pillars'][pilar_key]['passed_checks'].append(check)
+            table_report['passed_checks'].append(check)
             self.report['summary']['pillars'][pilar_key]['passed_checks_count'] += 1
 
     def _consolidate_table_report(self, table_report):

@@ -15,12 +15,14 @@ def integration_config():
             'key': 'mock_key'
         },
         'extractions': {
-            'tables': ['ventas', 'clima']
+            'tables': ['ventas', 'finances'],
+            'date_columns': ['fecha']
         },
         'general': {
             'data_raw_path': 'tests/temp/data/01_raw',
             'outputs_path': 'tests/temp/outputs',
-            'mode': 'load'
+            'mode': 'load',
+            'audit_reference_date': '2024-01-03'
         },
         'paths': {
             'contract': 'tests/fixtures/dummy_contract.yaml',
@@ -74,14 +76,14 @@ def test_full_loader_integration_flow(mock_handshake, mock_db_class, integration
         {'fecha': '2024-01-01', 'unidades_totales': 100, 'unidades_pagas': 100, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'A'},
         {'fecha': '2024-01-02', 'unidades_totales': 120, 'unidades_pagas': 120, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'B'}
     ]
-    mock_data_clima = [
-        {'fecha': '2024-01-01', 'temperatura': 20.5, 'lluvia': 0.0},
-        {'fecha': '2024-01-02', 'temperatura': 21.0, 'lluvia': 5.0}
+    mock_data_finances = [
+        {'fecha': '2024-01-01', 'price': 100.0},
+        {'fecha': '2024-01-02', 'price': 105.0}
     ]
     
     def table_mock_side_effect(table_name):
         mock_chain = MagicMock()
-        data = mock_data_ventas if table_name == 'ventas' else mock_data_clima
+        data = mock_data_ventas if table_name == 'ventas' else mock_data_finances
         mock_chain.select.return_value.gt.return_value.order.return_value.range.return_value.execute.return_value.data = data
         return mock_chain
 
@@ -101,7 +103,7 @@ def test_full_loader_integration_flow(mock_handshake, mock_db_class, integration
     report_path = os.path.join(integration_config['general']['outputs_path'], "reports", "phase_01")
 
     assert os.path.exists(os.path.join(raw_path, 'ventas.parquet'))
-    assert os.path.exists(os.path.join(raw_path, 'clima.parquet'))
+    assert os.path.exists(os.path.join(raw_path, 'finances.parquet'))
     assert os.path.exists(os.path.join(report_path, 'phase_01_loader_latest.json'))
 
     with open(os.path.join(report_path, 'phase_01_loader_latest.json'), 'r') as f:

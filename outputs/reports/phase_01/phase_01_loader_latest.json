@@ -3,7 +3,7 @@
         "phase": "01",
         "phase_name": "Data Loading & Validation",
         "execution_mode": "load",
-        "timestamp": "20260302_155234",
+        "timestamp": "20260302_173337",
         "contract_code": "v1_2026_03_01_20260302_134744",
         "contract_db_id": 23
     },
@@ -17,6 +17,71 @@
     "tables": {
         "ventas": {
             "status": "SUCCESS",
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Regla 'promo_balance' falló en 254 registros.",
+                    "timestamp": "2026-03-02T17:33:40.469899"
+                }
+            ],
+            "passed_checks": [
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema completo (todas las columnas presentes)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Tipos de datos certificados (Conformidad 100%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Integridad de registros: 0 filas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Periodicidad única: 0 fechas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Estabilidad (Drift): OK (< 15%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'logic_check_sum': OK (100% cumplimiento)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'ads_consistency': OK (100% cumplimiento)."
+                }
+            ],
             "pillars": {
                 "pilar_1": {
                     "status": "SUCCESS",
@@ -90,7 +155,7 @@
                         {
                             "severity": "WARNING",
                             "message": "Regla 'promo_balance' falló en 254 registros.",
-                            "timestamp": "2026-03-02T15:52:36.019508"
+                            "timestamp": "2026-03-02T17:33:40.469899"
                         }
                     ],
                     "passed_checks": [
@@ -126,6 +191,94 @@
         },
         "inventario": {
             "status": "SUCCESS",
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Data Drift en 'kit_inicial_bodega': 219.1% (Límite 15%)",
+                    "timestamp": "2026-03-02T17:33:41.095399"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Data Drift en 'kit_final_bodega': 225.0% (Límite 15%)",
+                    "timestamp": "2026-03-02T17:33:41.095399"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Regla 'stock_continuity' falló en 3 registros.",
+                    "timestamp": "2026-03-02T17:33:41.106933"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Regla 'production_yield' falló en 220 registros.",
+                    "timestamp": "2026-03-02T17:33:41.109598"
+                }
+            ],
+            "passed_checks": [
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema completo (todas las columnas presentes)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Tipos de datos certificados (Conformidad 100%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Integridad de registros: 0 filas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Periodicidad única: 0 fechas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Validación Cruzada: Integridad referencial OK."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'target_restriction': OK (100% cumplimiento)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'target_identity': OK (100% cumplimiento)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'waste_logic': OK (100% cumplimiento)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'physical_limit': OK (100% cumplimiento)."
+                }
+            ],
             "pillars": {
                 "pilar_1": {
                     "status": "SUCCESS",
@@ -189,12 +342,12 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'kit_inicial_bodega': 219.1% (Límite 15%)",
-                            "timestamp": "2026-03-02T15:52:36.407011"
+                            "timestamp": "2026-03-02T17:33:41.095399"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'kit_final_bodega': 225.0% (Límite 15%)",
-                            "timestamp": "2026-03-02T15:52:36.407011"
+                            "timestamp": "2026-03-02T17:33:41.095399"
                         }
                     ],
                     "passed_checks": [
@@ -210,12 +363,12 @@
                         {
                             "severity": "WARNING",
                             "message": "Regla 'stock_continuity' falló en 3 registros.",
-                            "timestamp": "2026-03-02T15:52:36.413610"
+                            "timestamp": "2026-03-02T17:33:41.106933"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Regla 'production_yield' falló en 220 registros.",
-                            "timestamp": "2026-03-02T15:52:36.416156"
+                            "timestamp": "2026-03-02T17:33:41.109598"
                         }
                     ],
                     "passed_checks": [
@@ -259,6 +412,81 @@
         },
         "finanzas": {
             "status": "SUCCESS",
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Data Drift en 'precio_unitario': 29.3% (Límite 15%)",
+                    "timestamp": "2026-03-02T17:33:41.608635"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Data Drift en 'costo_unitario': 32.5% (Límite 15%)",
+                    "timestamp": "2026-03-02T17:33:41.608635"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Data Drift en 'margen_bruto': 24.9% (Límite 15%)",
+                    "timestamp": "2026-03-02T17:33:41.608635"
+                }
+            ],
+            "passed_checks": [
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema completo (todas las columnas presentes)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Tipos de datos certificados (Conformidad 100%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Integridad de registros: 0 filas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Periodicidad única: 0 fechas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Validación Cruzada: Integridad referencial OK."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'margin_calculation': OK (100% cumplimiento)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'profitability_check': OK (100% cumplimiento)."
+                }
+            ],
             "pillars": {
                 "pilar_1": {
                     "status": "SUCCESS",
@@ -322,17 +550,17 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'precio_unitario': 29.3% (Límite 15%)",
-                            "timestamp": "2026-03-02T15:52:36.753951"
+                            "timestamp": "2026-03-02T17:33:41.608635"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'costo_unitario': 32.5% (Límite 15%)",
-                            "timestamp": "2026-03-02T15:52:36.753951"
+                            "timestamp": "2026-03-02T17:33:41.608635"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'margen_bruto': 24.9% (Límite 15%)",
-                            "timestamp": "2026-03-02T15:52:36.753951"
+                            "timestamp": "2026-03-02T17:33:41.608635"
                         }
                     ],
                     "passed_checks": [
@@ -378,6 +606,65 @@
         },
         "marketing": {
             "status": "SUCCESS",
+            "violations": [],
+            "passed_checks": [
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema completo (todas las columnas presentes)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Tipos de datos certificados (Conformidad 100%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Integridad de registros: 0 filas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Periodicidad única: 0 fechas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Validación Cruzada: Integridad referencial OK."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Estabilidad (Drift): OK (< 15%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'cost_sum': OK (100% cumplimiento)."
+                }
+            ],
             "pillars": {
                 "pilar_1": {
                     "status": "SUCCESS",
@@ -481,6 +768,77 @@
         },
         "macroeconomia": {
             "status": "SUCCESS",
+            "violations": [
+                {
+                    "severity": "WARNING",
+                    "message": "Data Drift en 'smlv': 29.9% (Límite 15%)",
+                    "timestamp": "2026-03-02T17:33:42.653429"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Data Drift en 'inflacion_mensual_ipc': 51.3% (Límite 15%)",
+                    "timestamp": "2026-03-02T17:33:42.653429"
+                },
+                {
+                    "severity": "WARNING",
+                    "message": "Data Drift en 'trm': 35.1% (Límite 15%)",
+                    "timestamp": "2026-03-02T17:33:42.653429"
+                }
+            ],
+            "passed_checks": [
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema completo (todas las columnas presentes)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Tipos de datos certificados (Conformidad 100%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Integridad de registros: 0 filas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Periodicidad única: 0 fechas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Validación Cruzada: Integridad referencial OK."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Sin reglas de dominio para esta tabla."
+                }
+            ],
             "pillars": {
                 "pilar_1": {
                     "status": "SUCCESS",
@@ -544,17 +902,17 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'smlv': 29.9% (Límite 15%)",
-                            "timestamp": "2026-03-02T15:52:37.415013"
+                            "timestamp": "2026-03-02T17:33:42.653429"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'inflacion_mensual_ipc': 51.3% (Límite 15%)",
-                            "timestamp": "2026-03-02T15:52:37.415013"
+                            "timestamp": "2026-03-02T17:33:42.653429"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'trm': 35.1% (Límite 15%)",
-                            "timestamp": "2026-03-02T15:52:37.415013"
+                            "timestamp": "2026-03-02T17:33:42.653429"
                         }
                     ],
                     "passed_checks": [
@@ -596,6 +954,69 @@
         },
         "clima": {
             "status": "SUCCESS",
+            "violations": [],
+            "passed_checks": [
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema completo (todas las columnas presentes)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Tipos de datos certificados (Conformidad 100%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Integridad de registros: 0 filas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Periodicidad única: 0 fechas duplicadas."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Validación Cruzada: Integridad referencial OK."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Control de Estabilidad (Drift): OK (< 15%)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'rain_logic_nula': OK (100% cumplimiento)."
+                },
+                {
+                    "status": "SUCCESS",
+                    "message": "Regla de Dominio 'rain_flag_logic': OK (100% cumplimiento)."
+                }
+            ],
             "pillars": {
                 "pilar_1": {
                     "status": "SUCCESS",

@@ -21,6 +21,10 @@ class DataLoader:
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.date_columns = self.config.get('extractions', {}).get('date_columns', [])
         
+        # Reference date for audit (useful for backtesting/testing)
+        ref_date_str = self.config.get('general', {}).get('audit_reference_date')
+        self.audit_reference_date = pd.to_datetime(ref_date_str).date() if ref_date_str else None
+        
         # Handshake: Get active contract and laws from Supabase View
         self.contract_metadata = self._handshake()
         self.contract_path = self.contract_metadata['ruta_contrato_yaml']
@@ -29,7 +33,7 @@ class DataLoader:
         self.internal_contract_id = self.contract_metadata['contract_db_id'] # ID numérico (BIGINT)
         
         # Initialize Auditor with the rules from the nube
-        self.auditor = DataHealthAuditor(self.contract_path, self.snapshot_path)
+        self.auditor = DataHealthAuditor(self.contract_path, self.snapshot_path, reference_date=self.audit_reference_date)
 
     def _handshake(self):
         """Query the v_latest_data_health view to get the active law."""

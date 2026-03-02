@@ -1,7 +1,7 @@
 {
     "phase": "01_loader_auditor",
     "test_type": "functional",
-    "timestamp": "2026-03-02T08:17:10.701999",
+    "timestamp": "2026-03-02T17:34:46.292008",
     "overall_status": "SUCCESS",
     "results": {
         "summary": {
@@ -10,7 +10,7 @@
             "failed": 0,
             "errors": 0,
             "skipped": 0,
-            "duration_sec": 4.47
+            "duration_sec": 0.741
         },
         "details": [
             {

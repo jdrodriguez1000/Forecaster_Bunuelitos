@@ -110,3 +110,68 @@ def test_get_incremental_info_no_data(mock_handshake, mock_auditor_class, mock_d
     
     # Should find the 1900-01-01 in the newly inserted data
     assert info['last_data_date'] == '1900-01-01'
+
+def test_apply_type_conversion(mock_config):
+    # Setup dummy config with date_columns (DataLoader uses date_columns, NOT datetime_columns)
+    mock_config['extractions']['date_columns'] = ['fecha', 'otro_campo']
+    
+    with patch('src.loader.DBConnector'), \
+         patch('src.loader.DataHealthAuditor'), \
+         patch('src.loader.DataLoader._handshake'):
+        
+        loader = DataLoader(mock_config)
+        df = pd.DataFrame({
+            'fecha': ['2024-01-01', '2024-01-02'],
+            'otro_campo': ['2024-01-03', 'invalid'],
+            'valor': [100, 200]
+        })
+        
+        df_converted = loader._apply_type_conversion(df)
+        
+        # Debug print
+        print(f"DEBUG: df_converted types:\n{df_converted.dtypes}")
+        
+        assert pd.api.types.is_datetime64_any_dtype(df_converted['fecha']), f"fecha should be datetime, got {df_converted['fecha'].dtype}"
+        assert pd.api.types.is_datetime64_any_dtype(df_converted['otro_campo']), f"otro_campo should be datetime, got {df_converted['otro_campo'].dtype}"
+        assert pd.isna(df_converted['otro_campo'].iloc[1]), "index 1 of otro_campo should be NaT"
+        assert pd.api.types.is_integer_dtype(df_converted['valor']), f"valor should be integer, got {df_converted['valor'].dtype}"
+
+@patch('src.loader.DBConnector')
+@patch('src.loader.DataHealthAuditor')
+@patch('src.loader.DataLoader._handshake')
+def test_audit_copy_isolation(mock_handshake, mock_auditor_class, mock_db_class, mock_config):
+    # This test ensures that the auditor doesn't modify the source dataframe 
+    # despite creating temp columns during its rules evaluation.
+    mock_db = mock_db_class.return_value
+    mock_db.get_client.return_value = MagicMock()
+    
+    mock_handshake.return_value = {
+        'ruta_contrato_yaml': 'tests/fixtures/dummy_contract.yaml',
+        'ruta_snapshot_json': 'tests/fixtures/dummy_snapshot.json',
+        'contract_id': 'v1_test',
+        'contract_db_id': 1
+    }
+    
+    # Simulate an auditor that adds a technical column
+    def audit_with_leak(table, df):
+        df['__temp_leak'] = True
+        return {'status': 'SUCCESS', 'violations': [], 'stats': {}}
+    
+    mock_auditor = mock_auditor_class.return_value
+    mock_auditor.audit_dataframe.side_effect = audit_with_leak
+    
+    loader = DataLoader(mock_config)
+    
+    # Mock download to return valid data and ensure no local file interference
+    with patch('os.path.exists', return_value=False), \
+         patch('src.loader.DataLoader._download_delta', return_value=pd.DataFrame({'fecha': ['2024-01-01']})) as mock_dl, \
+         patch('src.loader.DataLoader._save_phase_report'), \
+         patch('src.loader.DataLoader._get_incremental_info', return_value={'last_data_date': '1900-01-01'}), \
+         patch('pandas.DataFrame.to_parquet') as mock_to_parquet:
+        
+        loader.process_all_tables()
+        
+        # Test isolation: The original dataframe returned by _download_delta 
+        # should remain untouched because the auditor received a .copy()
+        original_df = mock_dl.return_value
+        assert '__temp_leak' not in original_df.columns
