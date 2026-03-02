@@ -1,13 +1,27 @@
 metadata:
   contract_id: "test_v1"
   version: "1.0"
+global_standards:
+  integrity_defaults:
+    unknown_categories: {severity: "WARNING"}
+    gap_detection: {threshold_days: 1, severity: "WARNING"}
+    null_management: {default_max_null_pct: 0.1}
+  sentinel_values:
+    numeric: [-999, 9999]
+    object: ["NULL", "N/A"]
+    datetime: ["1900-01-01", "2099-12-31"]
 monitoring_strategy:
   trend_analysis:
     drift_threshold_pct: 10
 tables:
   ventas:
     columns:
+      fecha: {type: "datetime"}
       unidades_totales: {type: "int"}
+      unidades_pagas: {type: "int"}
+      unidades_bonificadas: {type: "int"}
+      es_promocion: {type: "int"}
+      categoria: {type: "string", categories: ["A", "B", "C"]}
     rules:
       logic_sum:
         rule: "unidades_totales == unidades_pagas + unidades_bonificadas"
@@ -18,8 +32,5 @@ tables:
         severity: "WARNING"
   finances:
     columns:
+      fecha: {type: "datetime"}
       price: {type: "float"}
-global_standards:
-  integrity_defaults:
-    unknown_categories: {severity: "WARNING"}
-    null_management: {default_max_null_pct: 0.1}

@@ -3,7 +3,7 @@
         "phase": "01",
         "phase_name": "Data Loading & Validation",
         "execution_mode": "load",
-        "timestamp": "20260301_214337",
+        "timestamp": "20260301_220607",
         "contract_code": "v1_2026_03_01_20260301_203922",
         "contract_db_id": 22
     },
@@ -23,11 +23,11 @@
             "compliance": {
                 "matched_columns": [
                     "unidades_bonificadas",
-                    "unidades_pagas",
-                    "es_promocion",
+                    "ads_activos",
                     "unidades_totales",
                     "fecha",
-                    "ads_activos"
+                    "es_promocion",
+                    "unidades_pagas"
                 ],
                 "missing_columns": [],
                 "extra_columns": []
@@ -117,18 +117,18 @@
             "critical_message": "",
             "compliance": {
                 "matched_columns": [
-                    "ventas_reales_bonificadas",
-                    "kit_recibido",
-                    "kit_final_bodega",
-                    "buñuelos_desperdiciados",
+                    "kit_inicial_bodega",
                     "unidades_agotadas",
-                    "lbs_recibidas",
-                    "demanda_teorica_total",
-                    "ventas_reales_pagas",
+                    "kit_final_bodega",
                     "fecha",
-                    "ventas_reales_totales",
+                    "ventas_reales_pagas",
+                    "kit_recibido",
+                    "lbs_recibidas",
+                    "buñuelos_desperdiciados",
                     "buñuelos_preparados",
-                    "kit_inicial_bodega"
+                    "demanda_teorica_total",
+                    "ventas_reales_bonificadas",
+                    "ventas_reales_totales"
                 ],
                 "missing_columns": [],
                 "extra_columns": []
@@ -318,11 +318,11 @@
             "critical_message": "",
             "compliance": {
                 "matched_columns": [
-                    "precio_unitario",
-                    "fecha",
-                    "margen_bruto",
+                    "costo_unitario",
                     "porcentaje_margen",
-                    "costo_unitario"
+                    "margen_bruto",
+                    "fecha",
+                    "precio_unitario"
                 ],
                 "missing_columns": [],
                 "extra_columns": []
@@ -420,13 +420,13 @@
             "critical_message": "",
             "compliance": {
                 "matched_columns": [
+                    "inversion_total",
                     "ig_pct",
-                    "ig_cost",
                     "campaña_activa",
                     "fecha",
-                    "inversion_total",
-                    "fb_cost",
-                    "fb_pct"
+                    "ig_cost",
+                    "fb_pct",
+                    "fb_cost"
                 ],
                 "missing_columns": [],
                 "extra_columns": []
@@ -496,10 +496,10 @@
             "compliance": {
                 "matched_columns": [
                     "inflacion_mensual_ipc",
-                    "trm",
                     "smlv",
-                    "fecha",
-                    "tasa_desempleo"
+                    "tasa_desempleo",
+                    "trm",
+                    "fecha"
                 ],
                 "missing_columns": [],
                 "extra_columns": []
@@ -590,12 +590,12 @@
             "compliance": {
                 "matched_columns": [
                     "evento_macro",
-                    "es_dia_lluvioso",
-                    "temperatura_media",
-                    "fecha",
                     "probabilidad_lluvia",
+                    "precipitacion_mm",
                     "tipo_lluvia",
-                    "precipitacion_mm"
+                    "fecha",
+                    "es_dia_lluvioso",
+                    "temperatura_media"
                 ],
                 "missing_columns": [],
                 "extra_columns": []

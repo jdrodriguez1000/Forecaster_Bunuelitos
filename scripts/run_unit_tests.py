@@ -7,8 +7,8 @@ from datetime import datetime
 from src.utils.helpers import save_dual_persistence
 
 def main():
-    PHASE_ID = "00"
-    PHASE_NAME = "Exploración Inicial"
+    PHASE_ID = "01"
+    PHASE_NAME = "Loader & Auditor"
     print(f"🚀 Ejecutando QA - Fase {PHASE_ID}: {PHASE_NAME} (Forecaster Buñuelitos)...")
     
     # Path setup

@@ -270,11 +270,17 @@ class DataHealthAuditor:
         if not target_sentinels:
             return
 
-        # Standardize for comparison (especially for strings and dates)
-        found_sentinels = df[df[col_name].isin(target_sentinels)][col_name].unique().tolist()
-        hits = df[col_name].isin(target_sentinels).sum()
+        # Standardize for comparison (especially for dates)
+        comparison_sentinels = target_sentinels
+        if category == "datetime":
+            comparison_sentinels = pd.to_datetime(target_sentinels)
+
+        # Check for hits
+        hits_mask = df[col_name].isin(comparison_sentinels)
+        hits = hits_mask.sum()
         
         if hits > 0:
+            found_sentinels = df[hits_mask][col_name].unique().tolist()
             pct = (hits / len(df)) * 100
             table_report['stats']['integrity']['sentinel_count'] += int(hits)
             

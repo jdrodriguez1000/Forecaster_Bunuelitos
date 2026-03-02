@@ -10,7 +10,8 @@ def sample_df():
         'unidades_pagas': [100, 110, 120, 130, 140, 150, 160, 170, 180, 190],
         'unidades_bonificadas': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         'unidades_totales': [100, 110, 120, 130, 140, 150, 160, 170, 180, 190],
-        'es_promocion': [0, 0, 1, 1, 0, 0, 1, 1, 0, 0]
+        'es_promocion': [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+        'categoria': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'B', 'A', 'B']
     }
     return pd.DataFrame(data)
 
@@ -35,3 +36,37 @@ def sample_contract():
             }
         }
     }
+@pytest.fixture
+def df_with_duplicates():
+    """Provides a dataframe with duplicate rows and duplicate dates."""
+    data = {
+        'fecha': ['2024-01-01', '2024-01-01', '2024-01-02', '2024-01-02'],
+        'unidades_totales': [100, 100, 120, 130] 
+    }
+    # Row 0 and 1 are identical. Date 2024-01-02 is duplicated but values are different.
+    df = pd.DataFrame(data)
+    df['fecha'] = pd.to_datetime(df['fecha'])
+    return df
+
+@pytest.fixture
+def df_with_gaps():
+    """Provides a dataframe with missing days in the sequence."""
+    data = {
+        'fecha': ['2024-01-01', '2024-01-02', '2024-01-05'],
+        'unidades_totales': [100, 110, 140]
+    }
+    df = pd.DataFrame(data)
+    df['fecha'] = pd.to_datetime(df['fecha'])
+    return df
+
+@pytest.fixture
+def df_with_sentinels():
+    """Provides a dataframe with sentinel values (dummy markers)."""
+    data = {
+        'fecha': ['2024-01-01', '1900-01-01', '2024-01-03'],
+        'unidades_totales': [100, -999, 120],
+        'categoria': ['A', 'NULL', 'B']
+    }
+    df = pd.DataFrame(data)
+    df['fecha'] = pd.to_datetime(df['fecha'])
+    return df
