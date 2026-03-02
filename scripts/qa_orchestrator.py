@@ -15,16 +15,17 @@ def run_script(script_path):
     if not os.path.exists(script_path):
         return None  # Script doesn't exist
     
-    print(f"--- Ejecutando: {os.path.basename(script_path)} ---")
+    print(f"\n🚀 EJECUTANDO: {os.path.basename(script_path)}")
+    print("-" * 50)
     result = subprocess.run([sys.executable, script_path], capture_output=False)
     return result.returncode == 0
 
 def main():
     print("====================================================")
-    print("🚀 PIPELINE DE CALIDAD GLOBAL - Forecaster Buñuelitos")
+    print("🏆 PIPELINE DE CALIDAD GLOBAL - Forecaster Buñuelitos")
     print("====================================================")
     
-    # 1. Ejecutar Pruebas Unitarias (Obligatorias)
+    # 1. Pruebas Unitarias (MOTOR)
     unit_success = run_script("scripts/run_unit_tests.py")
     if unit_success is False:
         print("\n❌ FALLO CRÍTICO: Pruebas Unitarias no superadas.")
@@ -32,19 +33,24 @@ def main():
     elif unit_success is None:
         print("\n⚠️ ADVERTENCIA: No se encontró el script de pruebas unitarias.")
     
-    print("\n----------------------------------------------------")
-    
-    # 2. Ejecutar Pruebas de Integración (Opcionales/Inteligentes)
+    # 2. Pruebas Funcionales (LEYES DE NEGOCIO / MISIÓN)
+    functional_success = run_script("scripts/run_functional_tests.py")
+    if functional_success is False:
+        print("\n❌ FALLO CRÍTICO: Pruebas Funcionales no superadas.")
+        sys.exit(1)
+    elif functional_success is None:
+        print("\nℹ️ NOTA: Saltando pruebas funcionales (No detectadas).")
+
+    # 3. Pruebas de Integración (CONEXIÓN / TUBERÍAS)
     integration_success = run_script("scripts/run_integration_tests.py")
-    
     if integration_success is False:
-        print("\n❌ FALLO: Pruebas de Integración no superadas.")
+        print("\n❌ FALLO CRÍTICO: Pruebas de Integración no superadas.")
         sys.exit(1)
     elif integration_success is None:
-        print("ℹ️ NOTA: Saltando integración (No se detectaron pruebas para esta fase).")
+        print("\nℹ️ NOTA: Saltando pruebas de integración (No detectadas).")
     
     print("\n====================================================")
-    print("🏆 CERTIFICACIÓN DE CALIDAD COMPLETADA CON ÉXITO")
+    print("✅ CERTIFICACIÓN DE CALIDAD GLOBAL COMPLETADA")
     print("====================================================")
 
 if __name__ == "__main__":

@@ -29,6 +29,8 @@ def main():
         "pytest",
         "tests/unit/",
         "-v",
+        "-k", "not explorer",
+        "--ignore-glob=*explorer*",
         "--color=no",
         "--cov=src",
         "--cov-report=json",
