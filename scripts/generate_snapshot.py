@@ -47,7 +47,6 @@ def generate_initial_snapshot():
         print(f"Processing table: {table_name}...")
         try:
             # Query data from Supabase
-            # NOTE: Assuming the table names in Supabase match the keys in 'tables' section
             response = client.table(table_name).select("*").execute()
             data = response.data
             
@@ -57,11 +56,12 @@ def generate_initial_snapshot():
                 continue
             
             df = pd.DataFrame(data)
+            row_count = len(df)
             
-            # Basic stats for numerical columns
+            # Basic stats and Pilar 3 metrics
             numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
             table_stats = {
-                "row_count": len(df),
+                "row_count": row_count,
                 "columns": {}
             }
             
@@ -72,7 +72,16 @@ def generate_initial_snapshot():
                     "null_pct": float(df[col].isnull().mean())
                 }
                 
+                # --- Pilar 3: Salud Estadística Metrics ---
+                
+                # 10.2 Alta Cardinalidad
+                unique_count = df[col].nunique()
+                col_stats["unique_count"] = int(unique_count)
+                col_stats["is_high_cardinality"] = (unique_count / row_count > 0.5) if row_count > 0 else False
+                
+                # Metrics for Numeric values
                 if col in numeric_cols:
+                    # 10.1 Descriptive Stats
                     col_stats.update({
                         "min": float(df[col].min()),
                         "max": float(df[col].max()),
@@ -82,11 +91,52 @@ def generate_initial_snapshot():
                         "q50": float(df[col].quantile(0.50)),
                         "q75": float(df[col].quantile(0.75))
                     })
+                    
+                    # 10.3 Cero Varianza
+                    col_stats["is_zero_variance"] = (col_stats["std"] == 0) if not pd.isna(col_stats["std"]) else True
+                    
+                    # 10.4 Presencia de Ceros
+                    zero_count = int((df[col] == 0).sum())
+                    col_stats["zero_count"] = zero_count
+                    col_stats["zero_pct"] = float(zero_count / row_count) if row_count > 0 else 0.0
+                    
+                    # 10.5 Outliers (IQR Method)
+                    q1 = col_stats["q25"]
+                    q3 = col_stats["q75"]
+                    iqr = q3 - q1
+                    lower_bound = q1 - 1.5 * iqr
+                    upper_bound = q3 + 1.5 * iqr
+                    
+                    outliers_df = df[(df[col] < lower_bound) | (df[col] > upper_bound)]
+                    col_stats["outliers"] = {
+                        "lower_bound": float(lower_bound),
+                        "upper_bound": float(upper_bound),
+                        "count": int(len(outliers_df)),
+                        "pct": float(len(outliers_df) / row_count) if row_count > 0 else 0.0
+                    }
+                
+                # Metrics for Object values
                 elif df[col].dtype == 'object' or isinstance(df[col].iloc[0], str):
-                    # Categorical stats
+                    # 11.1 & 11.2 Frecuencia y Moda
                     counts = df[col].value_counts()
                     col_stats["categories"] = counts.to_dict()
-                    col_stats["unique_count"] = len(counts)
+                    col_stats["mode"] = str(counts.idxmax()) if not counts.empty else "N/A"
+
+                # Metrics for Booleans
+                elif df[col].dtype == 'bool' or df[col].dtype == 'boolean':
+                    # 12.1 & 12.2 Frecuencia y Moda
+                    counts = df[col].value_counts()
+                    col_stats["bool_counts"] = {str(k): int(v) for k, v in counts.to_dict().items()}
+                    col_stats["mode"] = bool(counts.idxmax()) if not counts.empty else None
+
+                # Metrics for Datetime (Point 13)
+                elif "datetime" in str(df[col].dtype):
+                    col_stats["min_date"] = str(df[col].min())
+                    col_stats["max_date"] = str(df[col].max())
+                    # Check frequency frequency (daily)
+                    if row_count > 1:
+                        diffs = df[col].sort_values().diff().dt.days.dropna()
+                        col_stats["is_daily_frequency"] = bool((diffs == 1).all())
                 
                 table_stats["columns"][col] = col_stats
             
@@ -112,3 +162,4 @@ def generate_initial_snapshot():
 
 if __name__ == "__main__":
     generate_initial_snapshot()
+

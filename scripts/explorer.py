@@ -65,21 +65,23 @@ def run_phase_00_audit():
 
     print(f"Archived and updated internal IDs: {unique_contract_id}")
 
-    # 1. Initialize Auditor & Load Data
-    auditor = DataHealthAuditor(contract_history, snapshot_history)
-    auditor.set_contract_id(unique_contract_id) # Update in the JSON metadata
+    # 1. Initialize Auditor (Gobernanza 2.0)
+    # Note: Auditor now expects actual dictionaries/data, not just paths in some versions, 
+    # but our current implementation of DataHealthAuditor manages loading if passed paths.
+    # Let's pass the data directly for robustness.
+    auditor = DataHealthAuditor(contract_data, snapshot_data)
     
-    version = auditor.contract['metadata']['version']
+    version = contract_data['metadata']['version']
 
     # Initialize DB Connection
     connector = DBConnector()
     client = connector.get_client()
     
     # Process each table...
-    for table_name in auditor.contract['tables']:
+    for table_name in contract_data['tables']:
         print(f"Auditing table: {table_name}...")
         try:
-            # Pagination logic to bypass 1000 record limit
+            # Pagination logic for Supabase (Pilar 2 Requirement: Full Data)
             all_data = []
             offset = 0
             page_size = 1000
@@ -96,59 +98,72 @@ def run_phase_00_audit():
             df = pd.DataFrame(all_data) if all_data else pd.DataFrame()
             
             if not df.empty:
-                # Ensure data is sorted by date for time-lagged rules (t_minus_1)
+                # Basic preprocessing for rules (sort by date)
                 if 'fecha' in df.columns:
                     df['fecha'] = pd.to_datetime(df['fecha'])
                     df = df.sort_values('fecha').reset_index(drop=True)
-                    # Support for calendar-based rules (e.g., ads shutdown on day 25)
-                    df['day'] = df['fecha'].dt.day
                 
+                # Perform 4-Pillar Audit
                 auditor.audit_dataframe(table_name, df)
-                # Ensure it's up to date! (Requirement 1)
-                auditor.audit_freshness(table_name, df, now.date()) 
+                print(f"  [OK] Table {table_name} status: {auditor.report['tables'][table_name]['status']}")
             else:
-                print(f"Warning: No data for {table_name}")
+                print(f"  [!] Warning: No data for {table_name}")
+                
         except Exception as e:
-            print(f"Error auditing table {table_name}: {str(e)}")
+            print(f"  [ERROR] Table {table_name} failure: {str(e)}")
 
-    # 2. Save Final Reports (Double Persistence following standard hierarchy)
+    # 2. Save Final Reports (Double Persistence)
     base_reports_path = "outputs/reports/phase_00"
-    history_reports_path = os.path.join(base_reports_path, "history")
-    os.makedirs(history_reports_path, exist_ok=True)
+    report_latest = os.path.join(base_reports_path, "phase_00_data_audit_latest.json")
+    report_hist = os.path.join(base_reports_path, "history", f"phase_00_audit_{timestamp}.json")
+    
+    os.makedirs(os.path.dirname(report_hist), exist_ok=True)
+    
+    # Update Metadata for Report
+    auditor.report['metadata'].update({
+        "phase": "00",
+        "phase_name": "Initial Exploration (Governance 2.0)",
+        "execution_mode": "EXPLORE"
+    })
+    
+    auditor.save_report(report_latest)
+    auditor.save_report(report_hist)
+    print(f"Audit Complete. Global Status: {auditor.report['summary']['status']}")
 
-    latest_report = os.path.join(base_reports_path, "phase_00_data_audit_latest.json")
-    history_report = os.path.join(history_reports_path, f"phase_00_data_audit_{timestamp}.json")
-    
-    auditor.set_metadata("00", "Initial Exploration & Data Contract", "EXPLORE")
-    auditor.save_report(latest_report) # Save latest
-    auditor.save_report(history_report) # Save history
-    
-    # 3. Sync with DB (using Immutable Paths)
-    # Deactivate previous active contract
-    client.table("data_contracts").update({"is_active": False}).match({"is_active": True}).execute()
-    
-    # Insert new record pointing to History files
-    print(f"Registering new Active Contract: {unique_contract_id}")
-    res_ins = client.table("data_contracts").insert({
-        "version": version,
-        "contract_id": unique_contract_id,
-        "yaml_path": contract_history,
-        "snapshot_path": snapshot_history,
-        "is_active": True
-    }).execute()
-    
-    db_contract_id = res_ins.data[0]['id']
-    
-    # Upload Log
-    print("Uploading audit log...")
-    client.table("validation_logs").insert({
-        "contract_id": db_contract_id,
-        "status": auditor.report['summary']['status'],
-        "health_score": auditor.report['summary']['health_score'],
-        "summary_report": auditor.report
-    }).execute()
-    
-    print(f"Workflow finished. Health Score: {auditor.report['summary']['health_score']}")
+    # 3. GOVERNANCE: Update Supabase Active Contract
+    try:
+        print(f"Activating Contract {unique_contract_id} in Supabase...")
+        
+        # 3.1 Deactivate all previous versions
+        client.table("data_contracts").update({"is_active": False}).match({"is_active": True}).execute()
+        
+        # 3.2 Insert/Activate current version (Fiel al esquema del usuario)
+        contract_record = {
+            "version": version,
+            "contract_id": unique_contract_id,
+            "is_active": True,
+            "yaml_path": contract_history,
+            "snapshot_path": snapshot_history
+        }
+        res_ins = client.table("data_contracts").insert(contract_record).execute()
+        
+        if not res_ins.data:
+            raise Exception("No se pudo insertar el contrato en Supabase.")
+            
+        db_contract_id = res_ins.data[0]['id']
+        
+        # 3.3 Log validation results (Fiel al esquema del usuario)
+        validation_record = {
+            "contract_id": db_contract_id,
+            "status": auditor.report['summary']['status'],
+            "health_score": auditor.report['summary']['health_score'],
+            "summary_report": auditor.report
+        }
+        client.table("validation_logs").insert(validation_record).execute()
+        
+        print(f"  [SUCCESS] Contract {unique_contract_id} is now ACTIVE and Logged.")
+    except Exception as e:
+        print(f"  [WARNING] Supabase governance sync failed: {str(e)}")
     print("------------------------------------------------------------------")
 
 if __name__ == "__main__":

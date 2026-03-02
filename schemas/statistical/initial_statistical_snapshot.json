@@ -1,8 +1,8 @@
 {
     "metadata": {
-        "contract_id": "v1_2026_03_01_20260301_203922",
+        "contract_id": "v1_2026_03_01_20260302_134744",
         "contract_version": "1.3",
-        "generated_at": "2026-03-01T17:11:38.814374",
+        "generated_at": "2026-03-02T12:51:23.796118",
         "lookback_period_days": 185
     },
     "tables": {
@@ -13,6 +13,8 @@
                     "type": "object",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1000,
+                    "is_high_cardinality": true,
                     "categories": {
                         "2017-01-01": 1,
                         "2017-01-02": 1,
@@ -1015,67 +1017,122 @@
                         "2019-09-26": 1,
                         "2019-09-27": 1
                     },
-                    "unique_count": 1000
+                    "mode": "2017-01-01"
                 },
                 "unidades_totales": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 226,
+                    "is_high_cardinality": false,
                     "min": 113.0,
                     "max": 484.0,
                     "mean": 213.451,
                     "std": 59.053085151123696,
                     "q25": 165.0,
                     "q50": 207.0,
-                    "q75": 243.0
+                    "q75": 243.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 48.0,
+                        "upper_bound": 360.0,
+                        "count": 17,
+                        "pct": 0.017
+                    }
                 },
                 "unidades_pagas": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 226,
+                    "is_high_cardinality": false,
                     "min": 113.0,
                     "max": 484.0,
                     "mean": 213.451,
                     "std": 59.053085151123696,
                     "q25": 165.0,
                     "q50": 207.0,
-                    "q75": 243.0
+                    "q75": 243.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 48.0,
+                        "upper_bound": 360.0,
+                        "count": 17,
+                        "pct": 0.017
+                    }
                 },
                 "unidades_bonificadas": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "es_promocion": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "ads_activos": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 }
             }
         },
@@ -1086,6 +1143,8 @@
                     "type": "object",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1000,
+                    "is_high_cardinality": true,
                     "categories": {
                         "2017-01-01": 1,
                         "2017-01-02": 1,
@@ -2088,139 +2147,260 @@
                         "2019-09-26": 1,
                         "2019-09-27": 1
                     },
-                    "unique_count": 1000
+                    "mode": "2017-01-01"
                 },
                 "kit_inicial_bodega": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 967,
+                    "is_high_cardinality": true,
                     "min": 43.0,
                     "max": 15473.0,
                     "mean": 7660.997,
                     "std": 3753.2678306243215,
                     "q25": 4630.0,
                     "q50": 7569.0,
-                    "q75": 10699.0
+                    "q75": 10699.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": -4473.5,
+                        "upper_bound": 19802.5,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "kit_recibido": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 35,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 6350.0,
                     "mean": 222.2,
                     "std": 863.630718547006,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": false,
+                    "zero_count": 935,
+                    "zero_pct": 0.935,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 65,
+                        "pct": 0.065
+                    }
                 },
                 "lbs_recibidas": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 35,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 127.0,
                     "mean": 4.444,
                     "std": 17.272614370940122,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": false,
+                    "zero_count": 935,
+                    "zero_pct": 0.935,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 65,
+                        "pct": 0.065
+                    }
                 },
                 "demanda_teorica_total": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 226,
+                    "is_high_cardinality": false,
                     "min": 113.0,
                     "max": 484.0,
                     "mean": 213.451,
                     "std": 59.053085151123696,
                     "q25": 165.0,
                     "q50": 207.0,
-                    "q75": 243.0
+                    "q75": 243.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 48.0,
+                        "upper_bound": 360.0,
+                        "count": 17,
+                        "pct": 0.017
+                    }
                 },
                 "buñuelos_preparados": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 230,
+                    "is_high_cardinality": false,
                     "min": 43.0,
                     "max": 498.0,
                     "mean": 212.488,
                     "std": 59.69208491082382,
                     "q25": 164.0,
                     "q50": 205.5,
-                    "q75": 244.0
+                    "q75": 244.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 44.0,
+                        "upper_bound": 364.0,
+                        "count": 17,
+                        "pct": 0.017
+                    }
                 },
                 "ventas_reales_totales": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 224,
+                    "is_high_cardinality": false,
                     "min": 43.0,
                     "max": 484.0,
                     "mean": 208.514,
                     "std": 58.13947025904176,
                     "q25": 161.0,
                     "q50": 201.5,
-                    "q75": 239.0
+                    "q75": 239.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 44.0,
+                        "upper_bound": 356.0,
+                        "count": 17,
+                        "pct": 0.017
+                    }
                 },
                 "ventas_reales_pagas": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 224,
+                    "is_high_cardinality": false,
                     "min": 43.0,
                     "max": 484.0,
                     "mean": 208.514,
                     "std": 58.13947025904176,
                     "q25": 161.0,
                     "q50": 201.5,
-                    "q75": 239.0
+                    "q75": 239.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 44.0,
+                        "upper_bound": 356.0,
+                        "count": 17,
+                        "pct": 0.017
+                    }
                 },
                 "ventas_reales_bonificadas": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "buñuelos_desperdiciados": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 27,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 27.0,
                     "mean": 3.974,
                     "std": 5.597915742547459,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 7.0
+                    "q75": 7.0,
+                    "is_zero_variance": false,
+                    "zero_count": 537,
+                    "zero_pct": 0.537,
+                    "outliers": {
+                        "lower_bound": -10.5,
+                        "upper_bound": 17.5,
+                        "count": 24,
+                        "pct": 0.024
+                    }
                 },
                 "unidades_agotadas": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 30,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 226.0,
                     "mean": 4.937,
                     "std": 9.34314322513175,
                     "q25": 0.0,
                     "q50": 1.0,
-                    "q75": 9.0
+                    "q75": 9.0,
+                    "is_zero_variance": false,
+                    "zero_count": 499,
+                    "zero_pct": 0.499,
+                    "outliers": {
+                        "lower_bound": -13.5,
+                        "upper_bound": 22.5,
+                        "count": 15,
+                        "pct": 0.015
+                    }
                 },
                 "kit_final_bodega": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 968,
+                    "is_high_cardinality": true,
                     "min": 0.0,
                     "max": 15190.0,
                     "mean": 7448.509,
                     "std": 3744.037975806774,
                     "q25": 4449.75,
                     "q50": 7414.0,
-                    "q75": 10492.25
+                    "q75": 10492.25,
+                    "is_zero_variance": false,
+                    "zero_count": 1,
+                    "zero_pct": 0.001,
+                    "outliers": {
+                        "lower_bound": -4614.0,
+                        "upper_bound": 19556.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 }
             }
         },
@@ -2231,6 +2411,8 @@
                     "type": "object",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1000,
+                    "is_high_cardinality": true,
                     "categories": {
                         "2017-01-01": 1,
                         "2017-01-02": 1,
@@ -3233,55 +3415,99 @@
                         "2019-09-26": 1,
                         "2019-09-27": 1
                     },
-                    "unique_count": 1000
+                    "mode": "2017-01-01"
                 },
                 "precio_unitario": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 6,
+                    "is_high_cardinality": false,
                     "min": 580.0,
                     "max": 680.0,
                     "mean": 624.1,
                     "std": 31.720595773033583,
                     "q25": 600.0,
                     "q50": 620.0,
-                    "q75": 640.0
+                    "q75": 640.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 540.0,
+                        "upper_bound": 700.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "costo_unitario": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 159,
+                    "is_high_cardinality": false,
                     "min": 205.14,
                     "max": 408.0,
                     "mean": 362.96457999999996,
                     "std": 44.28752383223509,
                     "q25": 360.0,
                     "q50": 372.0,
-                    "q75": 384.0
+                    "q75": 384.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 324.0,
+                        "upper_bound": 420.0,
+                        "count": 127,
+                        "pct": 0.127
+                    }
                 },
                 "margen_bruto": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 159,
+                    "is_high_cardinality": false,
                     "min": 232.0,
                     "max": 374.86,
                     "mean": 261.13542,
                     "std": 27.298984834542775,
                     "q25": 240.06,
                     "q50": 256.0,
-                    "q75": 264.0
+                    "q75": 264.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 204.15,
+                        "upper_bound": 299.90999999999997,
+                        "count": 90,
+                        "pct": 0.09
+                    }
                 },
                 "porcentaje_margen": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 154,
+                    "is_high_cardinality": false,
                     "min": 40.0,
                     "max": 64.63,
                     "mean": 41.981910000000006,
                     "std": 5.42530742101427,
                     "q25": 40.0,
                     "q50": 40.0,
-                    "q75": 40.0
+                    "q75": 40.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 40.0,
+                        "upper_bound": 40.0,
+                        "count": 154,
+                        "pct": 0.154
+                    }
                 }
             }
         },
@@ -3292,6 +3518,8 @@
                     "type": "object",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1000,
+                    "is_high_cardinality": true,
                     "categories": {
                         "2017-01-01": 1,
                         "2017-01-02": 1,
@@ -4294,79 +4522,145 @@
                         "2019-09-26": 1,
                         "2019-09-27": 1
                     },
-                    "unique_count": 1000
+                    "mode": "2017-01-01"
                 },
                 "inversion_total": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "ig_cost": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "fb_cost": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "ig_pct": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "fb_pct": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "campaña_activa": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 0.0,
                     "mean": 0.0,
                     "std": 0.0,
                     "q25": 0.0,
                     "q50": 0.0,
-                    "q75": 0.0
+                    "q75": 0.0,
+                    "is_zero_variance": true,
+                    "zero_count": 1000,
+                    "zero_pct": 1.0,
+                    "outliers": {
+                        "lower_bound": 0.0,
+                        "upper_bound": 0.0,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 }
             }
         },
@@ -4377,6 +4671,8 @@
                     "type": "object",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1000,
+                    "is_high_cardinality": true,
                     "categories": {
                         "2017-01-01": 1,
                         "2017-01-02": 1,
@@ -5379,55 +5675,99 @@
                         "2019-09-26": 1,
                         "2019-09-27": 1
                     },
-                    "unique_count": 1000
+                    "mode": "2017-01-01"
                 },
                 "smlv": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 3,
+                    "is_high_cardinality": false,
                     "min": 737717.0,
                     "max": 828116.0,
                     "mean": 778011.355,
                     "std": 35714.706113332875,
                     "q25": 737717.0,
                     "q50": 781242.0,
-                    "q75": 828116.0
+                    "q75": 828116.0,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 602118.5,
+                        "upper_bound": 963714.5,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "inflacion_mensual_ipc": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 3,
+                    "is_high_cardinality": false,
                     "min": 0.265,
                     "max": 0.3408,
                     "mean": 0.30662599999999995,
                     "std": 0.032972749752276126,
                     "q25": 0.265,
                     "q50": 0.3167,
-                    "q75": 0.3408
+                    "q75": 0.3408,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 0.15130000000000005,
+                        "upper_bound": 0.45449999999999996,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "tasa_desempleo": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 21,
+                    "is_high_cardinality": false,
                     "min": 8.9,
                     "max": 11.0,
                     "mean": 9.825920000000002,
                     "std": 0.593231554519209,
                     "q25": 9.4,
                     "q50": 9.83,
-                    "q75": 10.13
+                    "q75": 10.13,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 8.305,
+                        "upper_bound": 11.225000000000001,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "trm": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 989,
+                    "is_high_cardinality": true,
                     "min": 2818.1,
                     "max": 3607.41,
                     "mean": 3094.85505,
                     "std": 176.96349650391855,
                     "q25": 2985.59,
                     "q50": 3058.13,
-                    "q75": 3165.3900000000003
+                    "q75": 3165.3900000000003,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 2715.89,
+                        "upper_bound": 3435.0900000000006,
+                        "count": 97,
+                        "pct": 0.097
+                    }
                 }
             }
         },
@@ -5438,6 +5778,8 @@
                     "type": "object",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 1000,
+                    "is_high_cardinality": true,
                     "categories": {
                         "2017-01-01": 1,
                         "2017-01-02": 1,
@@ -6440,78 +6782,126 @@
                         "2019-09-26": 1,
                         "2019-09-27": 1
                     },
-                    "unique_count": 1000
+                    "mode": "2017-01-01"
                 },
                 "temperatura_media": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 54,
+                    "is_high_cardinality": false,
                     "min": 19.6,
                     "max": 25.1,
                     "mean": 22.3628,
                     "std": 1.125060852541729,
                     "q25": 21.5,
                     "q50": 22.45,
-                    "q75": 23.2
+                    "q75": 23.2,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 18.950000000000003,
+                        "upper_bound": 25.75,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 },
                 "probabilidad_lluvia": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 13,
+                    "is_high_cardinality": false,
                     "min": 0.1,
                     "max": 0.95,
                     "mean": 0.5212,
                     "std": 0.1920089253848045,
                     "q25": 0.45,
                     "q50": 0.5,
-                    "q75": 0.65
+                    "q75": 0.65,
+                    "is_zero_variance": false,
+                    "zero_count": 0,
+                    "zero_pct": 0.0,
+                    "outliers": {
+                        "lower_bound": 0.14999999999999997,
+                        "upper_bound": 0.9500000000000001,
+                        "count": 31,
+                        "pct": 0.031
+                    }
                 },
                 "precipitacion_mm": {
                     "type": "float64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 314,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 78.6,
                     "mean": 10.9745,
                     "std": 14.342863643202062,
                     "q25": 0.0,
                     "q50": 4.6,
-                    "q75": 18.45
+                    "q75": 18.45,
+                    "is_zero_variance": false,
+                    "zero_count": 469,
+                    "zero_pct": 0.469,
+                    "outliers": {
+                        "lower_bound": -27.674999999999997,
+                        "upper_bound": 46.125,
+                        "count": 33,
+                        "pct": 0.033
+                    }
                 },
                 "tipo_lluvia": {
                     "type": "object",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 4,
+                    "is_high_cardinality": false,
                     "categories": {
                         "Ninguna": 469,
                         "Moderada": 331,
                         "Fuerte": 165,
                         "Ligera": 35
                     },
-                    "unique_count": 4
+                    "mode": "Ninguna"
                 },
                 "evento_macro": {
                     "type": "object",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 3,
+                    "is_high_cardinality": false,
                     "categories": {
                         "Neutral": 456,
                         "El Niño": 303,
                         "La Niña": 241
                     },
-                    "unique_count": 3
+                    "mode": "Neutral"
                 },
                 "es_dia_lluvioso": {
                     "type": "int64",
                     "null_count": 0,
                     "null_pct": 0.0,
+                    "unique_count": 2,
+                    "is_high_cardinality": false,
                     "min": 0.0,
                     "max": 1.0,
                     "mean": 0.531,
                     "std": 0.4992877810324305,
                     "q25": 0.0,
                     "q50": 1.0,
-                    "q75": 1.0
+                    "q75": 1.0,
+                    "is_zero_variance": false,
+                    "zero_count": 469,
+                    "zero_pct": 0.469,
+                    "outliers": {
+                        "lower_bound": -1.5,
+                        "upper_bound": 2.5,
+                        "count": 0,
+                        "pct": 0.0
+                    }
                 }
             }
         }

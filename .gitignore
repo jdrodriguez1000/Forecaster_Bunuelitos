@@ -5,10 +5,12 @@ __pycache__/
 .venv/
 .env
 
-# Data and Outputs
+# Data, Schemas and Outputs
 data/
 outputs/**/history/
+schemas/**/history/
 !outputs/**/.gitkeep
+!schemas/**/.gitkeep
 
 # IDEs
 .vscode/
