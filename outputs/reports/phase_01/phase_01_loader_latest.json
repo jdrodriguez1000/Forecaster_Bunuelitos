@@ -3,703 +3,715 @@
         "phase": "01",
         "phase_name": "Data Loading & Validation",
         "execution_mode": "load",
-        "timestamp": "20260301_220607",
-        "contract_code": "v1_2026_03_01_20260301_203922",
-        "contract_db_id": 22
+        "timestamp": "20260302_151117",
+        "contract_code": "v1_2026_03_01_20260302_134744",
+        "contract_db_id": 23
     },
     "execution_summary": {
         "total_tables": 6,
-        "success_count": 2,
-        "warning_count": 4,
-        "failure_count": 0,
-        "overall_status": "WARNING"
+        "success_count": 0,
+        "warning_count": 0,
+        "failure_count": 6,
+        "overall_status": "FAILURE"
     },
     "tables": {
         "ventas": {
-            "status": "WARNING",
-            "ingestion_type": "NO_NEW_DATA",
-            "compliance_summary": "Matched: 6 | Missing: 0 | Extras: 0",
-            "critical_message": "",
-            "compliance": {
-                "matched_columns": [
-                    "unidades_bonificadas",
-                    "ads_activos",
-                    "unidades_totales",
-                    "fecha",
-                    "es_promocion",
-                    "unidades_pagas"
-                ],
-                "missing_columns": [],
-                "extra_columns": []
+            "status": "FAILURE",
+            "pillars": {
+                "pilar_1": {
+                    "status": "SUCCESS",
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema completo (todas las columnas presentes)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Tipos de datos certificados (Conformidad 100%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                        }
+                    ]
+                },
+                "pilar_2": {
+                    "status": "FAILURE",
+                    "violations": [
+                        {
+                            "severity": "FAILURE",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-02-28). Se requiere hasta 2026-03-01.",
+                            "timestamp": "2026-03-02T15:11:20.107196"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Integridad de registros: 0 filas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Periodicidad única: 0 fechas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                        }
+                    ]
+                },
+                "pilar_3": {
+                    "status": "SUCCESS",
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Estabilidad (Drift): OK (< 15%)."
+                        }
+                    ]
+                },
+                "pilar_4": {
+                    "status": "SUCCESS",
+                    "violations": [
+                        {
+                            "severity": "WARNING",
+                            "message": "Regla 'promo_balance' falló en 254 registros.",
+                            "timestamp": "2026-03-02T15:11:20.112768"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'logic_check_sum': OK (100% cumplimiento)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'ads_consistency': OK (100% cumplimiento)."
+                        }
+                    ]
+                }
             },
-            "successes": [
-                {
-                    "status": "SUCCESS",
-                    "message": "No temporal gaps found. Time series is continuous."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Schema matches contract exactly."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'unidades_totales' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'unidades_pagas' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'unidades_bonificadas' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'es_promocion' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'ads_activos' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'unidades_totales' (Deviation: 10.68%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'unidades_pagas' (Deviation: 0.54%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'unidades_pagas' in last 185 days (Deviation: 9.45%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'logic_check_sum' passed (0 violations)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'ads_consistency' passed (0 violations)"
-                }
-            ],
-            "violations": [
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'unidades_totales': 35.01% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Business Rule 'promo_balance' violated in 254 rows (7.6%). Rule: if (es_promocion == 1) then (abs(unidades_pagas - unidades_bonificadas) == 0)"
-                }
-            ],
             "stats": {
                 "row_count": 3346,
                 "null_pct": 0.0,
-                "integrity": {
+                "integrity_metrics": {
                     "duplicate_rows": 0,
                     "duplicate_dates": 0,
-                    "temporal_gaps": 0,
-                    "sentinel_count": 0
+                    "sentinel_hits": 0
+                },
+                "statistical_profiling": {
+                    "high_cardinality_cols": [],
+                    "zero_variance_cols": [],
+                    "high_zero_pct_cols": []
                 }
             },
+            "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 98.0
+            "health_score": 89
         },
         "inventario": {
-            "status": "WARNING",
-            "ingestion_type": "NO_NEW_DATA",
-            "compliance_summary": "Matched: 12 | Missing: 0 | Extras: 0",
-            "critical_message": "",
-            "compliance": {
-                "matched_columns": [
-                    "kit_inicial_bodega",
-                    "unidades_agotadas",
-                    "kit_final_bodega",
-                    "fecha",
-                    "ventas_reales_pagas",
-                    "kit_recibido",
-                    "lbs_recibidas",
-                    "buñuelos_desperdiciados",
-                    "buñuelos_preparados",
-                    "demanda_teorica_total",
-                    "ventas_reales_bonificadas",
-                    "ventas_reales_totales"
-                ],
-                "missing_columns": [],
-                "extra_columns": []
+            "status": "FAILURE",
+            "pillars": {
+                "pilar_1": {
+                    "status": "SUCCESS",
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema completo (todas las columnas presentes)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Tipos de datos certificados (Conformidad 100%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                        }
+                    ]
+                },
+                "pilar_2": {
+                    "status": "FAILURE",
+                    "violations": [
+                        {
+                            "severity": "FAILURE",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-02-28). Se requiere hasta 2026-03-01.",
+                            "timestamp": "2026-03-02T15:11:21.152859"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Integridad de registros: 0 filas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Periodicidad única: 0 fechas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Validación Cruzada: Integridad referencial OK."
+                        }
+                    ]
+                },
+                "pilar_3": {
+                    "status": "SUCCESS",
+                    "violations": [
+                        {
+                            "severity": "WARNING",
+                            "message": "Data Drift en 'kit_inicial_bodega': 219.0% (Límite 15%)",
+                            "timestamp": "2026-03-02T15:11:21.160854"
+                        },
+                        {
+                            "severity": "WARNING",
+                            "message": "Data Drift en 'kit_final_bodega': 225.0% (Límite 15%)",
+                            "timestamp": "2026-03-02T15:11:21.160854"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                        }
+                    ]
+                },
+                "pilar_4": {
+                    "status": "SUCCESS",
+                    "violations": [
+                        {
+                            "severity": "WARNING",
+                            "message": "Regla 'stock_continuity' falló en 2 registros.",
+                            "timestamp": "2026-03-02T15:11:21.165394"
+                        },
+                        {
+                            "severity": "WARNING",
+                            "message": "Regla 'production_yield' falló en 220 registros.",
+                            "timestamp": "2026-03-02T15:11:21.167396"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'target_restriction': OK (100% cumplimiento)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'target_identity': OK (100% cumplimiento)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'waste_logic': OK (100% cumplimiento)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'physical_limit': OK (100% cumplimiento)."
+                        }
+                    ]
+                }
             },
-            "successes": [
-                {
-                    "status": "SUCCESS",
-                    "message": "No temporal gaps found. Time series is continuous."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Schema matches contract exactly."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'kit_inicial_bodega' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'kit_recibido' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'lbs_recibidas' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'demanda_teorica_total' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'buñuelos_preparados' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'ventas_reales_totales' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'ventas_reales_pagas' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'ventas_reales_bonificadas' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'buñuelos_desperdiciados' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'unidades_agotadas' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'kit_final_bodega' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'kit_recibido' (Deviation: 12.01%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'lbs_recibidas' (Deviation: 12.01%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'demanda_teorica_total' (Deviation: 10.68%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'buñuelos_preparados' (Deviation: 10.87%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'ventas_reales_totales' (Deviation: 10.84%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'ventas_reales_pagas' (Deviation: 0.42%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'ventas_reales_pagas' in last 185 days (Deviation: 9.54%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'buñuelos_desperdiciados' (Deviation: 12.59%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'unidades_agotadas' (Deviation: 3.96%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'target_restriction' passed (0 violations)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'target_identity' passed (0 violations)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'waste_logic' passed (0 violations)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'physical_limit' passed (0 violations)"
-                }
-            ],
-            "violations": [
-                {
-                    "severity": "WARNING",
-                    "message": "Global Trend Drift detected in 'kit_inicial_bodega': 219.01% deviation from snapshot (Full History)"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'kit_inicial_bodega': 540.54% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'kit_recibido': 32.59% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'lbs_recibidas': 32.59% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'demanda_teorica_total': 35.01% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'buñuelos_preparados': 35.51% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'ventas_reales_totales': 35.19% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'buñuelos_desperdiciados': 52.47% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'unidades_agotadas': 27.19% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Global Trend Drift detected in 'kit_final_bodega': 224.95% deviation from snapshot (Full History)"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'kit_final_bodega': 554.95% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Business Rule 'stock_continuity' violated in 2 rows (0.1%). Rule: (kit_final_bodega_t_minus_1 + kit_recibido) == kit_inicial_bodega"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Business Rule 'production_yield' violated in 220 rows (6.6%). Rule: abs(buñuelos_preparados - (kit_inicial_bodega + kit_recibido - kit_final_bodega)) / (kit_inicial_bodega + kit_recibido - kit_final_bodega + 0.001) <= 0.10"
-                }
-            ],
             "stats": {
                 "row_count": 3346,
                 "null_pct": 0.0,
-                "integrity": {
+                "integrity_metrics": {
                     "duplicate_rows": 0,
                     "duplicate_dates": 0,
-                    "temporal_gaps": 0,
-                    "sentinel_count": 0
+                    "sentinel_hits": 0
+                },
+                "statistical_profiling": {
+                    "high_cardinality_cols": [],
+                    "zero_variance_cols": [],
+                    "high_zero_pct_cols": []
                 }
             },
+            "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 87.0
+            "health_score": 86
         },
         "finanzas": {
-            "status": "WARNING",
-            "ingestion_type": "NO_NEW_DATA",
-            "compliance_summary": "Matched: 5 | Missing: 0 | Extras: 0",
-            "critical_message": "",
-            "compliance": {
-                "matched_columns": [
-                    "costo_unitario",
-                    "porcentaje_margen",
-                    "margen_bruto",
-                    "fecha",
-                    "precio_unitario"
-                ],
-                "missing_columns": [],
-                "extra_columns": []
+            "status": "FAILURE",
+            "pillars": {
+                "pilar_1": {
+                    "status": "SUCCESS",
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema completo (todas las columnas presentes)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Tipos de datos certificados (Conformidad 100%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                        }
+                    ]
+                },
+                "pilar_2": {
+                    "status": "FAILURE",
+                    "violations": [
+                        {
+                            "severity": "FAILURE",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-02-28). Se requiere hasta 2026-03-01.",
+                            "timestamp": "2026-03-02T15:11:21.688524"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Integridad de registros: 0 filas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Periodicidad única: 0 fechas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Validación Cruzada: Integridad referencial OK."
+                        }
+                    ]
+                },
+                "pilar_3": {
+                    "status": "SUCCESS",
+                    "violations": [
+                        {
+                            "severity": "WARNING",
+                            "message": "Data Drift en 'precio_unitario': 29.3% (Límite 15%)",
+                            "timestamp": "2026-03-02T15:11:21.695516"
+                        },
+                        {
+                            "severity": "WARNING",
+                            "message": "Data Drift en 'costo_unitario': 32.4% (Límite 15%)",
+                            "timestamp": "2026-03-02T15:11:21.695516"
+                        },
+                        {
+                            "severity": "WARNING",
+                            "message": "Data Drift en 'margen_bruto': 24.9% (Límite 15%)",
+                            "timestamp": "2026-03-02T15:11:21.695516"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                        }
+                    ]
+                },
+                "pilar_4": {
+                    "status": "SUCCESS",
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'margin_calculation': OK (100% cumplimiento)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'profitability_check': OK (100% cumplimiento)."
+                        }
+                    ]
+                }
             },
-            "successes": [
-                {
-                    "status": "SUCCESS",
-                    "message": "No temporal gaps found. Time series is continuous."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Schema matches contract exactly."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'precio_unitario' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'costo_unitario' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'margen_bruto' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'porcentaje_margen' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'porcentaje_margen' (Deviation: 3.31%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'porcentaje_margen' in last 185 days (Deviation: 4.72%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'margin_calculation' passed (0 violations)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'profitability_check' passed (0 violations)"
-                }
-            ],
-            "violations": [
-                {
-                    "severity": "WARNING",
-                    "message": "Global Trend Drift detected in 'precio_unitario': 29.30% deviation from snapshot (Full History)"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'precio_unitario': 82.03% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Global Trend Drift detected in 'costo_unitario': 32.45% deviation from snapshot (Full History)"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'costo_unitario': 87.79% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Global Trend Drift detected in 'margen_bruto': 24.92% deviation from snapshot (Full History)"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'margen_bruto': 74.01% deviation in last 185 days"
-                }
-            ],
             "stats": {
                 "row_count": 3346,
                 "null_pct": 0.0,
-                "integrity": {
+                "integrity_metrics": {
                     "duplicate_rows": 0,
                     "duplicate_dates": 0,
-                    "temporal_gaps": 0,
-                    "sentinel_count": 0
+                    "sentinel_hits": 0
+                },
+                "statistical_profiling": {
+                    "high_cardinality_cols": [],
+                    "zero_variance_cols": [],
+                    "high_zero_pct_cols": []
                 }
             },
+            "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 94.0
+            "health_score": 87
         },
         "marketing": {
-            "status": "SUCCESS",
-            "ingestion_type": "NO_NEW_DATA",
-            "compliance_summary": "Matched: 7 | Missing: 0 | Extras: 0",
-            "critical_message": "",
-            "compliance": {
-                "matched_columns": [
-                    "inversion_total",
-                    "ig_pct",
-                    "campaña_activa",
-                    "fecha",
-                    "ig_cost",
-                    "fb_pct",
-                    "fb_cost"
-                ],
-                "missing_columns": [],
-                "extra_columns": []
-            },
-            "successes": [
-                {
+            "status": "FAILURE",
+            "pillars": {
+                "pilar_1": {
                     "status": "SUCCESS",
-                    "message": "No temporal gaps found. Time series is continuous."
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema completo (todas las columnas presentes)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Tipos de datos certificados (Conformidad 100%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                        }
+                    ]
                 },
-                {
-                    "status": "SUCCESS",
-                    "message": "Schema matches contract exactly."
+                "pilar_2": {
+                    "status": "FAILURE",
+                    "violations": [
+                        {
+                            "severity": "FAILURE",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-02-28). Se requiere hasta 2026-03-01.",
+                            "timestamp": "2026-03-02T15:11:22.214626"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Integridad de registros: 0 filas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Periodicidad única: 0 fechas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Validación Cruzada: Integridad referencial OK."
+                        }
+                    ]
                 },
-                {
+                "pilar_3": {
                     "status": "SUCCESS",
-                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Estabilidad (Drift): OK (< 15%)."
+                        }
+                    ]
                 },
-                {
+                "pilar_4": {
                     "status": "SUCCESS",
-                    "message": "Column 'inversion_total' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'fb_cost' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'ig_cost' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'fb_pct' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'ig_pct' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'campaña_activa' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'cost_sum' passed (0 violations)"
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'cost_sum': OK (100% cumplimiento)."
+                        }
+                    ]
                 }
-            ],
-            "violations": [],
+            },
             "stats": {
                 "row_count": 3346,
                 "null_pct": 0.0,
-                "integrity": {
+                "integrity_metrics": {
                     "duplicate_rows": 0,
                     "duplicate_dates": 0,
-                    "temporal_gaps": 0,
-                    "sentinel_count": 0
+                    "sentinel_hits": 0
+                },
+                "statistical_profiling": {
+                    "high_cardinality_cols": [],
+                    "zero_variance_cols": [],
+                    "high_zero_pct_cols": []
                 }
             },
+            "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 100.0
+            "health_score": 90
         },
         "macroeconomia": {
-            "status": "WARNING",
-            "ingestion_type": "NO_NEW_DATA",
-            "compliance_summary": "Matched: 5 | Missing: 0 | Extras: 0",
-            "critical_message": "",
-            "compliance": {
-                "matched_columns": [
-                    "inflacion_mensual_ipc",
-                    "smlv",
-                    "tasa_desempleo",
-                    "trm",
-                    "fecha"
-                ],
-                "missing_columns": [],
-                "extra_columns": []
+            "status": "FAILURE",
+            "pillars": {
+                "pilar_1": {
+                    "status": "SUCCESS",
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema completo (todas las columnas presentes)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Tipos de datos certificados (Conformidad 100%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                        }
+                    ]
+                },
+                "pilar_2": {
+                    "status": "FAILURE",
+                    "violations": [
+                        {
+                            "severity": "FAILURE",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-02-28). Se requiere hasta 2026-03-01.",
+                            "timestamp": "2026-03-02T15:11:22.706787"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Integridad de registros: 0 filas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Periodicidad única: 0 fechas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Validación Cruzada: Integridad referencial OK."
+                        }
+                    ]
+                },
+                "pilar_3": {
+                    "status": "SUCCESS",
+                    "violations": [
+                        {
+                            "severity": "WARNING",
+                            "message": "Data Drift en 'smlv': 29.9% (Límite 15%)",
+                            "timestamp": "2026-03-02T15:11:22.712449"
+                        },
+                        {
+                            "severity": "WARNING",
+                            "message": "Data Drift en 'inflacion_mensual_ipc': 51.3% (Límite 15%)",
+                            "timestamp": "2026-03-02T15:11:22.712449"
+                        },
+                        {
+                            "severity": "WARNING",
+                            "message": "Data Drift en 'trm': 35.1% (Límite 15%)",
+                            "timestamp": "2026-03-02T15:11:22.712449"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                        }
+                    ]
+                },
+                "pilar_4": {
+                    "status": "SUCCESS",
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Sin reglas de dominio para esta tabla."
+                        }
+                    ]
+                }
             },
-            "successes": [
-                {
-                    "status": "SUCCESS",
-                    "message": "No temporal gaps found. Time series is continuous."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Schema matches contract exactly."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'smlv' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'inflacion_mensual_ipc' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'tasa_desempleo' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'trm' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'inflacion_mensual_ipc' in last 185 days (Deviation: 10.70%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'tasa_desempleo' (Deviation: 12.69%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'tasa_desempleo' in last 185 days (Deviation: 4.96%)"
-                }
-            ],
-            "violations": [
-                {
-                    "severity": "WARNING",
-                    "message": "Global Trend Drift detected in 'smlv': 29.89% deviation from snapshot (Full History)"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'smlv': 86.28% deviation in last 185 days"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Global Trend Drift detected in 'inflacion_mensual_ipc': 51.29% deviation from snapshot (Full History)"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Global Trend Drift detected in 'trm': 35.05% deviation from snapshot (Full History)"
-                },
-                {
-                    "severity": "WARNING",
-                    "message": "Horizon Drift detected in 'trm': 55.62% deviation in last 185 days"
-                }
-            ],
             "stats": {
                 "row_count": 3346,
                 "null_pct": 0.0,
-                "integrity": {
+                "integrity_metrics": {
                     "duplicate_rows": 0,
                     "duplicate_dates": 0,
-                    "temporal_gaps": 0,
-                    "sentinel_count": 0
+                    "sentinel_hits": 0
+                },
+                "statistical_profiling": {
+                    "high_cardinality_cols": [],
+                    "zero_variance_cols": [],
+                    "high_zero_pct_cols": []
                 }
             },
+            "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 95.0
+            "health_score": 87
         },
         "clima": {
-            "status": "SUCCESS",
-            "ingestion_type": "NO_NEW_DATA",
-            "compliance_summary": "Matched: 7 | Missing: 0 | Extras: 0",
-            "critical_message": "",
-            "compliance": {
-                "matched_columns": [
-                    "evento_macro",
-                    "probabilidad_lluvia",
-                    "precipitacion_mm",
-                    "tipo_lluvia",
-                    "fecha",
-                    "es_dia_lluvioso",
-                    "temperatura_media"
-                ],
-                "missing_columns": [],
-                "extra_columns": []
-            },
-            "successes": [
-                {
+            "status": "FAILURE",
+            "pillars": {
+                "pilar_1": {
                     "status": "SUCCESS",
-                    "message": "No temporal gaps found. Time series is continuous."
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema completo (todas las columnas presentes)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Esquema fiel (sin columnas extra no autorizadas)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Tipos de datos certificados (Conformidad 100%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Higiene de nulos: OK (Tolerancia < 5%)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Centinelas: 0 valores sospechosos hallados."
+                        }
+                    ]
                 },
-                {
-                    "status": "SUCCESS",
-                    "message": "Schema matches contract exactly."
+                "pilar_2": {
+                    "status": "FAILURE",
+                    "violations": [
+                        {
+                            "severity": "FAILURE",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-02-28). Se requiere hasta 2026-03-01.",
+                            "timestamp": "2026-03-02T15:11:23.214977"
+                        }
+                    ],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Integridad de registros: 0 filas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Periodicidad única: 0 fechas duplicadas."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Consistencia de Masa: Volumen proporcional (1.0 reg/día)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Seguridad Temporal: Sin fuga de datos (Máximo T-1)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Validación Cruzada: Integridad referencial OK."
+                        }
+                    ]
                 },
-                {
+                "pilar_3": {
                     "status": "SUCCESS",
-                    "message": "Column 'fecha' null percentage within tolerance (0.00%)"
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Estabilidad Estadística: Sin problemas de cardinalidad o varianza."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Control de Estabilidad (Drift): OK (< 15%)."
+                        }
+                    ]
                 },
-                {
+                "pilar_4": {
                     "status": "SUCCESS",
-                    "message": "Column 'temperatura_media' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'probabilidad_lluvia' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'precipitacion_mm' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'tipo_lluvia' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'tipo_lluvia' categorical values within allowed list"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'evento_macro' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'evento_macro' categorical values within allowed list"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Column 'es_dia_lluvioso' null percentage within tolerance (0.00%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'temperatura_media' (Deviation: 1.53%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'temperatura_media' in last 185 days (Deviation: 1.68%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'probabilidad_lluvia' (Deviation: 9.85%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'probabilidad_lluvia' in last 185 days (Deviation: 5.32%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'precipitacion_mm' (Deviation: 7.50%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'precipitacion_mm' in last 185 days (Deviation: 14.57%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Global Drift detected in 'es_dia_lluvioso' (Deviation: 10.32%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "No Horizon Drift detected in 'es_dia_lluvioso' in last 185 days (Deviation: 12.93%)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'rain_logic_nula' passed (0 violations)"
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Business Rule 'rain_flag_logic' passed (0 violations)"
+                    "violations": [],
+                    "passed_checks": [
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'rain_logic_nula': OK (100% cumplimiento)."
+                        },
+                        {
+                            "status": "SUCCESS",
+                            "message": "Regla de Dominio 'rain_flag_logic': OK (100% cumplimiento)."
+                        }
+                    ]
                 }
-            ],
-            "violations": [],
+            },
             "stats": {
                 "row_count": 3346,
                 "null_pct": 0.0,
-                "integrity": {
+                "integrity_metrics": {
                     "duplicate_rows": 0,
                     "duplicate_dates": 0,
-                    "temporal_gaps": 0,
-                    "sentinel_count": 0
+                    "sentinel_hits": 0
+                },
+                "statistical_profiling": {
+                    "high_cardinality_cols": [],
+                    "zero_variance_cols": [],
+                    "high_zero_pct_cols": []
                 }
             },
+            "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 100.0
+            "health_score": 90
         }
     }
 }

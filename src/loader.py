@@ -19,6 +19,7 @@ class DataLoader:
         self.db = DBConnector()
         self.client = self.db.get_client()
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.date_columns = self.config.get('extractions', {}).get('date_columns', [])
         
         # Handshake: Get active contract and laws from Supabase View
         self.contract_metadata = self._handshake()
@@ -36,7 +37,7 @@ class DataLoader:
         res = self.client.table("v_latest_data_health") \
             .select("*") \
             .eq("es_contrato_activo", True) \
-            .order("contract_db_id", descending=True) \
+            .order("contract_db_id", desc=True) \
             .limit(1) \
             .execute()
         
@@ -104,16 +105,21 @@ class DataLoader:
             inventory_info = self._get_incremental_info(table)
             last_date = inventory_info['last_data_date']
             
-            # 2. Download to Memory (Buffer)
+            # 2. Extract/Prepare Data
             df_new = self._download_delta(table, last_date)
             
-            if df_new.empty:
+            if not df_new.empty:
+                df_new = self._apply_type_conversion(df_new)
+                df_audit = df_new
+                ingestion_type = "FULL" if not os.path.exists(os.path.join(raw_path, f"{table}.parquet")) else "INCREMENTAL"
+            else:
                 logger.info(f"No new data found for table '{table}'. Checking local mirror for report consistency.")
                 local_file = os.path.join(raw_path, f"{table}.parquet")
                 
                 if os.path.exists(local_file):
                     df_audit = pd.read_parquet(local_file)
-                    status_prefix = "NO_NEW_DATA" # Custom status for skipped ingest
+                    df_audit = self._apply_type_conversion(df_audit)
+                    status_prefix = "NO_NEW_DATA"
                     ingestion_type = "NO_NEW_DATA"
                 else:
                     # No data anywhere
@@ -130,13 +136,21 @@ class DataLoader:
                     }
                     summary_results[table] = "NO_DATA"
                     continue
-            else:
-                df_audit = df_new
-                ingestion_type = "FULL" if not os.path.exists(os.path.join(raw_path, f"{table}.parquet")) else "INCREMENTAL"
 
             # 3. Validation and Audit (The Aduana)
             # Reset auditor internal counters for single table run
-            self.auditor.report['summary'] = {"total_violations": 0, "failure_count": 0, "warning_count": 0, "status": "SUCCESS"}
+            self.auditor.report['summary'] = {
+                "total_violations": 0, 
+                "failure_count": 0, 
+                "warning_count": 0, 
+                "status": "SUCCESS",
+                "pillars": {
+                    "pilar_1": {"status": "SUCCESS", "violations_count": 0, "passed_checks_count": 0},
+                    "pilar_2": {"status": "SUCCESS", "violations_count": 0, "passed_checks_count": 0},
+                    "pilar_3": {"status": "SUCCESS", "violations_count": 0, "passed_checks_count": 0},
+                    "pilar_4": {"status": "SUCCESS", "violations_count": 0, "passed_checks_count": 0}
+                }
+            }
             
             audit_report = self.auditor.audit_dataframe(table, df_audit)
             
@@ -193,6 +207,19 @@ class DataLoader:
 
         self._save_phase_report(forensic_reports)
         return summary_results
+
+    def _apply_type_conversion(self, df):
+        """Standardize column types based on configuration."""
+        if df.empty:
+            return df
+            
+        df_clean = df.copy()
+        for col in self.date_columns:
+            if col in df_clean.columns:
+                logger.info(f"Converting column '{col}' to datetime...")
+                df_clean[col] = pd.to_datetime(df_clean[col], errors='coerce')
+        
+        return df_clean
 
     def _update_inventory_status(self, table, df_all, df_new, status, health_score, info):
         """Update the data_inventory_status table in Supabase."""

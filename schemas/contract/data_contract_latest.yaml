@@ -22,6 +22,11 @@ global_standards:
     - '2099-12-31'
     boolean:
     - null
+  temporal_security:
+    next_day_boundary: T-1
+    rule: no_current_or_future_data_allowed
+    description: Para predecir el día T, solo se permite información hasta las 23:59:59 del día T-1.
+    severity: FAILURE
   integrity_defaults:
     uniqueness:
       rule: no_duplicates_on_primary_key
@@ -44,6 +49,13 @@ monitoring_strategy:
   profiling:
     by_day_of_week: true
     holiday_mapping: Saturday
+    strategic_seasonal_mappings:
+      feria_de_las_flores:
+        dates: "01-10 Agosto"
+        model_as: Sunday
+      semana_santa:
+        days: ["Jueves Santo", "Viernes Santo"]
+        model_as: Sunday
     severity: WARNING
 tables:
   ventas:

@@ -22,6 +22,8 @@ extractions:
   db_type: supabase
   # Las tablas deben coincidir con los nombres en Supabase y el Contrato de Datos.
   tables: ["ventas", "inventario", "finanzas", "marketing", "macroeconomia", "clima"]
+  # Definición de columnas temporales para conversión automática (Paso previo a la auditoría)
+  date_columns: ["fecha"]
 
 preprocessing:
   day_x_strategy: true

@@ -3,7 +3,7 @@ import json
 import yaml
 import pandas as pd
 import numpy as np
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from src.utils.business_rules_engine import BusinessRulesEngine
 
 class DataHealthAuditor:
@@ -193,13 +193,18 @@ class DataHealthAuditor:
         # 3. Sync & Mass
         self._audit_sync_and_mass(table_name, df, table_report)
 
-        # 4. Data Leakage
+        # 4. Data Leakage (Temporal Security)
         if 'fecha' in df.columns:
-            future = df[pd.to_datetime(df['fecha']).dt.date > date.today()]
-            if not future.empty:
-                self._add_violation(table_report, "pilar_2", "FAILURE", f"Data Leakage: {len(future)} registros con fechas futuras.")
+            today_val = date.today()
+            # Rule: No current (T) or future (>T) data allowed. Must be <= T-1.
+            illegal_data = df[pd.to_datetime(df['fecha']).dt.date >= today_val]
+            if not illegal_data.empty:
+                max_illegal = pd.to_datetime(illegal_data['fecha']).dt.date.max()
+                self._add_violation(table_report, "pilar_2", "FAILURE", 
+                    f"Data Leakage: Se detectaron registros del día actual o futuro ({max_illegal}). "
+                    f"El modelo solo puede ver hasta T-1 ({today_val - timedelta(days=1)}).")
             else:
-                self._add_passed_check(table_report, "pilar_2", "Seguridad Temporal: Sin fuga de futuro.")
+                self._add_passed_check(table_report, "pilar_2", "Seguridad Temporal: Sin fuga de datos (Máximo T-1).")
 
         # 5. Referential integrity
         if table_name != 'ventas' and 'ventas' in self.dataframes:
@@ -219,10 +224,13 @@ class DataHealthAuditor:
         gap = (today_val - max_date).days
         
         # 5.1 Frontera Temporal
-        if gap <= 1:
-            self._add_passed_check(table_report, "pilar_2", f"Frontera Temporal: Al día (Última fecha: {max_date}).")
+        if gap == 1:
+            self._add_passed_check(table_report, "pilar_2", f"Frontera Temporal: Al día (Última fecha permitida: {max_date}).")
+        elif gap == 0:
+            # This is technically leakage, but we report it here as a synchronization status too
+            self._add_violation(table_report, "pilar_2", "WARNING", f"Frontera Temporal: Sobrecarga de datos. Se detectó el día actual ({max_date}), lo cual genera Leakage.")
         else:
-            self._add_violation(table_report, "pilar_2", "WARNING", f"Frontera Temporal: Brecha de {gap} días detectada (Último dato: {max_date}).")
+            self._add_violation(table_report, "pilar_2", "FAILURE", f"Frontera Temporal: Brecha de {gap} días detectada (Último dato: {max_date}). Se requiere hasta {today_val - timedelta(days=1)}.")
 
         # 5.2 Consistencia de Masa (Volumen Proporcional)
         snap_table = self.snapshot.get('tables', {}).get(table_name, {})
