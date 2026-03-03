@@ -3,7 +3,7 @@
         "phase": "01",
         "phase_name": "Data Loading & Validation",
         "execution_mode": "load",
-        "timestamp": "20260303_181325",
+        "timestamp": "20260303_181845",
         "contract_code": "v1_2026_03_01_20260302_134744",
         "contract_db_id": 23
     },
@@ -21,7 +21,7 @@
                 {
                     "severity": "WARNING",
                     "message": "Regla 'promo_balance' falló en 254 registros.",
-                    "timestamp": "2026-03-03T18:13:26.522541"
+                    "timestamp": "2026-03-03T18:18:46.422366"
                 }
             ],
             "passed_checks": [
@@ -155,7 +155,7 @@
                         {
                             "severity": "WARNING",
                             "message": "Regla 'promo_balance' falló en 254 registros.",
-                            "timestamp": "2026-03-03T18:13:26.522541"
+                            "timestamp": "2026-03-03T18:18:46.422366"
                         }
                     ],
                     "passed_checks": [
@@ -196,22 +196,22 @@
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'kit_inicial_bodega': 219.2% (Límite 15%)",
-                    "timestamp": "2026-03-03T18:13:27.786240"
+                    "timestamp": "2026-03-03T18:18:47.132822"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'kit_final_bodega': 225.1% (Límite 15%)",
-                    "timestamp": "2026-03-03T18:13:27.786240"
+                    "timestamp": "2026-03-03T18:18:47.132822"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Regla 'stock_continuity' falló en 4 registros.",
-                    "timestamp": "2026-03-03T18:13:27.795198"
+                    "timestamp": "2026-03-03T18:18:47.143042"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Regla 'production_yield' falló en 220 registros.",
-                    "timestamp": "2026-03-03T18:13:27.796405"
+                    "timestamp": "2026-03-03T18:18:47.146111"
                 }
             ],
             "passed_checks": [
@@ -343,12 +343,12 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'kit_inicial_bodega': 219.2% (Límite 15%)",
-                            "timestamp": "2026-03-03T18:13:27.786240"
+                            "timestamp": "2026-03-03T18:18:47.132822"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'kit_final_bodega': 225.1% (Límite 15%)",
-                            "timestamp": "2026-03-03T18:13:27.786240"
+                            "timestamp": "2026-03-03T18:18:47.132822"
                         }
                     ],
                     "passed_checks": [
@@ -364,12 +364,12 @@
                         {
                             "severity": "WARNING",
                             "message": "Regla 'stock_continuity' falló en 4 registros.",
-                            "timestamp": "2026-03-03T18:13:27.795198"
+                            "timestamp": "2026-03-03T18:18:47.143042"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Regla 'production_yield' falló en 220 registros.",
-                            "timestamp": "2026-03-03T18:13:27.796405"
+                            "timestamp": "2026-03-03T18:18:47.146111"
                         }
                     ],
                     "passed_checks": [
@@ -418,17 +418,17 @@
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'precio_unitario': 29.3% (Límite 15%)",
-                    "timestamp": "2026-03-03T18:13:28.602664"
+                    "timestamp": "2026-03-03T18:18:47.998106"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'costo_unitario': 32.5% (Límite 15%)",
-                    "timestamp": "2026-03-03T18:13:28.602664"
+                    "timestamp": "2026-03-03T18:18:47.998106"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'margen_bruto': 25.0% (Límite 15%)",
-                    "timestamp": "2026-03-03T18:13:28.602664"
+                    "timestamp": "2026-03-03T18:18:47.998106"
                 }
             ],
             "passed_checks": [
@@ -552,17 +552,17 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'precio_unitario': 29.3% (Límite 15%)",
-                            "timestamp": "2026-03-03T18:13:28.602664"
+                            "timestamp": "2026-03-03T18:18:47.998106"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'costo_unitario': 32.5% (Límite 15%)",
-                            "timestamp": "2026-03-03T18:13:28.602664"
+                            "timestamp": "2026-03-03T18:18:47.998106"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'margen_bruto': 25.0% (Límite 15%)",
-                            "timestamp": "2026-03-03T18:13:28.602664"
+                            "timestamp": "2026-03-03T18:18:47.998106"
                         }
                     ],
                     "passed_checks": [
@@ -776,17 +776,17 @@
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'smlv': 29.9% (Límite 15%)",
-                    "timestamp": "2026-03-03T18:13:30.241669"
+                    "timestamp": "2026-03-03T18:18:49.630358"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'inflacion_mensual_ipc': 51.3% (Límite 15%)",
-                    "timestamp": "2026-03-03T18:13:30.241669"
+                    "timestamp": "2026-03-03T18:18:49.630358"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'trm': 35.1% (Límite 15%)",
-                    "timestamp": "2026-03-03T18:13:30.241669"
+                    "timestamp": "2026-03-03T18:18:49.630358"
                 }
             ],
             "passed_checks": [
@@ -906,17 +906,17 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'smlv': 29.9% (Límite 15%)",
-                            "timestamp": "2026-03-03T18:13:30.241669"
+                            "timestamp": "2026-03-03T18:18:49.630358"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'inflacion_mensual_ipc': 51.3% (Límite 15%)",
-                            "timestamp": "2026-03-03T18:13:30.241669"
+                            "timestamp": "2026-03-03T18:18:49.630358"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'trm': 35.1% (Límite 15%)",
-                            "timestamp": "2026-03-03T18:13:30.241669"
+                            "timestamp": "2026-03-03T18:18:49.630358"
                         }
                     ],
                     "passed_checks": [

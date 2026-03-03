@@ -575,6 +575,10 @@ class Preprocessor:
                 },
                 "output_file": entry["output_path"]
             }
+            # Add Master Schema info if available in extra_info
+            if extra_info and "schema" in extra_info:
+                report["quality_metrics"]["master_schema"] = extra_info["schema"]
+
             if error_msg: report["technical_error"] = error_msg
         
         # Naming Convention: phase_02_preprocessing_latest.json

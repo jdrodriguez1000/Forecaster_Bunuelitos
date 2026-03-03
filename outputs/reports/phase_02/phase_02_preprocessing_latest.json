@@ -3,13 +3,13 @@
         "phase": "02",
         "phase_name": "Preprocessing & Data Healing",
         "execution_mode": "delta",
-        "timestamp": "20260303_181332",
+        "timestamp": "20260303_181851",
         "project": "Forecaster Buñuelitos"
     },
     "execution_summary": {
         "overall_status": "SUCCESS",
-        "processing_type": "INCREMENTAL",
-        "summary": "Mode: INCREMENTAL. New data integrated since 2026-03-01.",
+        "processing_type": "NO NEW DATA",
+        "summary": "Mode: NO NEW DATA. No new records found in Supabase since 2026-03-02. Dataset is already compliant.",
         "total_rows_produced": 3348,
         "date_range": [
             "2017-01-01",
@@ -122,7 +122,7 @@
         },
         "overall_stats": {
             "outliers_detected": 0,
-            "nulls_cured": 2,
+            "nulls_cured": 0,
             "physical_fixes": 0
         }
     },
@@ -136,6 +136,45 @@
             "temporal_series_gaps": 0,
             "audit_status": "CERTIFIED"
         },
-        "output_file": "data/02_cleansed\\master_cleansed.parquet"
+        "output_file": "data/02_cleansed\\master_cleansed.parquet",
+        "master_schema": {
+            "fecha": "datetime64[ns]",
+            "unidades_totales": "int64",
+            "unidades_pagas": "int64",
+            "unidades_bonificadas": "int64",
+            "es_promocion": "int64",
+            "ads_activos": "int64",
+            "kit_inicial_bodega": "float64",
+            "kit_recibido": "int64",
+            "lbs_recibidas": "int64",
+            "demanda_teorica_total": "int64",
+            "buñuelos_preparados": "int64",
+            "ventas_reales_pagas": "int64",
+            "ventas_reales_bonificadas": "int64",
+            "buñuelos_desperdiciados": "int64",
+            "unidades_agotadas": "int64",
+            "kit_final_bodega": "float64",
+            "ventas_reales_totales": "int64",
+            "precio_unitario": "int64",
+            "costo_unitario": "float64",
+            "margen_bruto": "float64",
+            "porcentaje_margen": "float64",
+            "inversion_total": "int64",
+            "ig_cost": "int64",
+            "fb_cost": "int64",
+            "ig_pct": "float64",
+            "fb_pct": "float64",
+            "campaña_activa": "int64",
+            "smlv": "int64",
+            "inflacion_mensual_ipc": "float64",
+            "tasa_desempleo": "float64",
+            "trm": "float64",
+            "temperatura_media": "float64",
+            "probabilidad_lluvia": "float64",
+            "precipitacion_mm": "float64",
+            "tipo_lluvia": "object",
+            "evento_macro": "object",
+            "es_dia_lluvioso": "int64"
+        }
     }
 }
