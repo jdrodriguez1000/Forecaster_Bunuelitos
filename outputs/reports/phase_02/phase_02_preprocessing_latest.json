@@ -3,19 +3,139 @@
         "phase": "02",
         "phase_name": "Preprocessing & Data Healing",
         "execution_mode": "delta",
-        "timestamp": "20260303_160730",
-        "project": "Forecaster BuÃ±uelitos"
+        "timestamp": "20260303_181332",
+        "project": "Forecaster Buñuelitos"
     },
     "execution_summary": {
-        "overall_status": "FAILED",
-        "processing_type": "FULL",
-        "summary": "Preprocessing ABORTED. Phase 01 (LOAD) did not complete successfully. Check Phase 01 logs.",
-        "total_rows_produced": 0,
-        "date_range": "N/A"
+        "overall_status": "SUCCESS",
+        "processing_type": "INCREMENTAL",
+        "summary": "Mode: INCREMENTAL. New data integrated since 2026-03-01.",
+        "total_rows_produced": 3348,
+        "date_range": [
+            "2017-01-01",
+            "2026-03-02"
+        ]
     },
     "input_data_health": {
         "source": "Supabase (data_inventory_status)",
-        "table_health_scores": {}
+        "table_health_scores": {
+            "ventas": "99.00%",
+            "inventario": "96.00%",
+            "finanzas": "97.00%",
+            "marketing": "100.00%",
+            "macroeconomia": "97.00%",
+            "clima": "100.00%"
+        }
     },
-    "technical_error": "Handshake FAILED: Latest LOAD phase (Phase 01) recorded as FAILED at 2026-03-03T21:07:29.681507+00:00. Aborting preprocessing."
+    "healing_details": {
+        "domain_drilldown": {
+            "ventas": {
+                "global_laws_compliance": [
+                    "Cumple todas las leyes globales"
+                ],
+                "healing_and_reconstruction": [
+                    "Sanity OK"
+                ],
+                "business_rules_names": [
+                    "Evidencia de Promoción",
+                    "Simetría 2x1 Forzada",
+                    "Sanación Pagas",
+                    "Sanación Bonos",
+                    "Integridad del Total",
+                    "Señal de Pauta"
+                ]
+            },
+            "inventario": {
+                "global_laws_compliance": [
+                    "Cumple todas las leyes globales"
+                ],
+                "healing_and_reconstruction": [
+                    "Sanity OK"
+                ],
+                "business_rules_names": [
+                    "Sincronización de Verdad Comercial",
+                    "Ley del Cierre Nocturno (Continuidad)",
+                    "Techo de Vitrina (Ventas vs Producción)",
+                    "Inercia de Factor de Conversión (Lbs/Kit)",
+                    "Cálculo de Consumo Real (Back-Calculation)",
+                    "Ajuste de Salida de Bodega (Masa Invariante)",
+                    "Integridad de Merma",
+                    "Unidades Agotadas",
+                    "Reconstrucción del Target (Demanda Total)"
+                ]
+            },
+            "finanzas": {
+                "global_laws_compliance": [
+                    "Cumple todas las leyes globales"
+                ],
+                "healing_and_reconstruction": [
+                    "Sanity OK"
+                ],
+                "business_rules_names": [
+                    "Herencia de Precios y Costos",
+                    "Reconstrucción de Margen Bruto",
+                    "Cálculo de Eficiencia (Porcentaje)"
+                ]
+            },
+            "marketing": {
+                "global_laws_compliance": [
+                    "Cumple todas las leyes globales"
+                ],
+                "healing_and_reconstruction": [
+                    "Sanity OK"
+                ],
+                "business_rules_names": [
+                    "Herencia de Mix de Canales",
+                    "Reconstrucción de Costura por Canal",
+                    "Integridad de Inversión Total",
+                    "Sanación de Nulos a Zero",
+                    "Sincronización de Campaña Activa"
+                ]
+            },
+            "macroeconomia": {
+                "global_laws_compliance": [
+                    "Cumple todas las leyes globales"
+                ],
+                "healing_and_reconstruction": [
+                    "Sanity OK"
+                ],
+                "business_rules_names": [
+                    "Herencia de Indicadores Estables",
+                    "Inercia de Mercado (TRM)"
+                ]
+            },
+            "clima": {
+                "global_laws_compliance": [
+                    "Cumple todas las leyes globales"
+                ],
+                "healing_and_reconstruction": [
+                    "Sanity OK"
+                ],
+                "business_rules_names": [
+                    "Inercia Térmica",
+                    "Reanimación de Precipitación",
+                    "Evidencia de Categoría (Tipo Lluvia)",
+                    "Consistencia del Flag Lluvioso",
+                    "Fenómenos Macro (Clima)"
+                ]
+            }
+        },
+        "overall_stats": {
+            "outliers_detected": 0,
+            "nulls_cured": 2,
+            "physical_fixes": 0
+        }
+    },
+    "quality_metrics": {
+        "health_score_avg": 98.16666666666667,
+        "quality_gate_passed": true,
+        "output_health_audit": {
+            "duplicate_rows": 0,
+            "duplicate_dates": 0,
+            "total_null_values": 0,
+            "temporal_series_gaps": 0,
+            "audit_status": "CERTIFIED"
+        },
+        "output_file": "data/02_cleansed\\master_cleansed.parquet"
+    }
 }

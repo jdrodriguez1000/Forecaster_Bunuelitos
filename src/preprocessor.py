@@ -101,7 +101,21 @@ class Preprocessor:
         # Store individual health scores for the final report
         self.input_health_status = status_df.set_index('table_name')['health_score'].to_dict()
         
-        failed_tables = status_df[status_df['status'] != required_status]['table_name'].tolist()
+        required_status = self.config['preprocessing']['orchestration']['handshake']['required_status']
+        min_score = self.config['preprocessing']['orchestration']['handshake']['min_health_score']
+
+        # Handshake Logic: Fail if any table is FAILED or below min_health_score
+        # Note: If required_status is SUCCESS, we allow WARNING as per business rules ("No inicia si hay FAILURE")
+        if required_status == "SUCCESS":
+            failed_tables = status_df[
+                (status_df['status'] == "FAILED") | 
+                (status_df['health_score'] < min_score * 100)
+            ]['table_name'].tolist()
+        else:
+            failed_tables = status_df[
+                (status_df['status'] != required_status) | 
+                (status_df['health_score'] < min_score * 100)
+            ]['table_name'].tolist()
         if failed_tables:
             msg = f"Handshake FAILED. Tables not ready: {failed_tables}"
             logger.error(msg)

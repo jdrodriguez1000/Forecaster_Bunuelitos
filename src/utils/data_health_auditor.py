@@ -324,6 +324,9 @@ class DataHealthAuditor:
                 self._add_passed_check(table_report, "pilar_4", f"Regla de Dominio '{rule_name}': OK (100% cumplimiento).")
 
     def _add_violation(self, table_report, pilar_key, severity, message):
+        # Normalize severity to standard 'FAILED'
+        if severity == "FAILURE": severity = "FAILED"
+        
         violation = {"severity": severity, "message": message, "timestamp": datetime.now().isoformat()}
         table_report['pillars'][pilar_key]['violations'].append(violation)
         
@@ -336,6 +339,8 @@ class DataHealthAuditor:
             self.report['summary']['status'] = "FAILED"
             self.report['summary']['pillars'][pilar_key]['status'] = "FAILED"
         else:
+            if table_report['pillars'][pilar_key]['status'] != "FAILED":
+                table_report['pillars'][pilar_key]['status'] = "WARNING"
             self.report['summary']['warning_count'] += 1
             if self.report['summary']['status'] != "FAILED": self.report['summary']['status'] = "WARNING"
             if self.report['summary']['pillars'][pilar_key]['status'] != "FAILED": self.report['summary']['pillars'][pilar_key]['status'] = "WARNING"

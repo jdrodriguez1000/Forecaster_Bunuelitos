@@ -24,6 +24,14 @@ extractions:
   tables: ["ventas", "inventario", "finanzas", "marketing", "macroeconomia", "clima"]
   # Definición de columnas temporales para conversión automática (Paso previo a la auditoría)
   date_columns: ["fecha"]
+  # Definición de columnas por dominio (Contrato Técnico)
+  columns:
+    ventas: ["unidades_totales", "unidades_pagas", "unidades_bonificadas", "es_promocion", "ads_activos"]
+    inventario: ["kit_inicial_bodega", "kit_recibido", "lbs_recibidas", "demanda_teorica_total", "buñuelos_preparados", "ventas_reales_totales", "ventas_reales_pagas", "ventas_reales_bonificadas", "buñuelos_desperdiciados", "unidades_agotadas", "kit_final_bodega"]
+    finanzas: ["precio_unitario", "costo_unitario", "margen_bruto", "porcentaje_margen"]
+    marketing: ["inversion_total", "fb_cost", "ig_cost", "fb_pct", "ig_pct", "campaña_activa"]
+    macroeconomia: ["smlv", "inflacion_mensual_ipc", "tasa_desempleo", "trm"]
+    clima: ["temperatura_media", "probabilidad_lluvia", "precipitacion_mm", "tipo_lluvia", "evento_macro", "es_dia_lluvioso"]
 
 preprocessing:
   # 0. Orquestación y Control de Inicio
