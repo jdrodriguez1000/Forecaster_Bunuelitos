@@ -110,7 +110,7 @@ class DataHealthAuditor:
         # 1. Schema & Extra Columns
         missing = list(set(contract_cols.keys()) - data_cols)
         if missing:
-            self._add_violation(table_report, "pilar_1", "FAILURE", f"Columnas ausentes: {missing}")
+            self._add_violation(table_report, "pilar_1", "FAILED", f"Columnas ausentes: {missing}")
         else:
             self._add_passed_check(table_report, "pilar_1", "Esquema completo (todas las columnas presentes).")
 
@@ -139,7 +139,7 @@ class DataHealthAuditor:
             elif expected_type == 'string' and not ('object' in actual_dtype or 'str' in actual_dtype or 'string' in actual_dtype): match = False
             
             if not match:
-                self._add_violation(table_report, "pilar_1", "FAILURE", f"Validación de Tipo: '{col}' debe ser {expected_type} (Encontrado: {actual_dtype})")
+                self._add_violation(table_report, "pilar_1", "FAILED", f"Validación de Tipo: '{col}' debe ser {expected_type} (Encontrado: {actual_dtype})")
                 type_issues = True
         
         if not type_issues:
@@ -152,7 +152,7 @@ class DataHealthAuditor:
             if col not in df.columns: continue
             null_pct = float(df[col].isnull().mean())
             if rules.get('required') and null_pct > 0:
-                self._add_violation(table_report, "pilar_1", "FAILURE", f"Nulos en '{col}': Prohibido para campo requerido ({null_pct:.1%}).")
+                self._add_violation(table_report, "pilar_1", "FAILED", f"Nulos en '{col}': Prohibido para campo requerido ({null_pct:.1%}).")
                 any_null_issue = True
             elif null_pct > max_null:
                 self._add_violation(table_report, "pilar_1", "WARNING", f"Nulos en '{col}': Excede tolerancia ({null_pct:.1%} > {max_null:.1%}).")
@@ -184,7 +184,7 @@ class DataHealthAuditor:
         dups = int(df.duplicated().sum())
         table_report['stats']['integrity_metrics']['duplicate_rows'] = dups
         if dups > 0:
-            self._add_violation(table_report, "pilar_2", "FAILURE", f"Filas Duplicadas: Hallados {dups} registros idénticos.")
+            self._add_violation(table_report, "pilar_2", "FAILED", f"Filas Duplicadas: Hallados {dups} registros idénticos.")
         else:
             self._add_passed_check(table_report, "pilar_2", "Integridad de registros: 0 filas duplicadas.")
 
@@ -194,7 +194,7 @@ class DataHealthAuditor:
             date_dups = int(df['fecha'].duplicated().sum())
             table_report['stats']['integrity_metrics']['duplicate_dates'] = date_dups
             if date_dups > 0:
-                self._add_violation(table_report, "pilar_2", "FAILURE", f"Fechas Duplicadas: {date_dups} colisiones temporales en '{table_name}'.")
+                self._add_violation(table_report, "pilar_2", "FAILED", f"Fechas Duplicadas: {date_dups} colisiones temporales en '{table_name}'.")
             else:
                 self._add_passed_check(table_report, "pilar_2", "Periodicidad única: 0 fechas duplicadas.")
 
@@ -208,7 +208,7 @@ class DataHealthAuditor:
             illegal_data = df[pd.to_datetime(df['fecha']).dt.date >= today_val]
             if not illegal_data.empty:
                 max_illegal = pd.to_datetime(illegal_data['fecha']).dt.date.max()
-                self._add_violation(table_report, "pilar_2", "FAILURE", 
+                self._add_violation(table_report, "pilar_2", "FAILED", 
                     f"Data Leakage: Se detectaron registros del día actual o futuro ({max_illegal}). "
                     f"El modelo solo puede ver hasta T-1 ({today_val - timedelta(days=1)}).")
             else:
@@ -228,6 +228,7 @@ class DataHealthAuditor:
         if 'fecha' not in df.columns: return
         df_dates = pd.to_datetime(df['fecha']).dt.date
         max_date = df_dates.max()
+        table_report['stats']['last_data_date'] = str(max_date)
         today_val = self.reference_date
         gap = (today_val - max_date).days
         
@@ -238,7 +239,7 @@ class DataHealthAuditor:
             # This is technically leakage, but we report it here as a synchronization status too
             self._add_violation(table_report, "pilar_2", "WARNING", f"Frontera Temporal: Sobrecarga de datos. Se detectó el día actual ({max_date}), lo cual genera Leakage.")
         else:
-            self._add_violation(table_report, "pilar_2", "FAILURE", f"Frontera Temporal: Brecha de {gap} días detectada (Último dato: {max_date}). Se requiere hasta {today_val - timedelta(days=1)}.")
+            self._add_violation(table_report, "pilar_2", "FAILED", f"Frontera Temporal: Brecha de {gap} días detectada (Último dato: {max_date}). Se requiere hasta {today_val - timedelta(days=1)}.")
 
         # 5.2 Consistencia de Masa (Volumen Proporcional)
         snap_table = self.snapshot.get('tables', {}).get(table_name, {})
@@ -253,7 +254,7 @@ class DataHealthAuditor:
             
             # Lógica: Inconsistencia de Sincronización
             if current_mass_daily < (avg_mass_daily * 0.75):
-                self._add_violation(table_report, "pilar_2", "FAILURE", 
+                self._add_violation(table_report, "pilar_2", "FAILED", 
                     f"Inconsistencia de Sincronización: El volumen de registros ({current_mass_daily:.1f}/día) no es proporcional al promedio histórico ({avg_mass_daily:.1f}/día). Posible sub-reporte.")
             else:
                 self._add_passed_check(table_report, "pilar_2", f"Consistencia de Masa: Volumen proporcional ({current_mass_daily:.1f} reg/día).")
@@ -329,15 +330,15 @@ class DataHealthAuditor:
         # Also add to the top-level list of the table report for easier access
         table_report['violations'].append(violation)
         
-        if severity == "FAILURE":
-            table_report['pillars'][pilar_key]['status'] = "FAILURE"
+        if severity == "FAILED":
+            table_report['pillars'][pilar_key]['status'] = "FAILED"
             self.report['summary']['failure_count'] += 1
-            self.report['summary']['status'] = "FAILURE"
-            self.report['summary']['pillars'][pilar_key]['status'] = "FAILURE"
+            self.report['summary']['status'] = "FAILED"
+            self.report['summary']['pillars'][pilar_key]['status'] = "FAILED"
         else:
             self.report['summary']['warning_count'] += 1
-            if self.report['summary']['status'] != "FAILURE": self.report['summary']['status'] = "WARNING"
-            if self.report['summary']['pillars'][pilar_key]['status'] != "FAILURE": self.report['summary']['pillars'][pilar_key]['status'] = "WARNING"
+            if self.report['summary']['status'] != "FAILED": self.report['summary']['status'] = "WARNING"
+            if self.report['summary']['pillars'][pilar_key]['status'] != "FAILED": self.report['summary']['pillars'][pilar_key]['status'] = "WARNING"
             
         self.report['summary']['total_violations'] += 1
         self.report['summary']['pillars'][pilar_key]['violations_count'] += 1
@@ -352,7 +353,7 @@ class DataHealthAuditor:
     def _consolidate_table_report(self, table_report):
         worst = "SUCCESS"
         for p in table_report['pillars'].values():
-            if p['status'] == "FAILURE": worst = "FAILURE"; break
+            if p['status'] == "FAILED": worst = "FAILED"; break
             if p['status'] == "WARNING": worst = "WARNING"
         table_report['status'] = worst
 

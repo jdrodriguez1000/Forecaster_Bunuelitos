@@ -3,25 +3,30 @@
         "phase": "01",
         "phase_name": "Data Loading & Validation",
         "execution_mode": "load",
-        "timestamp": "20260302_185428",
+        "timestamp": "20260303_160722",
         "contract_code": "v1_2026_03_01_20260302_134744",
         "contract_db_id": 23
     },
     "execution_summary": {
         "total_tables": 6,
-        "success_count": 6,
+        "success_count": 0,
         "warning_count": 0,
-        "failure_count": 0,
-        "overall_status": "SUCCESS"
+        "failure_count": 6,
+        "overall_status": "FAILED"
     },
     "tables": {
         "ventas": {
-            "status": "SUCCESS",
+            "status": "FAILED",
             "violations": [
+                {
+                    "severity": "FAILED",
+                    "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                    "timestamp": "2026-03-03T16:07:24.554046"
+                },
                 {
                     "severity": "WARNING",
                     "message": "Regla 'promo_balance' falló en 254 registros.",
-                    "timestamp": "2026-03-02T18:54:30.886223"
+                    "timestamp": "2026-03-03T16:07:24.564294"
                 }
             ],
             "passed_checks": [
@@ -52,10 +57,6 @@
                 {
                     "status": "SUCCESS",
                     "message": "Periodicidad única: 0 fechas duplicadas."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                 },
                 {
                     "status": "SUCCESS",
@@ -110,8 +111,14 @@
                     ]
                 },
                 "pilar_2": {
-                    "status": "SUCCESS",
-                    "violations": [],
+                    "status": "FAILED",
+                    "violations": [
+                        {
+                            "severity": "FAILED",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                            "timestamp": "2026-03-03T16:07:24.554046"
+                        }
+                    ],
                     "passed_checks": [
                         {
                             "status": "SUCCESS",
@@ -120,10 +127,6 @@
                         {
                             "status": "SUCCESS",
                             "message": "Periodicidad única: 0 fechas duplicadas."
-                        },
-                        {
-                            "status": "SUCCESS",
-                            "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                         },
                         {
                             "status": "SUCCESS",
@@ -155,7 +158,7 @@
                         {
                             "severity": "WARNING",
                             "message": "Regla 'promo_balance' falló en 254 registros.",
-                            "timestamp": "2026-03-02T18:54:30.886223"
+                            "timestamp": "2026-03-03T16:07:24.564294"
                         }
                     ],
                     "passed_checks": [
@@ -182,35 +185,41 @@
                     "high_cardinality_cols": [],
                     "zero_variance_cols": [],
                     "high_zero_pct_cols": []
-                }
+                },
+                "last_data_date": "2026-03-01"
             },
             "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 99
+            "health_score": 89
         },
         "inventario": {
-            "status": "SUCCESS",
+            "status": "FAILED",
             "violations": [
+                {
+                    "severity": "FAILED",
+                    "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                    "timestamp": "2026-03-03T16:07:25.924606"
+                },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'kit_inicial_bodega': 219.1% (Límite 15%)",
-                    "timestamp": "2026-03-02T18:54:31.776573"
+                    "timestamp": "2026-03-03T16:07:25.933091"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'kit_final_bodega': 225.0% (Límite 15%)",
-                    "timestamp": "2026-03-02T18:54:31.776573"
+                    "timestamp": "2026-03-03T16:07:25.933091"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Regla 'stock_continuity' falló en 3 registros.",
-                    "timestamp": "2026-03-02T18:54:31.783919"
+                    "timestamp": "2026-03-03T16:07:25.943507"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Regla 'production_yield' falló en 220 registros.",
-                    "timestamp": "2026-03-02T18:54:31.787593"
+                    "timestamp": "2026-03-03T16:07:25.945123"
                 }
             ],
             "passed_checks": [
@@ -241,10 +250,6 @@
                 {
                     "status": "SUCCESS",
                     "message": "Periodicidad única: 0 fechas duplicadas."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                 },
                 {
                     "status": "SUCCESS",
@@ -307,8 +312,14 @@
                     ]
                 },
                 "pilar_2": {
-                    "status": "SUCCESS",
-                    "violations": [],
+                    "status": "FAILED",
+                    "violations": [
+                        {
+                            "severity": "FAILED",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                            "timestamp": "2026-03-03T16:07:25.924606"
+                        }
+                    ],
                     "passed_checks": [
                         {
                             "status": "SUCCESS",
@@ -317,10 +328,6 @@
                         {
                             "status": "SUCCESS",
                             "message": "Periodicidad única: 0 fechas duplicadas."
-                        },
-                        {
-                            "status": "SUCCESS",
-                            "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                         },
                         {
                             "status": "SUCCESS",
@@ -342,12 +349,12 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'kit_inicial_bodega': 219.1% (Límite 15%)",
-                            "timestamp": "2026-03-02T18:54:31.776573"
+                            "timestamp": "2026-03-03T16:07:25.933091"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'kit_final_bodega': 225.0% (Límite 15%)",
-                            "timestamp": "2026-03-02T18:54:31.776573"
+                            "timestamp": "2026-03-03T16:07:25.933091"
                         }
                     ],
                     "passed_checks": [
@@ -363,12 +370,12 @@
                         {
                             "severity": "WARNING",
                             "message": "Regla 'stock_continuity' falló en 3 registros.",
-                            "timestamp": "2026-03-02T18:54:31.783919"
+                            "timestamp": "2026-03-03T16:07:25.943507"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Regla 'production_yield' falló en 220 registros.",
-                            "timestamp": "2026-03-02T18:54:31.787593"
+                            "timestamp": "2026-03-03T16:07:25.945123"
                         }
                     ],
                     "passed_checks": [
@@ -403,30 +410,36 @@
                     "high_cardinality_cols": [],
                     "zero_variance_cols": [],
                     "high_zero_pct_cols": []
-                }
+                },
+                "last_data_date": "2026-03-01"
             },
             "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 96
+            "health_score": 86
         },
         "finanzas": {
-            "status": "SUCCESS",
+            "status": "FAILED",
             "violations": [
+                {
+                    "severity": "FAILED",
+                    "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                    "timestamp": "2026-03-03T16:07:26.841367"
+                },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'precio_unitario': 29.3% (Límite 15%)",
-                    "timestamp": "2026-03-02T18:54:32.681776"
+                    "timestamp": "2026-03-03T16:07:26.848795"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'costo_unitario': 32.5% (Límite 15%)",
-                    "timestamp": "2026-03-02T18:54:32.681776"
+                    "timestamp": "2026-03-03T16:07:26.848795"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'margen_bruto': 24.9% (Límite 15%)",
-                    "timestamp": "2026-03-02T18:54:32.681776"
+                    "timestamp": "2026-03-03T16:07:26.848795"
                 }
             ],
             "passed_checks": [
@@ -457,10 +470,6 @@
                 {
                     "status": "SUCCESS",
                     "message": "Periodicidad única: 0 fechas duplicadas."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                 },
                 {
                     "status": "SUCCESS",
@@ -515,8 +524,14 @@
                     ]
                 },
                 "pilar_2": {
-                    "status": "SUCCESS",
-                    "violations": [],
+                    "status": "FAILED",
+                    "violations": [
+                        {
+                            "severity": "FAILED",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                            "timestamp": "2026-03-03T16:07:26.841367"
+                        }
+                    ],
                     "passed_checks": [
                         {
                             "status": "SUCCESS",
@@ -525,10 +540,6 @@
                         {
                             "status": "SUCCESS",
                             "message": "Periodicidad única: 0 fechas duplicadas."
-                        },
-                        {
-                            "status": "SUCCESS",
-                            "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                         },
                         {
                             "status": "SUCCESS",
@@ -550,17 +561,17 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'precio_unitario': 29.3% (Límite 15%)",
-                            "timestamp": "2026-03-02T18:54:32.681776"
+                            "timestamp": "2026-03-03T16:07:26.848795"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'costo_unitario': 32.5% (Límite 15%)",
-                            "timestamp": "2026-03-02T18:54:32.681776"
+                            "timestamp": "2026-03-03T16:07:26.848795"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'margen_bruto': 24.9% (Límite 15%)",
-                            "timestamp": "2026-03-02T18:54:32.681776"
+                            "timestamp": "2026-03-03T16:07:26.848795"
                         }
                     ],
                     "passed_checks": [
@@ -597,16 +608,23 @@
                     "high_cardinality_cols": [],
                     "zero_variance_cols": [],
                     "high_zero_pct_cols": []
-                }
+                },
+                "last_data_date": "2026-03-01"
             },
             "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 97
+            "health_score": 87
         },
         "marketing": {
-            "status": "SUCCESS",
-            "violations": [],
+            "status": "FAILED",
+            "violations": [
+                {
+                    "severity": "FAILED",
+                    "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                    "timestamp": "2026-03-03T16:07:27.760566"
+                }
+            ],
             "passed_checks": [
                 {
                     "status": "SUCCESS",
@@ -635,10 +653,6 @@
                 {
                     "status": "SUCCESS",
                     "message": "Periodicidad única: 0 fechas duplicadas."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                 },
                 {
                     "status": "SUCCESS",
@@ -693,8 +707,14 @@
                     ]
                 },
                 "pilar_2": {
-                    "status": "SUCCESS",
-                    "violations": [],
+                    "status": "FAILED",
+                    "violations": [
+                        {
+                            "severity": "FAILED",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                            "timestamp": "2026-03-03T16:07:27.760566"
+                        }
+                    ],
                     "passed_checks": [
                         {
                             "status": "SUCCESS",
@@ -703,10 +723,6 @@
                         {
                             "status": "SUCCESS",
                             "message": "Periodicidad única: 0 fechas duplicadas."
-                        },
-                        {
-                            "status": "SUCCESS",
-                            "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                         },
                         {
                             "status": "SUCCESS",
@@ -759,30 +775,36 @@
                     "high_cardinality_cols": [],
                     "zero_variance_cols": [],
                     "high_zero_pct_cols": []
-                }
+                },
+                "last_data_date": "2026-03-01"
             },
             "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 100
+            "health_score": 90
         },
         "macroeconomia": {
-            "status": "SUCCESS",
+            "status": "FAILED",
             "violations": [
+                {
+                    "severity": "FAILED",
+                    "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                    "timestamp": "2026-03-03T16:07:28.682995"
+                },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'smlv': 29.9% (Límite 15%)",
-                    "timestamp": "2026-03-02T18:54:34.238563"
+                    "timestamp": "2026-03-03T16:07:28.691030"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'inflacion_mensual_ipc': 51.3% (Límite 15%)",
-                    "timestamp": "2026-03-02T18:54:34.238563"
+                    "timestamp": "2026-03-03T16:07:28.691030"
                 },
                 {
                     "severity": "WARNING",
                     "message": "Data Drift en 'trm': 35.1% (Límite 15%)",
-                    "timestamp": "2026-03-02T18:54:34.238563"
+                    "timestamp": "2026-03-03T16:07:28.691030"
                 }
             ],
             "passed_checks": [
@@ -813,10 +835,6 @@
                 {
                     "status": "SUCCESS",
                     "message": "Periodicidad única: 0 fechas duplicadas."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                 },
                 {
                     "status": "SUCCESS",
@@ -867,8 +885,14 @@
                     ]
                 },
                 "pilar_2": {
-                    "status": "SUCCESS",
-                    "violations": [],
+                    "status": "FAILED",
+                    "violations": [
+                        {
+                            "severity": "FAILED",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                            "timestamp": "2026-03-03T16:07:28.682995"
+                        }
+                    ],
                     "passed_checks": [
                         {
                             "status": "SUCCESS",
@@ -877,10 +901,6 @@
                         {
                             "status": "SUCCESS",
                             "message": "Periodicidad única: 0 fechas duplicadas."
-                        },
-                        {
-                            "status": "SUCCESS",
-                            "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                         },
                         {
                             "status": "SUCCESS",
@@ -902,17 +922,17 @@
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'smlv': 29.9% (Límite 15%)",
-                            "timestamp": "2026-03-02T18:54:34.238563"
+                            "timestamp": "2026-03-03T16:07:28.691030"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'inflacion_mensual_ipc': 51.3% (Límite 15%)",
-                            "timestamp": "2026-03-02T18:54:34.238563"
+                            "timestamp": "2026-03-03T16:07:28.691030"
                         },
                         {
                             "severity": "WARNING",
                             "message": "Data Drift en 'trm': 35.1% (Límite 15%)",
-                            "timestamp": "2026-03-02T18:54:34.238563"
+                            "timestamp": "2026-03-03T16:07:28.691030"
                         }
                     ],
                     "passed_checks": [
@@ -945,16 +965,23 @@
                     "high_cardinality_cols": [],
                     "zero_variance_cols": [],
                     "high_zero_pct_cols": []
-                }
+                },
+                "last_data_date": "2026-03-01"
             },
             "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 97
+            "health_score": 87
         },
         "clima": {
-            "status": "SUCCESS",
-            "violations": [],
+            "status": "FAILED",
+            "violations": [
+                {
+                    "severity": "FAILED",
+                    "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                    "timestamp": "2026-03-03T16:07:29.445662"
+                }
+            ],
             "passed_checks": [
                 {
                     "status": "SUCCESS",
@@ -983,10 +1010,6 @@
                 {
                     "status": "SUCCESS",
                     "message": "Periodicidad única: 0 fechas duplicadas."
-                },
-                {
-                    "status": "SUCCESS",
-                    "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                 },
                 {
                     "status": "SUCCESS",
@@ -1045,8 +1068,14 @@
                     ]
                 },
                 "pilar_2": {
-                    "status": "SUCCESS",
-                    "violations": [],
+                    "status": "FAILED",
+                    "violations": [
+                        {
+                            "severity": "FAILED",
+                            "message": "Frontera Temporal: Brecha de 2 días detectada (Último dato: 2026-03-01). Se requiere hasta 2026-03-02.",
+                            "timestamp": "2026-03-03T16:07:29.445662"
+                        }
+                    ],
                     "passed_checks": [
                         {
                             "status": "SUCCESS",
@@ -1055,10 +1084,6 @@
                         {
                             "status": "SUCCESS",
                             "message": "Periodicidad única: 0 fechas duplicadas."
-                        },
-                        {
-                            "status": "SUCCESS",
-                            "message": "Frontera Temporal: Al día (Última fecha permitida: 2026-03-01)."
                         },
                         {
                             "status": "SUCCESS",
@@ -1115,12 +1140,13 @@
                     "high_cardinality_cols": [],
                     "zero_variance_cols": [],
                     "high_zero_pct_cols": []
-                }
+                },
+                "last_data_date": "2026-03-01"
             },
             "ingestion_type": "NO_NEW_DATA",
             "new_rows_count": 0,
             "message": "Audit performed on local data (No Delta download).",
-            "health_score": 100
+            "health_score": 90
         }
     }
 }

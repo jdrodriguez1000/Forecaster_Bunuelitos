@@ -32,6 +32,11 @@ class DataLoader:
         self.contract_id = self.contract_metadata['contract_id'] # TU código texto (v1_...)
         self.internal_contract_id = self.contract_metadata['contract_db_id'] # ID numérico (BIGINT)
         
+        # Central Execution Tracking State
+        self.processing_type = "NO NEW DATA" # Start optimistic, will upgrade based on tables
+        self.overall_health = []
+        self.total_violations = 0
+        
         # Initialize Auditor with the rules from the nube
         self.auditor = DataHealthAuditor(self.contract_path, self.snapshot_path, reference_date=self.audit_reference_date)
 
@@ -116,6 +121,12 @@ class DataLoader:
                 df_new = self._apply_type_conversion(df_new)
                 df_audit = df_new
                 ingestion_type = "FULL" if not os.path.exists(os.path.join(raw_path, f"{table}.parquet")) else "INCREMENTAL"
+                
+                # Upgrade overall processing type
+                if ingestion_type == "FULL":
+                    self.processing_type = "FULL"
+                elif ingestion_type == "INCREMENTAL" and self.processing_type != "FULL":
+                    self.processing_type = "INCREMENTAL"
             else:
                 logger.info(f"No new data found for table '{table}'. Checking local mirror for report consistency.")
                 local_file = os.path.join(raw_path, f"{table}.parquet")
@@ -134,7 +145,7 @@ class DataLoader:
                         "compliance_summary": "No data in Supabase nor Local disk",
                         "compliance": {"matched_columns": [], "missing_columns": [], "extra_columns": []},
                         "successes": [],
-                        "violations": [{"severity": "FAILURE", "message": "CRÍTICO: NO CONTINUAR - NO HAY DATOS"}],
+                        "violations": [{"severity": "FAILED", "message": "CRÍTICO: NO CONTINUAR - NO HAY DATOS"}],
                         "stats": {"row_count": 0, "null_pct": 0},
                         "health_score": 0
                     }
@@ -179,12 +190,19 @@ class DataLoader:
             forensic_reports[table] = audit_report
             logger.info(f"Audit Result for '{table}': HP {hs} | State: {status} | Ingest: {ingestion_type}")
 
+            # Aggregate stats for central report (regardless of status)
+            self.overall_health.append(hs)
+            # Use 'stats' from audit_report safely
+            current_violations = audit_report.get('summary', {}).get('total_violations', 0)
+            self.total_violations += current_violations
+
             # 4. Decision: Persist or Abort
-            if status == "FAILURE":
-                logger.error(f"FAILURE for table '{table}'. NO CONTINUAR.")
+            if status == "FAILED":
+                logger.error(f"FAILED for table '{table}'. NO CONTINUAR.")
+                self._update_inventory_status(table, df_audit, pd.DataFrame(), status, hs, inventory_info)
                 self._log_and_notify(table, status, audit_report, inventory_info)
-                summary_results[table] = "FAILURE"
-                continue # Skip persistence but keep processing other tables
+                summary_results[table] = "FAILED"
+                continue # Skip persistence but move to next table
 
             if not df_new.empty:
                 # SUCCESS or WARNING (Incremental/Full) -> Persist
@@ -209,14 +227,23 @@ class DataLoader:
                 summary_results[table] = status
             else:
                 # No new data, but we still update the status with the local audit results
-                # to keep the Control Plane (Supabase) in sync with the latest truth
                 local_file = os.path.join(raw_path, f"{table}.parquet")
                 df_local = pd.read_parquet(local_file)
                 self._update_inventory_status(table, df_local, pd.DataFrame(), status, hs, inventory_info)
                 self._log_and_notify(table, status, audit_report, inventory_info)
                 summary_results[table] = status
 
+        # Final Phase Reporting
+        avg_health = sum(self.overall_health) / len(self.overall_health) if self.overall_health else 0
+        status_final = "FAILED" if any(v['status'] == "FAILED" for v in forensic_reports.values()) else ("WARNING" if any(v['status'] == "WARNING" for v in forensic_reports.values()) else "SUCCESS")
+        
+        # Get overall last date and total records (proxy from last table)
+        last_date = max([v.get('stats', {}).get('last_data_date', '1900-01-01') for v in forensic_reports.values()])
+        total_records = sum([v.get('stats', {}).get('row_count', 0) for v in forensic_reports.values()])
+
+        self._sync_execution_to_supabase(status_final, last_date, total_records, avg_health)
         self._save_phase_report(forensic_reports)
+        
         return summary_results
 
     def _apply_type_conversion(self, df):
@@ -263,6 +290,31 @@ class DataLoader:
         }
         self.client.table("validation_logs").insert(log_entry).execute()
 
+    def _sync_execution_to_supabase(self, status, last_date, row_count, avg_health):
+        """Standardized reporting to the central pipeline table."""
+        # Use config to check if reporting is enabled
+        tracking_cfg = self.config.get('general', {}).get('execution_tracking', {})
+        if isinstance(tracking_cfg, dict) and not tracking_cfg.get('enabled', True):
+            return
+
+        entry = {
+            "phase": "LOAD",
+            "last_processed_date": str(last_date) if last_date else None,
+            "master_row_count": int(row_count),
+            "processing_type": self.processing_type,
+            "health_score_avg": float(avg_health),
+            "anomalies_detected": int(self.total_violations),
+            "output_path": self.config['general']['data_raw_path'],
+            "status": status,
+            "error_message": None
+        }
+        
+        try:
+            self.client.table("pipeline_execution_status").insert(entry).execute()
+            logger.info(f"Phase 01 Status ({status}) synced to Supabase Control Plane.")
+        except Exception as e:
+            logger.warning(f"Supabase Status Sync failed: {e}")
+
     def _save_phase_report(self, summary):
         """Save a local JSON report of the entire phase execution following MLOps standards."""
         base_reports_path = os.path.join(self.config['general']['outputs_path'], "reports", "phase_01")
@@ -283,8 +335,8 @@ class DataLoader:
                 "total_tables": len(summary),
                 "success_count": sum(1 for v in summary.values() if v['status'] == "SUCCESS"),
                 "warning_count": sum(1 for v in summary.values() if v['status'] == "WARNING"),
-                "failure_count": sum(1 for v in summary.values() if v['status'] == "FAILURE"),
-                "overall_status": "FAILURE" if any(v['status'] == "FAILURE" for v in summary.values()) else ("WARNING" if any(v['status'] == "WARNING" for v in summary.values()) else "SUCCESS")
+                "failure_count": sum(1 for v in summary.values() if v['status'] == "FAILED"),
+                "overall_status": "FAILED" if any(v['status'] == "FAILED" for v in summary.values()) else ("WARNING" if any(v['status'] == "WARNING" for v in summary.values()) else "SUCCESS")
             },
             "tables": summary
         }
