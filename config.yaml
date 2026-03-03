@@ -26,11 +26,282 @@ extractions:
   date_columns: ["fecha"]
 
 preprocessing:
-  day_x_strategy: true
-  imputation_rules:
-    ventas: zero
-    clima: interpolate
-    macroeconomia: forward_fill
+  # 0. Orquestación y Control de Inicio
+  orchestration:
+    handshake:
+      enabled: true
+      source_table: "data_inventory_status"
+      required_status: "SUCCESS"          # No inicia si existe algún FAILURE
+      min_health_score: 0.90              # Umbral de tolerancia
+      tables_to_check: ["ventas", "inventario", "finanzas", "marketing", "macroeconomia", "clima"]
+    
+    incremental:
+      enabled: true
+      master_file: "master_dataset_latest.parquet"
+      look_back_days: 1                   # Semilla (T-1) para leyes de continuidad
+      mode: "delta"                       # Opciones: full, delta
+
+    execution_tracking:
+      enabled: true
+      table_name: "pipeline_execution_status"
+      phase_name: "PREPROCESSING"
+
+  # 1. Reglas Generales (Leyes del Sistema)
+  global_settings:
+    anti_leakage_t_minus_1: true     # No procesar datos de 'Hoy' (T)
+    quorum_required: true            # Sincronización obligatoria de las 6 tablas
+    deduplication_strategy: 
+      by_column: "updated_at"        # Columna de desempate para la 'Última Verdad'
+      order: "descending"
+    alignment:
+      drop_extra_columns: true       # Eliminar columnas no declaradas en el Contrato
+      log_removed: true              # Registrar qué se eliminó para auditoría
+    continuity:
+      ensure_zero_gaps: true         # Crear filas para días faltantes
+
+  # 2. Política Maestra de Outliers (Filtro de Sentido Común)
+  # Esta fase se ejecuta ANTES de la reconstrucción de tablas.
+  outlier_policy:
+    enabled: true
+    flag_column: "flag_outlier"
+    
+    # Escenario A: Éxito de Negocio (Punto Alto Real)
+    # Si el dato es extremo pero hay una justificación de negocio.
+    business_success:
+      action: "keep_original"
+      set_flag: 1
+      justification_triggers: ["es_promocion", "es_festivo", "ads_activos"]
+
+    # Escenario B: Error de Datos (Ruido Técnico)
+    # Si el dato es extremo y no hay justificación.
+    data_error:
+      action: "convert_to_nan"      # Se convierte en NaN para que la fase 3 lo impute
+      set_flag: 0
+      
+  # 3. Reglas por Tabla (Healing & Imputation)
+  table_rules:
+    ventas:
+      # Algoritmo Secuencial de Reconstrucción (Baile de Sanación)
+      reconstruction_steps:
+        - step: 1
+          name: "Evidencia de Promoción"
+          target: "es_promocion"
+          action: "if_nan_then_logic"
+          rule: "1 if unidades_bonificadas > 0 else 0"
+
+        - step: 2
+          name: "Simetría 2x1 Forzada"
+          target: "unidades_bonificadas"
+          action: "force_consistency"
+          rule: "unidades_pagas if es_promocion == 1 else current_value"
+
+        - step: 3
+          name: "Sanación Pagas"
+          target: "unidades_pagas"
+          action: "impute"
+          rule_if_nan: "unidades_bonificadas if es_promocion == 1 else ffill"
+
+        - step: 4
+          name: "Sanación Bonos"
+          target: "unidades_bonificadas"
+          action: "impute"
+          rule_if_nan: "unidades_pagas if es_promocion == 1 else 0"
+
+        - step: 5
+          name: "Integridad del Total"
+          target: "unidades_totales"
+          action: "force_recalculate"
+          formula: "unidades_pagas + unidades_bonificadas"
+
+        - step: 6
+          name: "Señal de Pauta"
+          target: "ads_activos"
+          action: "impute"
+          rule_if_nan: "marketing_window_logic" # Logic: (PromoStart - 20) to (PromoEndMonth Day 25)
+
+    clima:
+      # Algoritmo de Inercia Ambiental
+      reconstruction_steps:
+        - step: 1
+          name: "Inercia Térmica"
+          target: "temperatura_media"
+          action: "impute"
+          rule_if_nan: "interpolate"
+
+        - step: 2
+          name: "Reanimación de Precipitación"
+          target: "precipitacion_mm"
+          action: "impute"
+          rule_if_nan: "0 if tipo_lluvia == 'Ninguna' else interpolate"
+
+        - step: 3
+          name: "Evidencia de Categoría (Tipo Lluvia)"
+          target: "tipo_lluvia"
+          action: "if_nan_then_logic"
+          rule: "'Ninguna' if precipitacion_mm == 0 else ('Ligera' if precipitacion_mm < 5 else 'Moderada')"
+
+        - step: 4
+          name: "Consistencia del Flag Lluvioso"
+          target: "es_dia_lluvioso"
+          action: "force_recalculate"
+          formula: "1 if precipitacion_mm > 0 else 0"
+
+        - step: 5
+          name: "Fenómenos Macro (Clima)"
+          target: "evento_macro"
+          action: "impute"
+          rule_if_nan: "ffill"
+    macroeconomia:
+      # Algoritmo de Contexto Persistente
+      reconstruction_steps:
+        - step: 1
+          name: "Herencia de Indicadores Estables"
+          target: ["smlv", "inflacion_mensual_ipc", "tasa_desempleo"]
+          action: "impute"
+          rule_if_nan: "ffill"
+
+        - step: 2
+          name: "Inercia de Mercado (TRM)"
+          target: "trm"
+          action: "impute"
+          rule_if_nan: "interpolate"
+    finanzas:
+      # Algoritmo de Estabilidad Contractual
+      reconstruction_steps:
+        - step: 1
+          name: "Herencia de Precios y Costos"
+          target: ["precio_unitario", "costo_unitario"]
+          action: "impute"
+          rule_if_nan: "ffill"
+
+        - step: 2
+          name: "Reconstrucción de Margen Bruto"
+          target: "margen_bruto"
+          action: "force_recalculate"
+          formula: "precio_unitario - costo_unitario"
+
+        - step: 3
+          name: "Cálculo de Eficiencia (Porcentaje)"
+          target: "porcentaje_margen"
+          action: "force_recalculate"
+          formula: "margen_bruto / precio_unitario"
+    marketing:
+      # Algoritmo de Atribución de Pauta
+      reconstruction_steps:
+        - step: 1
+          name: "Herencia de Mix de Canales"
+          target: ["fb_pct", "ig_pct"]
+          action: "impute"
+          rule_if_nan: "ffill"
+
+        - step: 2
+          name: "Reconstrucción de Costura por Canal"
+          target: ["fb_cost", "ig_cost"]
+          action: "reconstruct_from_total"
+          formula: "inversion_total * canal_pct"
+          condition: "if_nan"
+
+        - step: 3
+          name: "Integridad de Inversión Total"
+          target: "inversion_total"
+          action: "force_recalculate"
+          formula: "fb_cost + ig_cost"
+
+        - step: 4
+          name: "Sanación de Nulos a Zero"
+          target: ["inversion_total", "fb_cost", "ig_cost"]
+          action: "impute"
+          rule_if_nan: 0
+
+        - step: 5
+          name: "Sincronización de Campaña Activa"
+          target: "campaña_activa"
+          action: "if_nan_then_logic"
+          rule: "1 if inversion_total > 0 else 0"
+    inventario:
+      # Algoritmo de Reconstrucción Operativa (Balance de Masa 2.0)
+      reconstruction_steps:
+        - step: 1
+          name: "Sincronización de Verdad Comercial"
+          target: "ventas_reales_totales"
+          action: "sync_from_table"
+          source: "ventas.unidades_totales"
+          condition: "always"
+
+        - step: 2
+          name: "Ley del Cierre Nocturno (Continuidad)"
+          target: "kit_inicial_bodega"
+          action: "inherit_temporal"
+          source: "kit_final_bodega"
+          lag: 1
+          condition: "always"
+
+        - step: 3
+          name: "Techo de Vitrina (Ventas vs Producción)"
+          target: "buñuelos_preparados"
+          action: "force_min_threshold"
+          threshold_source: "ventas_reales_totales"
+          formula: "max(buñuelos_preparados, ventas_reales_totales)"
+
+        - step: 4
+          name: "Inercia de Factor de Conversión (Lbs/Kit)"
+          target: "__temp_lbs_per_kit"
+          action: "calculate_and_inherit"
+          formula: "lbs_recibidas / kit_recibido"
+          rule_if_nan: "ffill"
+
+        - step: 5
+          name: "Cálculo de Consumo Real (Back-Calculation)"
+          target: "__temp_lbs_necesarias"
+          action: "force_recalculate"
+          formula: "buñuelos_preparados / 50"
+
+        - step: 6
+          name: "Ajuste de Salida de Bodega (Masa Invariante)"
+          target: "kit_final_bodega"
+          action: "force_recalculate"
+          formula: "(kit_inicial_bodega + kit_recibido) - (__temp_lbs_necesarias / __temp_lbs_per_kit)"
+
+        - step: 7
+          name: "Integridad de Merma"
+          target: "buñuelos_desperdiciados"
+          action: "force_recalculate"
+          formula: "max(0, buñuelos_preparados - ventas_reales_totales)"
+
+        - step: 8
+          name: "Unidades Agotadas"
+          target: "unidades_agotadas"
+          action: "impute"
+          rule_if_nan: 0
+
+        - step: 9
+          name: "Reconstrucción del Target (Demanda Total)"
+          target: "demanda_teorica_total"
+          action: "force_recalculate"
+          formula: "ventas_reales_totales + unidades_agotadas"
+
+    # 4. Puerta de Calidad Final (Tranquilidad del Dataset Maestro)
+    quality_gate:
+      certification_required: true
+      zero_tolerance_columns: 
+        - demanda_teorica_total
+        - fecha
+        - ventas_reales_totales
+        - kit_inicial_bodega
+      assertions:
+        - name: "Unicidad Temporal"
+          rule: "no_duplicate_dates"
+          severity: "FAILURE"
+        - name: "Continuidad Cronológica"
+          rule: "no_date_gaps"
+          severity: "FAILURE"
+        - name: "Higiene Total"
+          rule: "global_null_pct < 0.001"
+          severity: "FAILURE"
+        - name: "Cierre de Masa"
+          rule: "abs(buñuelos_preparados - ventas_reales_totales - buñuelos_desperdiciados) < 0.01"
+          severity: "FAILURE"
+
 
 eda:
   generate_figures: true
