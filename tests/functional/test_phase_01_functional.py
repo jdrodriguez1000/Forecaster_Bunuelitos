@@ -16,7 +16,7 @@ def functional_config():
         },
         'extractions': {
             'tables': ['ventas'],
-            'date_columns': ['fecha']
+            'date_columns': ['fecha', 'updated_at']
         },
         'general': {
             'data_raw_path': 'tests/temp/functional/data/01_raw',
@@ -61,10 +61,20 @@ def test_functional_math_integrity_failure(mock_handshake, mock_db_class, functi
     # Mathematical failure (100 != 80 + 10)
     # We use values close to snapshot mean (145) to avoid drift warnings
     bad_data = pd.DataFrame([
-        {'fecha': '2024-01-01', 'unidades_totales': 145, 'unidades_pagas': 120, 'unidades_bonificadas': 10, 'es_promocion': 0, 'categoria': 'A'}
+        {
+            'fecha': '2024-01-01', 
+            'unidades_totales': 145, 
+            'unidades_pagas': 120, 
+            'unidades_bonificadas': 10, 
+            'es_promocion': 0, 
+            'categoria': 'A',
+            'updated_at': '2024-01-01 12:00:00',
+            'valor': 15000.0
+        }
     ])
     bad_data['fecha'] = pd.to_datetime(bad_data['fecha'])
-
+    bad_data['updated_at'] = pd.to_datetime(bad_data['updated_at'])
+    
     loader = DataLoader(functional_config)
     with patch.object(DataLoader, '_get_incremental_info', return_value={'last_data_date': '1900-01-01'}), \
          patch.object(DataLoader, '_download_delta', return_value=bad_data), \
@@ -73,7 +83,7 @@ def test_functional_math_integrity_failure(mock_handshake, mock_db_class, functi
         
         results = loader.process_all_tables()
 
-    assert results['ventas'] == 'FAILURE'
+    assert results['ventas'] == 'FAILED'
     
     # Verify report contains the specific violation
     report_file = os.path.join(functional_config['general']['outputs_path'], "reports/phase_01/phase_01_loader_latest.json")
@@ -81,7 +91,7 @@ def test_functional_math_integrity_failure(mock_handshake, mock_db_class, functi
         report = json.load(f)
     
     ventas_report = report['tables']['ventas']
-    assert any(v['severity'] == 'FAILURE' and 'logic_sum' in v['message'] for v in ventas_report['violations'])
+    assert any(v['severity'] == 'FAILED' and 'logic_sum' in v['message'] for v in ventas_report['violations'])
 
 @patch('src.loader.DBConnector')
 @patch('src.loader.DataLoader._handshake')
@@ -99,12 +109,18 @@ def test_functional_100_percent_health(mock_handshake, mock_db_class, functional
     
     # Snapshot mean is 145.0, Threshold 10%. 
     # (140 + 150) / 2 = 145.0 -> 0% drift
+    # Snapshot mean is 145.0
     perfect_data = pd.DataFrame([
-        {'fecha': '2024-01-01', 'unidades_totales': 140, 'unidades_pagas': 140, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'A'},
-        {'fecha': '2024-01-02', 'unidades_totales': 150, 'unidades_pagas': 140, 'unidades_bonificadas': 10, 'es_promocion': 0, 'categoria': 'B'}
+        {'fecha': '2023-12-28', 'unidades_totales': 140, 'unidades_pagas': 140, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'A', 'updated_at': '2024-01-03 12:00:00', 'valor': 15000.0},
+        {'fecha': '2023-12-29', 'unidades_totales': 150, 'unidades_pagas': 140, 'unidades_bonificadas': 10, 'es_promocion': 0, 'categoria': 'A', 'updated_at': '2024-01-03 12:00:00', 'valor': 16000.0},
+        {'fecha': '2023-12-30', 'unidades_totales': 145, 'unidades_pagas': 145, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'B', 'updated_at': '2024-01-03 12:00:00', 'valor': 15500.0},
+        {'fecha': '2023-12-31', 'unidades_totales': 145, 'unidades_pagas': 145, 'unidades_bonificadas': 0, 'es_promocion': 1, 'categoria': 'B', 'updated_at': '2024-01-03 12:00:00', 'valor': 15500.0},
+        {'fecha': '2024-01-01', 'unidades_totales': 145, 'unidades_pagas': 145, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'C', 'updated_at': '2024-01-03 12:00:00', 'valor': 15500.0},
+        {'fecha': '2024-01-02', 'unidades_totales': 145, 'unidades_pagas': 145, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'C', 'updated_at': '2024-01-03 12:00:00', 'valor': 15500.0}
     ])
     perfect_data['fecha'] = pd.to_datetime(perfect_data['fecha'])
-
+    perfect_data['updated_at'] = pd.to_datetime(perfect_data['updated_at'])
+    
     loader = DataLoader(functional_config)
     with patch.object(DataLoader, '_get_incremental_info', return_value={'last_data_date': '1900-01-01'}), \
          patch.object(DataLoader, '_download_delta', return_value=perfect_data), \
@@ -113,7 +129,15 @@ def test_functional_100_percent_health(mock_handshake, mock_db_class, functional
         
         results = loader.process_all_tables()
 
-    assert results['ventas'] == 'SUCCESS'
+    # Capture violations for better debugging if it fails
+    report_file = os.path.join(functional_config['general']['outputs_path'], "reports/phase_01/phase_01_loader_latest.json")
+    violations = []
+    if os.path.exists(report_file):
+        with open(report_file, 'r', encoding='utf-8') as f:
+            full_report = json.load(f)
+            violations = full_report['tables']['ventas'].get('violations', [])
+            
+    assert results['ventas'] == 'SUCCESS', f"Violations found: {violations}"
     
     # Verify Score 100 in report
     report_file = os.path.join(functional_config['general']['outputs_path'], "reports/phase_01/phase_01_loader_latest.json")
@@ -142,15 +166,35 @@ def test_functional_incremental_fusion(mock_handshake, mock_db_class, functional
     
     # Snapshot Mean 145.0
     df_local = pd.DataFrame([
-        {'fecha': '2024-01-01', 'unidades_totales': 145, 'unidades_pagas': 145, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'A'}
+        {
+            'fecha': '2024-01-01', 
+            'unidades_totales': 145, 
+            'unidades_pagas': 145, 
+            'unidades_bonificadas': 0, 
+            'es_promocion': 0, 
+            'categoria': 'A',
+            'updated_at': '2024-01-01 12:00:00',
+            'valor': 15000.0
+        }
     ])
     df_local['fecha'] = pd.to_datetime(df_local['fecha'])
+    df_local['updated_at'] = pd.to_datetime(df_local['updated_at'])
     df_local.to_parquet(local_file, index=False)
     
     new_delta = pd.DataFrame([
-        {'fecha': '2024-01-02', 'unidades_totales': 145, 'unidades_pagas': 145, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'A'}
+        {
+            'fecha': '2024-01-02', 
+            'unidades_totales': 145, 
+            'unidades_pagas': 145, 
+            'unidades_bonificadas': 0, 
+            'es_promocion': 0, 
+            'categoria': 'A',
+            'updated_at': '2024-01-02 12:00:00',
+            'valor': 15000.0
+        }
     ])
     new_delta['fecha'] = pd.to_datetime(new_delta['fecha'])
+    new_delta['updated_at'] = pd.to_datetime(new_delta['updated_at'])
 
     loader = DataLoader(functional_config)
     with patch.object(DataLoader, '_get_incremental_info', return_value={'last_data_date': '2024-01-01'}), \

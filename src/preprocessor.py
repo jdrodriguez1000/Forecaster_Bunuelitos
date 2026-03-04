@@ -426,13 +426,51 @@ class Preprocessor:
         else:
             master_df = master_df.set_index('fecha').reindex(full_range).reset_index().rename(columns={'index': 'fecha'})
 
-        # Smart Fill
+        # Smart Fill: Pillar of Continuity
+        # 1. Rule-Aware Filling (Domain specific)
+        for domain, df_domain in df_dict.items():
+            rules = self.config['preprocessing']['table_rules'].get(domain, {}).get('reconstruction_steps', [])
+            
+            # Map rule-targets to their possibly suffixed master column names
+            fill_map = {}
+            for step in rules:
+                if step.get('action') == 'if_nan_then_logic':
+                    target = step['target']
+                    targets = [target] if isinstance(target, str) else target
+                    for t in targets:
+                        # Find matching column in master_df (might have _x or _y)
+                        if t in master_df.columns:
+                            fill_map[t] = step['rule']
+                        else:
+                            # Search for suffix versions
+                            for master_col in master_df.columns:
+                                if master_col.startswith(f"{t}_") or master_col.endswith(f"_{t}"):
+                                    fill_map[master_col] = step['rule']
+
+            for col, rule in fill_map.items():
+                mask = master_df[col].isna()
+                if mask.any():
+                    eval_res = self._safe_eval(master_df, rule)
+                    master_df.loc[mask, col] = eval_res.loc[mask] if isinstance(eval_res, pd.Series) else eval_res
+                    logger.debug(f"Applied Rule-Fill to '{col}' in gaps.")
+
+        # 2. Global Heuristics (Cleanup remaining nulls)
         for col in master_df.columns:
             if col == 'fecha': continue
-            if any(k in col for k in ['flag', 'promocion', 'festivo', 'ads', 'precio', 'costo']):
+            mask = master_df[col].isna()
+            if not mask.any(): continue
+            
+            # Priority 1: Generic Business Patterns (Categorical/Flag-like)
+            if any(k in col.lower() for k in ['flag', 'promocion', 'festivo', 'ads', 'precio', 'costo', 'updated_at', 'valor']):
                 master_df[col] = master_df[col].ffill().fillna(0)
+            
+            # Priority 2: Linear Interpolation (Physical/Continuity fallback)
             else:
-                master_df[col] = master_df[col].interpolate(method='linear').ffill().bfill()
+                try:
+                    master_df[col] = master_df[col].interpolate(method='linear').ffill().bfill()
+                except:
+                    # Non-numeric might fail interpolation
+                    master_df[col] = master_df[col].ffill().fillna(0)
         
         return master_df
 
@@ -515,7 +553,7 @@ class Preprocessor:
             "execution_summary": {
                 "overall_status": status,
                 "processing_type": self.processing_type,
-                "summary": extra_info.get("processing_description") if extra_info else f"Preprocessing finished with status: {status}",
+                "summary": error_msg if error_msg else (extra_info.get("processing_description") if extra_info else f"Preprocessing finished with status: {status}"),
                 "total_rows_produced": int(row_count),
                 "date_range": extra_info.get("date_range") if extra_info else "N/A"
             },
@@ -544,10 +582,10 @@ class Preprocessor:
                     stats["applied_rules"] = [r['name'] for r in sorted(config_rules, key=lambda x: x['step'])]
 
                 global_actions = []
-                if stats['anti_leakage'] > 0: global_actions.append(f"Anti-Leakage: {stats['anti_leakage']} filas descartadas")
-                if stats['deduplicated'] > 0: global_actions.append(f"Deduplicación: {stats['deduplicated']} filas filtradas")
-                if stats['pruned_cols']: global_actions.append(f"Poda: {len(stats['pruned_cols'])} columnas removidas")
-                if stats['gaps_filled'] > 0: global_actions.append(f"Continuidad: {stats['gaps_filled']} días creados")
+                if stats.get('anti_leakage', 0) > 0: global_actions.append(f"Anti-Leakage: {stats.get('anti_leakage')} filas descartadas")
+                if stats.get('deduplicated', 0) > 0: global_actions.append(f"Deduplicación: {stats.get('deduplicated')} filas filtradas")
+                if stats.get('pruned_cols'): global_actions.append(f"Poda: {len(stats.get('pruned_cols'))} columnas removidas")
+                if stats.get('gaps_filled', 0) > 0: global_actions.append(f"Continuidad: {stats.get('gaps_filled')} días creados")
                 
                 detailed_log[domain] = {
                     "global_laws_compliance": global_actions if global_actions else ["Cumple todas las leyes globales"],
@@ -573,6 +611,7 @@ class Preprocessor:
                     "temporal_series_gaps": int(self.output_audit['temporal_gaps']),
                     "audit_status": "CERTIFIED" if status == "SUCCESS" else "FAILED"
                 },
+                "total_rows": int(row_count),
                 "output_file": entry["output_path"]
             }
             # Add Master Schema info if available in extra_info
@@ -679,7 +718,14 @@ class Preprocessor:
 
             # 7. Final Check & Sync
             if not self._quality_gate(master_df):
-                 self._sync_execution_to_supabase("FAILED", "N/A", 0, 0, "Quality Gate Failed")
+                 reasons = []
+                 if self.output_audit['duplicate_rows'] > 0: reasons.append("Duplicate rows detected")
+                 if self.output_audit['duplicate_dates'] > 0: reasons.append("Duplicate dates detected")
+                 if self.output_audit['null_values'] > 0: reasons.append(f"Null values detected ({self.output_audit['null_values']})")
+                 if self.output_audit['temporal_gaps'] > 0: reasons.append("Temporal series gaps detected")
+                 
+                 qg_msg = f"Quality Gate FAILED: {', '.join(reasons)}"
+                 self._sync_execution_to_supabase("FAILED", "N/A", 0, avg_health, qg_msg)
                  return "FAILED"
 
             master_df.to_parquet(master_path, index=False)

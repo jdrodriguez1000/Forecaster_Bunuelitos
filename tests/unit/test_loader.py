@@ -120,21 +120,33 @@ def test_apply_type_conversion(mock_config):
          patch('src.loader.DataLoader._handshake'):
         
         loader = DataLoader(mock_config)
+        # Mock the contract in the auditor
+        loader.auditor.contract = {
+            'tables': {
+                'ventas': {
+                    'columns': {
+                        'fecha': {'type': 'datetime'},
+                        'otro_campo': {'type': 'datetime'},
+                        'valor': {'type': 'int'}
+                    }
+                }
+            }
+        }
+
         df = pd.DataFrame({
             'fecha': ['2024-01-01', '2024-01-02'],
             'otro_campo': ['2024-01-03', 'invalid'],
-            'valor': [100, 200]
+            'valor': [100.0, 200.0]
         })
         
-        df_converted = loader._apply_type_conversion(df)
+        # Now requires table_name
+        df_converted = loader._apply_type_conversion(df, 'ventas')
         
-        # Debug print
-        print(f"DEBUG: df_converted types:\n{df_converted.dtypes}")
-        
-        assert pd.api.types.is_datetime64_any_dtype(df_converted['fecha']), f"fecha should be datetime, got {df_converted['fecha'].dtype}"
-        assert pd.api.types.is_datetime64_any_dtype(df_converted['otro_campo']), f"otro_campo should be datetime, got {df_converted['otro_campo'].dtype}"
-        assert pd.isna(df_converted['otro_campo'].iloc[1]), "index 1 of otro_campo should be NaT"
-        assert pd.api.types.is_integer_dtype(df_converted['valor']), f"valor should be integer, got {df_converted['valor'].dtype}"
+        assert pd.api.types.is_datetime64_any_dtype(df_converted['fecha'])
+        assert pd.api.types.is_datetime64_any_dtype(df_converted['otro_campo'])
+        assert pd.isna(df_converted['otro_campo'].iloc[1])
+        # valor 100.0 became float, should be int after conversion
+        assert pd.api.types.is_integer_dtype(df_converted['valor'])
 
 @patch('src.loader.DBConnector')
 @patch('src.loader.DataHealthAuditor')

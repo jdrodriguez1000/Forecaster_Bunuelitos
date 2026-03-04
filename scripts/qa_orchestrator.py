@@ -17,7 +17,12 @@ def run_script(script_path):
     
     print(f"\n🚀 EJECUTANDO: {os.path.basename(script_path)}")
     print("-" * 50)
-    result = subprocess.run([sys.executable, script_path], capture_output=False)
+    
+    # Ensure UTF-8 for subprocesses on Windows
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
+    
+    result = subprocess.run([sys.executable, script_path], capture_output=False, env=env)
     return result.returncode == 0
 
 def main():

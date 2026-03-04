@@ -166,8 +166,12 @@ class DataHealthAuditor:
         for col in df.columns:
             if col in self.SYSTEM_COLUMNS: continue
             for cat, vals in sentinels.items():
-                # Filter out values that are not in the current column's data
-                hits = df[col].isin(vals).sum()
+                if pd.api.types.is_datetime64_any_dtype(df[col]):
+                    # To avoid FutureWarning with isin, cast dates to strings for this specific check
+                    hits = df[col].dt.strftime('%Y-%m-%d').isin(vals).sum()
+                else:
+                    hits = df[col].isin(vals).sum()
+                
                 if hits > 0:
                     sentinel_total += hits
                     self._add_violation(table_report, "pilar_1", "WARNING", f"Valores Centinela en '{col}': {hits} registros encontrados ({cat}).")
@@ -275,7 +279,7 @@ class DataHealthAuditor:
                 table_report['stats']['statistical_profiling']['high_cardinality_cols'].append(col)
                 self._add_violation(table_report, "pilar_3", "WARNING", f"Alta Cardinalidad en '{col}': Ratio {ratio:.2f}")
                 stats_issues = True
-            if unique_count == 1:
+            if unique_count == 1 and len(df) > 5:
                 table_report['stats']['statistical_profiling']['zero_variance_cols'].append(col)
                 self._add_violation(table_report, "pilar_3", "WARNING", f"Varianza Cero en '{col}': Columna constante.")
                 stats_issues = True

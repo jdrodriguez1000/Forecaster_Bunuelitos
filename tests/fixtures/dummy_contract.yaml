@@ -22,6 +22,8 @@ tables:
       unidades_pagas: {type: "int"}
       unidades_bonificadas: {type: "int"}
       es_promocion: {type: "int"}
+      updated_at: {type: "datetime"}
+      valor: {type: "float"}
       categoria: {type: "string", categories: ["A", "B", "C"]}
     rules:
       logic_sum:
@@ -35,3 +37,4 @@ tables:
     columns:
       fecha: {type: "datetime"}
       price: {type: "float"}
+      updated_at: {type: "datetime"}

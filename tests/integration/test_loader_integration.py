@@ -16,7 +16,7 @@ def integration_config():
         },
         'extractions': {
             'tables': ['ventas', 'finances'],
-            'date_columns': ['fecha']
+            'date_columns': ['fecha', 'updated_at']
         },
         'general': {
             'data_raw_path': 'tests/temp/data/01_raw',
@@ -42,10 +42,6 @@ def setup_teardown_temp_dirs():
             shutil.rmtree(d)
         os.makedirs(d, exist_ok=True)
     yield
-    # Cleanup after test
-    for d in ['tests/temp']:
-        if os.path.exists(d):
-            shutil.rmtree(d)
 
 @patch('src.loader.DBConnector')
 @patch('src.loader.DataLoader._handshake')
@@ -73,12 +69,30 @@ def test_full_loader_integration_flow(mock_handshake, mock_db_class, integration
     mock_db.get_client.return_value = mock_client
     
     mock_data_ventas = [
-        {'fecha': '2024-01-01', 'unidades_totales': 100, 'unidades_pagas': 100, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'A'},
-        {'fecha': '2024-01-02', 'unidades_totales': 120, 'unidades_pagas': 120, 'unidades_bonificadas': 0, 'es_promocion': 0, 'categoria': 'B'}
+        {
+            'fecha': '2024-01-01', 
+            'unidades_totales': 100, 
+            'unidades_pagas': 100, 
+            'unidades_bonificadas': 0, 
+            'es_promocion': 0, 
+            'categoria': 'A',
+            'updated_at': '2024-01-01 12:00:00',
+            'valor': 10000.0
+        },
+        {
+            'fecha': '2024-01-02', 
+            'unidades_totales': 120, 
+            'unidades_pagas': 120, 
+            'unidades_bonificadas': 0, 
+            'es_promocion': 0, 
+            'categoria': 'B',
+            'updated_at': '2024-01-02 12:00:00',
+            'valor': 12000.0
+        }
     ]
     mock_data_finances = [
-        {'fecha': '2024-01-01', 'price': 100.0},
-        {'fecha': '2024-01-02', 'price': 105.0}
+        {'fecha': '2024-01-01', 'price': 100.0, 'updated_at': '2024-01-01 12:00:00'},
+        {'fecha': '2024-01-02', 'price': 105.0, 'updated_at': '2024-01-02 12:00:00'}
     ]
     
     def table_mock_side_effect(table_name):

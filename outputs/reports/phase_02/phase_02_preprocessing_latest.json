@@ -3,7 +3,7 @@
         "phase": "02",
         "phase_name": "Preprocessing & Data Healing",
         "execution_mode": "delta",
-        "timestamp": "20260303_181851",
+        "timestamp": "20260303_193814",
         "project": "Forecaster Buñuelitos"
     },
     "execution_summary": {
@@ -136,6 +136,7 @@
             "temporal_series_gaps": 0,
             "audit_status": "CERTIFIED"
         },
+        "total_rows": 3348,
         "output_file": "data/02_cleansed\\master_cleansed.parquet",
         "master_schema": {
             "fecha": "datetime64[ns]",

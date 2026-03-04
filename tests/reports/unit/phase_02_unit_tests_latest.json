@@ -1,0 +1,89 @@
+{
+    "metadata": {
+        "phase_id": "02",
+        "phase_name": "Loader, Auditor & Preprocessor",
+        "project": "Forecaster Buñuelitos",
+        "execution_date": "2026-03-03T19:34:22.249455"
+    },
+    "summary": {
+        "status": "PASSED",
+        "duration_seconds": 12.733,
+        "coverage_percentage": "31.46%",
+        "metrics": {
+            "passed": 13,
+            "failed": 0,
+            "total": 13
+        }
+    },
+    "test_results": [
+        {
+            "test_name": "test_loader_initialization",
+            "class": "tests.unit.test_loader",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_loader_run_audit_only",
+            "class": "tests.unit.test_loader",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_get_incremental_info_no_data",
+            "class": "tests.unit.test_loader",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_apply_type_conversion",
+            "class": "tests.unit.test_loader",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_audit_copy_isolation",
+            "class": "tests.unit.test_loader",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_preprocessor_initialization",
+            "class": "tests.unit.test_preprocessor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_handshake_failure",
+            "class": "tests.unit.test_preprocessor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_anti_leakage",
+            "class": "tests.unit.test_preprocessor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_deduplication",
+            "class": "tests.unit.test_preprocessor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_column_pruning",
+            "class": "tests.unit.test_preprocessor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_safe_eval_ternary",
+            "class": "tests.unit.test_preprocessor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_apply_healing_steps",
+            "class": "tests.unit.test_preprocessor",
+            "status": "PASSED"
+        },
+        {
+            "test_name": "test_quality_gate",
+            "class": "tests.unit.test_preprocessor",
+            "status": "PASSED"
+        }
+    ],
+    "raw_output": {
+        "stdout": "============================= test session starts =============================\nplatform win32 -- Python 3.12.10, pytest-9.0.2, pluggy-1.6.0 -- C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\ncachedir: .pytest_cache\nrootdir: C:\\Users\\USUARIO\\Documents\\Forecaster\\BuÃ±uelitos\nplugins: anyio-4.12.0, cov-7.0.0\ncollecting ... collected 13 items\n\ntests/unit/test_loader.py::test_loader_initialization PASSED             [  7%]\ntests/unit/test_loader.py::test_loader_run_audit_only PASSED             [ 15%]\ntests/unit/test_loader.py::test_get_incremental_info_no_data PASSED      [ 23%]\ntests/unit/test_loader.py::test_apply_type_conversion PASSED             [ 30%]\ntests/unit/test_loader.py::test_audit_copy_isolation PASSED              [ 38%]\ntests/unit/test_preprocessor.py::test_preprocessor_initialization PASSED [ 46%]\ntests/unit/test_preprocessor.py::test_handshake_failure PASSED           [ 53%]\ntests/unit/test_preprocessor.py::test_anti_leakage PASSED                [ 61%]\ntests/unit/test_preprocessor.py::test_deduplication PASSED               [ 69%]\ntests/unit/test_preprocessor.py::test_column_pruning PASSED              [ 76%]\ntests/unit/test_preprocessor.py::test_safe_eval_ternary PASSED           [ 84%]\ntests/unit/test_preprocessor.py::test_apply_healing_steps PASSED         [ 92%]\ntests/unit/test_preprocessor.py::test_quality_gate PASSED                [100%]\n\n============================== warnings summary ===============================\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:20\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:20: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class BaseBucket(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:130\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:130: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class SignedUrlJsonResponse(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:134\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:134: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class SignedUrlsJsonItem(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:143\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:143: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class CreateSignedUploadUrlOptions(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:161\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:161: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class MetadataConfiguration(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:167\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:167: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class ListIndexesOptions(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:173\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:173: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class ListIndexesResponseItem(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:177\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:177: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class ListVectorIndexesResponse(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:182\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:182: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class VectorIndex(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:194\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:194: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class GetVectorIndexResponse(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:201\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:201: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class VectorData(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:205\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:205: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class VectorObject(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:211\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:211: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class VectorMatch(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:218\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:218: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class GetVectorsResponse(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:222\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:222: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class ListVectorsResponse(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:227\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:227: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class QueryVectorsResponse(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:231\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:231: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class AnalyticsBucket(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:245\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:245: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class AnalyticsBucketDeleteResponse(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:249\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:249: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class VectorBucketEncryptionConfiguration(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:254\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:254: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class VectorBucket(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:260\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:260: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class GetVectorBucketResponse(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:264\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:264: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class ListVectorBucketsItem(BaseModel, extra=Extra.ignore):\n\n..\\..\\..\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:268\n  C:\\Users\\USUARIO\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\storage3\\types.py:268: PydanticDeprecatedSince20: `pydantic.config.Extra` is deprecated, use literal values instead (e.g. `extra='allow'`). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/\n    class ListVectorBucketsResponse(BaseModel, extra=Extra.ignore):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n- generated xml file: C:\\Users\\USUARIO\\Documents\\Forecaster\\BuÃ±uelitos\\tests\\reports\\unit\\temp_results.xml -\n=============================== tests coverage ================================\n______________ coverage: platform win32, python 3.12.10-final-0 _______________\n\nCoverage JSON written to file tests/reports/unit\\coverage.json\n======================= 13 passed, 23 warnings in 8.43s =======================\n",
+        "stderr": ""
+    }
+}

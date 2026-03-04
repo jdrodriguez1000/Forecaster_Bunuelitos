@@ -91,7 +91,7 @@ def main():
     
     # Build final report
     final_report = {
-        "phase": "01_loader_auditor",
+        "phase": "02_loader_preprocessor",
         "test_type": "functional",
         "timestamp": datetime.now().isoformat(),
         "overall_status": "SUCCESS" if exit_code == 0 else "FAILURE",
@@ -106,7 +106,7 @@ def main():
     save_dual_persistence(
         data=final_report,
         base_path=reports_dir,
-        filename="phase_01_functional_tests"
+        filename="phase_02_functional_tests"
     )
     
     # Cleanup temp XML

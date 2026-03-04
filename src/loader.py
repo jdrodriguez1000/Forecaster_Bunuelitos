@@ -118,7 +118,7 @@ class DataLoader:
             df_new = self._download_delta(table, last_date)
             
             if not df_new.empty:
-                df_new = self._apply_type_conversion(df_new)
+                df_new = self._apply_type_conversion(df_new, table)
                 df_audit = df_new
                 ingestion_type = "FULL" if not os.path.exists(os.path.join(raw_path, f"{table}.parquet")) else "INCREMENTAL"
                 
@@ -133,7 +133,7 @@ class DataLoader:
                 
                 if os.path.exists(local_file):
                     df_audit = pd.read_parquet(local_file)
-                    df_audit = self._apply_type_conversion(df_audit)
+                    df_audit = self._apply_type_conversion(df_audit, table)
                     status_prefix = "NO_NEW_DATA"
                     ingestion_type = "NO_NEW_DATA"
                 else:
@@ -197,7 +197,7 @@ class DataLoader:
             self.total_violations += current_violations
 
             # 4. Decision: Persist or Abort
-            if status == "FAILED":
+            if audit_report['status'] == "FAILED":
                 logger.error(f"FAILED for table '{table}'. NO CONTINUAR.")
                 self._update_inventory_status(table, df_audit, pd.DataFrame(), status, hs, inventory_info)
                 self._log_and_notify(table, status, audit_report, inventory_info)
@@ -211,7 +211,7 @@ class DataLoader:
                 # FUSION: Merge with local history if exists
                 if os.path.exists(local_file):
                     df_local = pd.read_parquet(local_file)
-                    df_local = self._apply_type_conversion(df_local)
+                    df_local = self._apply_type_conversion(df_local, table)
                     df_combined = pd.concat([df_local, df_new], ignore_index=True)
                     df_combined = df_combined.drop_duplicates(subset=['fecha'], keep='last').sort_values('fecha')
                 else:
@@ -246,16 +246,27 @@ class DataLoader:
         
         return summary_results
 
-    def _apply_type_conversion(self, df):
-        """Standardize column types based on configuration."""
+    def _apply_type_conversion(self, df, table_name):
+        """Standardize column types based on contract configuration."""
         if df.empty:
             return df
             
         df_clean = df.copy()
-        for col in self.date_columns:
+        
+        # Get column types from contract
+        contract_cols = self.auditor.contract.get('tables', {}).get(table_name, {}).get('columns', {})
+        
+        for col, meta in contract_cols.items():
             if col in df_clean.columns:
-                logger.info(f"Converting column '{col}' to datetime...")
-                df_clean[col] = pd.to_datetime(df_clean[col], errors='coerce')
+                target_type = meta.get('type')
+                if target_type == 'datetime':
+                    df_clean[col] = pd.to_datetime(df_clean[col], errors='coerce')
+                elif target_type == 'int':
+                    df_clean[col] = pd.to_numeric(df_clean[col], errors='coerce').fillna(0).astype(int)
+                elif target_type == 'float':
+                    df_clean[col] = pd.to_numeric(df_clean[col], errors='coerce').astype(float)
+                elif target_type == 'string':
+                    df_clean[col] = df_clean[col].astype(str).replace('nan', '')
         
         return df_clean
 

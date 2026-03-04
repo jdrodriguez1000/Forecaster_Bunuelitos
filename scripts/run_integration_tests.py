@@ -4,16 +4,21 @@ import subprocess
 import json
 import xml.etree.ElementTree as ET
 from datetime import datetime
+
+# Add the root directory to the PYTHONPATH
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.utils.helpers import save_dual_persistence
 
 def main():
-    PHASE_ID = "01"
-    PHASE_NAME = "Loader & Auditor (Integration)"
+    PHASE_ID = "02"
+    PHASE_NAME = "Loader, Auditor & Preprocessor (Integration)"
     print(f"🚀 Ejecutando Integración - Fase {PHASE_ID}: {PHASE_NAME} (Forecaster Buñuelitos)...")
     
     # Path setup
     base_path = os.path.abspath(os.curdir)
-    sys.path.insert(0, base_path)
+    if base_path not in sys.path:
+        sys.path.insert(0, base_path)
     
     # Report setup
     report_base = "tests/reports/integration"
