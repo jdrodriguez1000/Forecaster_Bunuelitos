@@ -313,6 +313,49 @@ preprocessing:
 
 eda:
   generate_figures: true
+  target_variable: "demanda_teorica_total"
+  splits:
+    test_days: 185
+    val_days: 185
+  time_series:
+    lags_acf_pacf: 40
+  statistics:
+    vif_threshold: 10
+    vif_columns:
+      - "smlv"
+      - "inflacion_mensual_ipc"
+      - "tasa_desempleo"
+      - "trm"
+      - "temperatura_media"
+      - "probabilidad_lluvia"
+      - "precipitacion_mm"
+      - "inversion_total"
+      - "ig_cost"
+      - "fb_cost"
+      - "precio_unitario"
+      - "costo_unitario"
+  business_rules:
+    pandemic:
+      start: "2020-05-01"
+      end: "2021-04-30"
+    promotions:
+      cycle_1_months: [4, 5]
+      cycle_2_months: [9, 10]
+      start_year: 2022
+    events:
+      novenas:
+        month: 12
+        days: [16, 26]
+      semana_santa:
+        jueves_viernes_santo: true # Lógica interna para festivos móviles
+      feria_flores:
+        month: 8
+        days: [1, 10]
+    payments:
+      quincenas: [15, 16, 30, 31]
+      prima_legal:
+        june: [15, 20]
+        december: [15, 20]
 
 features:
   calendars:
